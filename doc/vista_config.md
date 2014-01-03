@@ -1,4 +1,14 @@
-# VISTA Configuration
+# Forum System Configuration
+
+## MASTER PARAMTERS
+If you don't want to read any of the rest of this, this is the summary of
+the VISTA system configuration.
+
+ * UCI: DEV
+ * VOLUME SET: FORUM
+ * SITE NUMBER: 121
+ * INERNET DOMAIN NAMES: FORUM.OSEHRA.ORG (A), Q-PATCH.OSEHRA.ORG [MX].
+
 ## Baseline Routines and Globals
 Cloned from <https://github.com/OSEHRA/VistA-M> on December 25th 2013.
 
@@ -118,7 +128,7 @@ Other Null devices had to be renamed to make sure there is only one Null.
 
 ## Mailman configuration
 ### Forum Instance Domain Name Creation
-All of these are entries in the domain file.
+All of these are entries in the DOMAIN (#4.2) file.
 
 #### Main Domain 
 TURN enabled so that it can function as a mail drop.
@@ -156,7 +166,7 @@ Postfix listens on 10025 ONLY on localhost.
 	SYNONYM: JO
 
 ### Remote Instance Domain Name Creation
-To send messages to FORUM.OSEHRA.ORG from your own VISTA system, you can send
+To send messages to Q-PATCH.OSEHRA.ORG from your own VISTA system, you can send
 it via the internet by setting up postfix and having it do the work for you 
 (as above). An easier alternative is to configure a direct link, as follows:
 (NB: This example is only for GT.M. Use the Cache Mailman Conduits for Cache.)
@@ -170,3 +180,304 @@ it via the internet by setting up postfix and having it do the work for you
 	 O H="FORUM.OSEHRA.ORG",P=TCP/GTM
 	 C TCPCHAN-SOCKET25/GTM
 
+### Chistening
+System is chistened using menu option XMCHIRS as FORUM.OSEHRA.ORG with parent
+GW.OSEHRA.ORG in EDT Time Zone.
+
+### Pointing KSP and RSP to new Domain
+Domain FORUM.OSEHRA.ORG has an IEN of 76.
+
+    DEV,FORUM>S $P(^XTV(8989.3,1,0),"^")=76
+    DEV,FORUM>S $P(^XWB(8994.1,1,0),"^")=76
+
+Re-index the files after making this change.
+
+	DEV,FORUM>F DIK="^XTV(8989.3,","^XWB(8994.1," S DA=1 D IXALL2^DIK,IXALL^DIK
+
+### Identifying local mail for relay
+In the MAILMAN SITE PARAMTERS file (#4.3), the MY DOMAINS multiple contains
+.OSEHRA.ORG as one of the sites we can relay mail for. Without that, mailman
+will reject incoming messages coming for us.
+
+### Postfix configuration
+Postfix's function is to send emails to the outside world from VISTA.
+
+In `/etc/postfix/main.cf`, `mynetworks_style = host` was added to have postfix
+only listen to the localhost for messages.
+
+In `/etc/postfix/master.cf`, comment out the smtp line and add a line for
+listening on 10025.
+
+	#smtp      inet  n       -       n       -       -       smtpd # VEN/SMH - don't listen on 25 but on 10025
+	10025      inet  n       -       n       -       -       smtpd
+
+### XMRUCX routine changes for xinetd support
+Add this code to the bottom of the routine.
+
+	GTMLNX  ;From Linux xinetd script
+	 S U="^",$ETRAP="D ^%ZTER S ZZIO=$ZIO H 33 D R^XMCTRAP Q"
+	 ;S (XMRPORT,IO,IO(0))=$P X "U XMRPORT:(nowrap:delimiter=$C(13))" 
+	 S (XMRPORT,IO,IO(0))=$P X "U XMRPORT:(nowrap:delimiter=$C(13):ioerror=""GTMIOER"")"
+	 S @("$ZINTERRUPT=""I $$JOBEXAM^ZU($ZPOSITION)""")
+	 ;GTM specific code
+	 S %="",@("%=$ZTRNLNM(""REMOTE_HOST"")") S:$L(%) IO("GTM-IP")=%
+	 D SETNM^%ZOSV($E(XMRPORT_"INETMM",1,15)),COUNT^XUSCNT(1) ;Process counting under GT.M
+	 S XMCHAN="TCP/GTM",XMNO220=""
+	 N DIQUIET S DIQUIET=1 D DT^DICRW,DUZ^XUP(.5)
+	 D ENT^XMR
+	 D COUNT^XUSCNT(-1) ;Check out GT.M counting
+	 Q
+	GTMIOER ; For Sam...
+	 D COUNT^XUSCNT(-1)
+	 QUIT
+
+### Create xinetd service and shell script
+Create a xinetd service listening on port 25 to run the shell script.
+
+	[forum@forum-a ~]$ cat /etc/xinetd.d/mailman-forum-smtp-25 
+	# Written by Sam Habiel on 30 Dec 2013 for Mailman
+
+	service mailman-forum-smtp-25
+	{
+			port        = 25
+			socket_type = stream
+			protocol    = tcp
+			type        = UNLISTED
+			user        = forum
+			server      = /home/forum/bin/mailman_smtp.sh
+			wait        = no
+			disable     = no
+			per_source  = UNLIMITED
+			instances   = UNLIMITED
+			env         =  HOME=/home/forum
+	}
+
+Shell script that invokes `GTMLNX^XMRUCX`:
+
+	[forum@forum-a ~]$ cat /home/forum/bin/mailman_smtp.sh
+	#!/bin/bash
+	# Written by Sam Habiel on 30 December 2013
+
+	cd  # goto home directory
+	source /home/forum/bin/set_env 
+
+	$gtm_dist/mumps -run GTMLNX^XMRUCX 2>> /home/forum/log/mailman.log
+
+### Firewall
+Not VISTA related, but the Firewall was modified to to allow port 25 in.
+
+### DNS Records
+* FORUM.OSEHRA.ORG (A)
+* Q-PATCH.OSEHRA.ORG (MX)
+* FORUM.OSHERA.ORG (SPF) (NOT COMPLETED YET)
+* REVERSE DNS TO FORUM.OSHERA.ORG (NOT COMPLETED YET)
+
+Dig output:
+
+	sakura@icarus:~$ dig forum.osehra.org ANY +short
+	10 forum.osehra.org.
+	23.253.7.225
+	sakura@icarus:~$ dig q-patch.osehra.org ANY +short
+	10 q-patch.osehra.org.
+	23.253.7.225
+
+Host output:
+
+	sakura@icarus:~$ host 23.253.7.225
+	Host 225.7.253.23.in-addr.arpa. not found: 3(NXDOMAIN)
+
+### Testing
+Testing was done using netcat and telnet to confirm that the VISTA SMTP service 
+works. Testing was done also by making a direct link between two VISTA instances
+and using the script runner (shown below) to send the message.
+
+Sending emails to external domains using VISTA was tested from VISTA's script
+runner. First change the domain to Queue in the domain file rather than send,
+and when you send a message, run the script runner.
+
+First, XMMGR > XMNET > XMNET-TRANSMISSION-MANAGEMENT, then...
+
+	Select Transmission Management <TEST ACCOUNT> Option: EDIT a script
+	Select DOMAIN NAME:    GW.OSEHRA.ORG                   0 msgs
+	PHYSICAL LINK DEVICE: 
+	FLAGS: S// Q
+	SECURITY KEY: ^
+	TRANSMISSION TASK#: ^
+
+Second, send a message
+
+	Select Transmission Management <TEST ACCOUNT> Option: "MAILMAN
+
+	VA MailMan 8.0 service for POSTMASTER@FORUM.OSEHRA.ORG
+	You last used MailMan: 01/03/14@14:13
+	You have no new messages.
+
+
+	   NML    New Messages and Responses
+	   RML    Read/Manage Messages
+	   SML    Send a Message
+			  Query/Search for Messages
+	   AML    Become a Surrogate (SHARED,MAIL or Other)
+			  Personal Preferences ...
+			  Other MailMan Functions ...
+			  Help (User/Group Info., etc.) ...
+
+	Select MailMan Menu <TEST ACCOUNT> Option: SML  Send a Message
+
+	Subject: TEST
+	You may enter the text of the message...
+	  1>TEST
+	  2>
+	EDIT Option: 
+	Send mail to: POSTMASTER// SAM.HABIEL@GMAIL.COM  GW.OSEHRA.ORG via GW.OSEHRA.ORG
+	 (Queued)
+	And Send to: 
+
+	Select Message option: Transmit now// Sending [69]...
+	  Sent
+
+Thrid, transmit using the script runner.
+
+	Select Transmission Management <TEST ACCOUNT> Option: play a script
+	Select DOMAIN NAME: gw.OSEHRA.ORG                      1 msgs
+
+	  #  Script Name              Type      Priority
+	 --  -----------              ----      --------
+	  1  MAIN                     SMTP       1
+
+	14:16:06 To GW.OSEHRA.ORG from FORUM.OSEHRA.ORG on 1/3/2014
+	14:16:06 Script: MAIN
+	14:16:06 O H="127.0.0.1",P=TCP/GTM
+	14:16:06 Channel opened to GW.OSEHRA.ORG
+	14:16:06 Device 'NULL', Protocol 'TCP/GTM' (file 3.4)
+	14:16:06 Xecuting 'S XMRPORT=10025'
+	14:16:06 C TCPCHAN-SOCKET25/GTM
+	14:16:06 Calling script 'TCPCHAN-SOCKET25/GTM' (file 4.6)
+	14:16:06 Xecuting 'L +^XMBX("TCPCHAN",XMHOST):99 E  S ER=1,XMER="CHANNEL IN USE"
+	'
+	14:16:06 Xecuting 'S X="ERRSCRPT^XMRTCP",@^%ZOSF("TRAP")'
+	14:16:06 Xecuting 'S XMRPORT=$G(XMRPORT,25)'
+	14:16:06 Xecuting 'D CALL^%ZISTCP(XMHOST,XMRPORT) I POP S ER=1 L -^XMBX("TCPCHAN
+	",XMHOST)'
+	14:16:06 Xecuting 'S XMHANG="D CLOSE^%ZISTCP"'
+	14:16:06 Xecuting 'U IO:(DELIMITER=$C(13))'
+	14:16:06 Look: Timeout=45, Command String='220'
+	14:16:06 R: 220
+	14:16:06 Beginning sender-SMTP service
+	14:16:06 R:  forum-a.osehra.org ESMTP Postfix
+	14:16:06 S: NOOP
+	14:16:06 R: 250 2.0.0 Ok
+	14:16:06 S: HELO FORUM.OSEHRA.ORG
+	14:16:06 R: 250 forum-a.osehra.org
+	14:16:06 S: MAIL FROM:<POSTMASTER@FORUM.OSEHRA.ORG>
+	14:16:06 R: 250 2.1.0 Ok
+	14:16:06 S: RCPT TO:<SAM.HABIEL@GMAIL.COM>
+	14:16:06 R: 250 2.1.5 Ok
+	14:16:06 S: DATA
+	14:16:06 R: 354 End data with <CR><LF>.<CR><LF>
+	14:16:06 S: Subject: TEST
+	14:16:06 S: Date: 3 Jan 2014 14:14:40 -0400 (EDT)
+	14:16:06 S: Message-ID: <69.3140103@FORUM.OSEHRA.ORG>
+	14:16:06 S: From: <POSTMASTER@FORUM.OSEHRA.ORG>
+	14:16:06 S: To: SAM.HABIEL@GMAIL.COM
+	14:16:06 S: 
+	14:16:06 S: TEST
+	14:16:06 S: .
+	14:16:06 R: 250 2.0.0 Ok: queued as 9E45213E0DE
+	14:16:07 TURN command disabled for GW.OSEHRA.ORG
+	14:16:07 S: QUIT
+	14:16:07 R: 221 2.0.0 Bye
+	14:16:07 Xecuting 'L -^XMBX("TCPHAN",XMHOST) K XMSIO'
+	14:16:07 Returning to script 'MAIN'.
+	14:16:07 Script complete.
+	14:16:07 1 sent, 0 received.
+
+### Extra config item
+There was an old domain with a transmission script that was failing. This was
+deleted from the domain file and the entries pointing to it were repointed to
+FORUM.OSEHRA.ORG.
+
+## Insitution and Station Set-up
+The OSEHRA FORUM institution was modeled after the FORUM institution, except
+that it has the station number of 121 instead of FORUM's 120.
+
+	Select INSTITUTION NAME: OSEHRA FORUM    VA  OTHER  121  
+	Another one: 
+	Standard Captioned Output? Yes//   (Yes)
+	Include COMPUTED fields:  (N/Y/R/B): NO//  - No record number (IEN), no Computed
+	 Fields
+
+	NAME: OSEHRA FORUM                      STATE: VIRGINIA
+	  STATUS: National
+	  STREET ADDR. 1: Virginia Tech Research Building
+	  STREET ADDR. 2: 900 North Glebe Road, Suite 4-009
+	  CITY: ARLINGTON                       ZIP: 22203
+	CONTACT: MAIN                           PHONE #: (571) 858-3061
+	  FACILITY TYPE: OTHER                  DOMAIN: FORUM.OSEHRA.ORG
+	  STATION NUMBER: 121                   OFFICIAL VA NAME: OSEHRA FORUM
+	  AGENCY CODE: EHR                      POINTER TO AGENCY: EHR
+	CODING SYSTEM: VASTANUM                 ID: 121
+
+The lone entry in the `STATION NUMBER (TIME SENSITIVE)` file was modified to
+look as follows:
+
+	Output from what File: INSTITUTION// STATION NUMBER (TIME SENSITIVE)  
+											  (1 entry)
+
+	Select STATION NUMBER (TIME SENSITIVE) REFERENCE NUMBER: 121       12-30-13     
+	OSEHRA FORUM     121
+	Another one: 
+	Standard Captioned Output? Yes//   (Yes)
+	Include COMPUTED fields:  (N/Y/R/B): NO//  - No record number (IEN), no Computed
+	 Fields
+
+	REFERENCE NUMBER: 121                   EFFECTIVE DATE: DEC 30,2013
+	  MEDICAL CENTER DIVISION: OSEHRA FORUM
+	  STATION NUMBER: 121                   IS PRIMARY DIVISION: YES
+
+The lone entry in the `MEDICAL CENTER DIVISION` file was modified to point to
+the correct institution and modified to have the right station number.
+
+	Output from what File: STATION NUMBER (TIME SENSITIVE)// medical cenTER DIVISION
+											  (1 entry)
+	Select MEDICAL CENTER DIVISION NAME: `1  OSEHRA FORUM     121
+	Another one: 
+	Standard Captioned Output? Yes//   (Yes)
+	Include COMPUTED fields:  (N/Y/R/B): NO//  - No record number (IEN), no Computed
+	 Fields
+
+	NUM: 1                                  NAME: OSEHRA FORUM
+	  FACILITY NUMBER: 121                  INSTITUTION FILE POINTER: OSEHRA FORUM
+
+To test all these changes, the API `$$SITE^VASITE` should return the correct
+data:
+
+	DEV,FORUM>W $$SITE^VASITE
+	2957^OSEHRA FORUM^121
+	DEV,FORUM>W $$PRIM^VASITE
+	1
+
+Not strictly necessary on this system, but we need to change the 
+`MASTER PATIENT INDEX (LOCAL NUMBERS)` file to have the right station number.
+
+	Output from what File: MEDICAL CENTER DIVISION// MASTER PATIENT INDEX (LOCAL NUM
+	BERS)                                     (1 entry)
+	Select MASTER PATIENT INDEX (LOCAL NUMBERS) SITE ID NUMBER: `1  121
+	Another one: 
+	Standard Captioned Output? Yes//   (Yes)
+	Include COMPUTED fields:  (N/Y/R/B): NO//  - No record number (IEN), no Computed
+	 Fields
+
+	SITE ID NUMBER: 121                     LAST NUMBER USED: 500000000
+	  CHECK SUM FOR LAST NUMBER USED: 217407
+	  NEXT NUMBER TO USE: 500000001         CHECK SUM FOR NEXT: 075322
+
+## Kernel Site Parameters adjustments
+These are just a few tweaks to make sure the system is configured properly.
+
+ * DEFAULT INSTITUTION -> OSEHRA FORUM
+ * AGENCY CODE -> EHR
+ * MULTIPLE SIGN-ON -> YES
+ * AUTO-MENU -> YES
+ * DEFAULT HFS DIRECTORY -> /tmp/
+ * DNS IPs -> (same as those in /etc/resolve.conf)
