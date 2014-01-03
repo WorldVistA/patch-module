@@ -33,37 +33,37 @@ GT.M version is currently GT.M V6.0-003 Linux x86_64.
 
 ## Default Database characteristics
 
-  Access method                          BG  Global Buffers                1024
-  Reserved Bytes                          0  Block size (in bytes)         4096
-  Maximum record size                  4080  Starting VBN                   513
-  Maximum key size                      355  Total blocks            0x00061D8F
-  Null subscripts                     NEVER  Free blocks             0x0001BDFE
-  Standard Null Collation             FALSE  Free space              0x00000000
-  Last Record Backup     0x0000000000000001  Extension Count                  0
-  Last Database Backup   0x0000000003D3A4E9  Number of local maps           783
-  Last Bytestream Backup 0x0000000000000001  Lock space              0x000003E8
-  In critical section            0x00000000  Timers pending                   1
-  Cache freeze id                0x00000000  Flush timer            00:00:01:00
-  Freeze match                   0x00000000  Flush trigger                  960
-  Current transaction    0x0000000003D4A81F  No. of writes/flush              7
-  Maximum TN             0xFFFFFFFF83FFFFFF  Certified for Upgrade to        V6
-  Maximum TN Warn        0xFFFFFFFD93FFFFFF  Desired DB Format               V6
-  Master Bitmap Size                    496  Blocks to Upgrade       0x00000000
-  Create in progress                  FALSE  Modified cache blocks            1
-  Reference count                         6  Wait Disk                        0
-  Journal State                          ON  Journal Before imaging        TRUE
-  Journal Allocation                   2048  Journal Extension               10
-  Journal Buffer Size                  4096  Journal Alignsize             4096
-  Journal AutoSwitchLimit           8388598  Journal Epoch Interval         300
-  Journal Yield Limit                     8  Journal Sync IO              FALSE
-  Journal File: /home/forum/j/default.mjl
-  Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
-  Mutex Queue Slots                    1024  KILLs in progress                0
-  Replication State                      ON  Region Seqno    0x000000000022D19F
-  Zqgblmod Seqno         0x0000000000000000  Zqgblmod Trans  0x0000000000000000
-  Endian Format                      LITTLE  Commit Wait Spin Count          16
-  Database file encrypted             FALSE  Inst Freeze on Error         FALSE
-  Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
+	Access method                          BG  Global Buffers                1024
+	Reserved Bytes                          0  Block size (in bytes)         4096
+	Maximum record size                  4080  Starting VBN                   513
+	Maximum key size                      355  Total blocks            0x00061D8F
+	Null subscripts                     NEVER  Free blocks             0x0001BDFE
+	Standard Null Collation             FALSE  Free space              0x00000000
+	Last Record Backup     0x0000000000000001  Extension Count                  0
+	Last Database Backup   0x0000000003D3A4E9  Number of local maps           783
+	Last Bytestream Backup 0x0000000000000001  Lock space              0x000003E8
+	In critical section            0x00000000  Timers pending                   1
+	Cache freeze id                0x00000000  Flush timer            00:00:01:00
+	Freeze match                   0x00000000  Flush trigger                  960
+	Current transaction    0x0000000003D4A81F  No. of writes/flush              7
+	Maximum TN             0xFFFFFFFF83FFFFFF  Certified for Upgrade to        V6
+	Maximum TN Warn        0xFFFFFFFD93FFFFFF  Desired DB Format               V6
+	Master Bitmap Size                    496  Blocks to Upgrade       0x00000000
+	Create in progress                  FALSE  Modified cache blocks            1
+	Reference count                         6  Wait Disk                        0
+	Journal State                          ON  Journal Before imaging        TRUE
+	Journal Allocation                   2048  Journal Extension               10
+	Journal Buffer Size                  4096  Journal Alignsize             4096
+	Journal AutoSwitchLimit           8388598  Journal Epoch Interval         300
+	Journal Yield Limit                     8  Journal Sync IO              FALSE
+	Journal File: /home/forum/j/default.mjl
+	Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
+	Mutex Queue Slots                    1024  KILLs in progress                0
+	Replication State                      ON  Region Seqno    0x000000000022D19F
+	Zqgblmod Seqno         0x0000000000000000  Zqgblmod Trans  0x0000000000000000
+	Endian Format                      LITTLE  Commit Wait Spin Count          16
+	Database file encrypted             FALSE  Inst Freeze on Error         FALSE
+	Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
 # GDE Configuration
 									*** SEGMENTS ***
