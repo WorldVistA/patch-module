@@ -13,9 +13,11 @@ the VISTA system configuration.
 Cloned from <https://github.com/OSEHRA/VistA-M> on December 25th 2013.
 
 Applied fixes for GT.M:
-https://github.com/OSEHRA/VistA/blob/master/Testing/Setup/XINDX2.ro
-https://github.com/OSEHRA/VistA/blob/master/Testing/Setup/ZTLOAD1.ro
+ * <https://github.com/OSEHRA/VistA/blob/master/Testing/Setup/XINDX2.ro>
+ * <https://github.com/OSEHRA/VistA/blob/master/Testing/Setup/ZTLOAD1.ro>
 
+My random utility routines for VISTA were imported into the system:
+<https://github.com/shabiel/random-vista-utilities>
 
 ## ZTMGRSET
 
@@ -481,3 +483,32 @@ These are just a few tweaks to make sure the system is configured properly.
  * AUTO-MENU -> YES
  * DEFAULT HFS DIRECTORY -> /tmp/
  * DNS IPs -> (same as those in /etc/resolve.conf)
+
+## VISTA system local mods
+Lloyd Milligan's excellent ZSY routine for M process monitoring was downloaded
+from <http://www.seaislandsystems.com/ZSY/ZSY.m> and applied. For it to be
+invoked, JOBEXAM+1^ZU needs to be
+
+	 I $T(NTRUPT^ZSY)]"" D NTRUPT^ZSY Q 1; SIS/LM - Custom interrupt completion
+
+I made that change ZUGTM and then ran ^ZUSET.
+
+As mentioned before, XMRUCX now has an entry point for GTMLNX for xinetd entry.
+XMRUCX has an issue right now with TCP alive checks which tend to invoke the
+boiler plate code for process set-up in VISTA. I need to fix that before
+deciding that XMRUCX is good enough.
+
+Because of this same issue, the process counting in %ZOSV for GT.M (already
+pretty awful) was not working. I got Bhaskar's %ZOSV routine, changed the
+process counting code so that it doesn't use a global reference, fixed another
+bug in $$RTNDIR, and modified COUNT^XUSCNT so that it is a no op. I would
+have liked to make CLEAR^XUSCNT a no op as well, but I have to fix the
+mailman problem first as it is setting ^XUTL("XUSYS") nodes and they are only
+cleaned by CLEAR^XUSCNT.
+
+Joel Ivey's M-Tools (XT*7.3*81) was applied. I then applied my modified
+routines (XTMUNIT and XTMUNIT1) from the vista-less-branch
+<https://github.com/shabiel/M-Tools/tree/vista-less-support/Utilities%20XT_7.3_81%20not%20yet%20released>.
+I plan to put these in the main KIDS build once I have unit tests for 
+everything I changed in there and can prove to my satisfaction that everything
+is still working.
