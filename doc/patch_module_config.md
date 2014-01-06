@@ -105,7 +105,7 @@ Module.
 	-------------------------------------------------------------------------------
 
 ## Typical workflow
- * Developer emails patch to PM via XXX@Q-PATCH.OSEHRA.ORG
+ * Developer emails patch to PM via XXX AT Q-PATCH.OSEHRA.ORG
  * Developer creates PM patch via `Add a Patch` and loads emailed patch. Status is now `UNDER DEVELOPMENT`. Second developer gets emailed that there is a patch ready to review.
  * Second developer reviews patch via `Edit a Patch` and then changes status to `COMPLETED`. Verifier gets emailed that there is a patch ready to review.
  * Verifier reviews patch via `Release a Patch` and then changes status to `VERIFIED`. Once verified, patch automatically gets emailed to the Network routing list configured inside the A1AE package.
