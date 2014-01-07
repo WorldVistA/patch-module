@@ -1,6 +1,6 @@
 # Forum System Configuration
 
-## MASTER PARAMTERS
+## MASTER PARAMETERS
 If you don't want to read any of the rest of this, this is the summary of
 the VISTA system configuration.
 
@@ -182,8 +182,8 @@ it via the internet by setting up postfix and having it do the work for you
 	 O H="FORUM.OSEHRA.ORG",P=TCP/GTM
 	 C TCPCHAN-SOCKET25/GTM
 
-### Chistening
-System is chistened using menu option XMCHIRS as FORUM.OSEHRA.ORG with parent
+### Christening
+System is christened using menu option XMCHIRS as FORUM.OSEHRA.ORG with parent
 GW.OSEHRA.ORG in EDT Time Zone.
 
 ### Pointing KSP and RSP to new Domain
@@ -266,7 +266,7 @@ Shell script that invokes `GTMLNX^XMRUCX`:
 	$gtm_dist/mumps -run GTMLNX^XMRUCX 2>> /home/forum/log/mailman.log
 
 ### Firewall
-Not VISTA related, but the Firewall was modified to to allow port 25 in.
+Not VISTA related, but the Firewall was modified to allow port 25 in.
 
 ### DNS Records
 * FORUM.OSEHRA.ORG (A)
