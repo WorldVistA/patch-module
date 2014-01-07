@@ -33,11 +33,9 @@ In 1^A1AEPH1 (Entry point to Add a Patch), the following are set:
    This is used to control access to the file by making sure you are either
    a developer or a verifier.
 
-<pre>
    ^A1AE(11007,IEN,"V",version_no,PB) <-- Next problem number. Unused.
                                  ,PH) <-- Next patch number.
                                  ,PR) <-- Next sequence number.
-</pre>
 
 To actually create the patch number, NUM^A1AEUTL is called. The following
 variables are set:
