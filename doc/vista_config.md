@@ -172,8 +172,19 @@ To send messages to Q-PATCH.OSEHRA.ORG from your own VISTA system, you can send
 it via the internet by setting up postfix and having it do the work for you 
 (as above). An easier alternative is to configure a direct link, as follows:
 (NB: This example is only for GT.M. Use the Cache Mailman Conduits for Cache.)
+To send HFS checksum messages (for packages exported via HFS) you need to
+create FORUM.OSEHRA.ORG.
 
 	NAME: Q-PATCH.OSEHRA.ORG                FLAGS: Q
+	TRANSMISSION SCRIPT: MAIN               PRIORITY: 1
+	  NUMBER OF ATTEMPTS: 2                 TYPE: Simple Mail Transfer Protocol
+	  PHYSICAL LINK / DEVICE: NULL
+	  NETWORK ADDRESS (MAILMAN HOST): FORUM.OSEHRA.ORG
+	 TEXT:   
+	 O H="FORUM.OSEHRA.ORG",P=TCP/GTM
+	 C TCPCHAN-SOCKET25/GTM
+
+	NAME: FORUM.OSEHRA.ORG                  FLAGS: Q
 	TRANSMISSION SCRIPT: MAIN               PRIORITY: 1
 	  NUMBER OF ATTEMPTS: 2                 TYPE: Simple Mail Transfer Protocol
 	  PHYSICAL LINK / DEVICE: NULL
@@ -483,6 +494,48 @@ These are just a few tweaks to make sure the system is configured properly.
  * AUTO-MENU -> YES
  * DEFAULT HFS DIRECTORY -> /tmp/
  * DNS IPs -> (same as those in /etc/resolve.conf)
+
+## HFS Checksum server Set-up
+### Remote system Set-up
+You need to set-up outgoing mail to FORUM.OSEHRA.ORG. See that in the domain
+section above.
+
+You then need to set the following parameter to tell KIDS where to send the
+message.
+
+	GTM>D ^XPAREDIT                                                                 
+																					
+							 --- Edit Parameter Values ---                          
+																					
+	Select PARAMETER DEFINITION NAME:    XPD PATCH HFS SERVER   Patch module HFS ser
+	ver                                                                             
+																					
+	-------------- Setting XPD PATCH HFS SERVER  for Package: KIDS --------------   
+	DHCP patch module server name: S.A1AE HFS CHKSUM SVR@FORUM.OSEHRA.ORG           
+	-----------------------------------------------------------------------------   
+
+### Forum system Set-up
+On the Forum system, you must add a active user (must have an access code and
+a mailbox) to these two groups:
+
+	* A1AE PATCH ERRORS - Couldn't process the Message
+	* A1AE HFS MESSAGES - Copy of the messages sent to the server
+
+This means that the active user cannot be remote user.
+
+To activate the server, you must add either one of these two mail groups to the
+`XQSERVER` bulletin, like this:
+
+	NAME: XQSERVER                          SUBJECT: Server Request Notice
+	MAIL GROUP: A1AE HFS MESSAGES
+	...
+
+The last thing you need to activate the server, you need to have your package
+file point to the domain from which the message will be coming. As of today,
+this domain multiple does not exist on our system. It appears to be a local
+mod on the Forum System.
+
+	^DIC(9.4,PACKAGE,25,IX,
 
 ## VISTA system local mods
 Lloyd Milligan's excellent ZSY routine for M process monitoring was downloaded
