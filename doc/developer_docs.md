@@ -35,9 +35,9 @@ In 1^A1AEPH1 (Entry point to Add a Patch), the following are set:
 
 Format:
 
-   ^A1AE(11007,IEN,"V",version_no,PB) <-- Next problem number. Unused.
-                                 ,PH) <-- Next patch number.
-                                 ,PR) <-- Next sequence number.
+	^A1AE(11007,IEN,"V",version_no,PB) <-- Next problem number. Unused.
+	^A1AE(11007,IEN,"V",version_no,PH) <-- Next patch number.
+	^A1AE(11007,IEN,"V",version_no,PR) <-- Next sequence number.
 
 To actually create the patch number, NUM^A1AEUTL is called. The following
 variables are set:
