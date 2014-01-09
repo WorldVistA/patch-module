@@ -1,8 +1,9 @@
-A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;12/17/09  08:09
+A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-01-08  5:03 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	;
 	;logic from dd,  U triggers test MESSAGE if underdevlopment
 	;I A1AEOLD="c","Uu"'[$E(X_0,1) Q  ;allow c=>u in template
+        N DIERR ; VEN/SMH - Don't allow DIERR to leak back to DBS Fileman calls
 	K TESTMES
 	I "Uu"[$E(X_0,1),A1AEOLD="u" S X="u",TESTMES=1
 	I A1AEOLD=$E(X,1),X'="u" Q  ;only allow u=>u if u/U entered
@@ -91,7 +92,8 @@ V	;
 	;
 ER	W !?3,"Once the status has been set to 'E'ntered in error or 'R'etired it can not be changed!" K X Q
 	;
-ASKCHG	S A1AEX=X,A1AERD("A")="Are you sure you want to change status to "_A1AEOPT_"? ",A1AERD(0)="S",A1AERD(1)="Yes^change status and send a message to users",A1AERD(2)="No^leave the status the same",A1AERD("B")=2
+ASKCHG	I $D(DIFM) S A1AEX=X QUIT  ; If we are inside the DBS, don't ask... VEN/SMH...
+        S A1AEX=X,A1AERD("A")="Are you sure you want to change status to "_A1AEOPT_"? ",A1AERD(0)="S",A1AERD(1)="Yes^change status and send a message to users",A1AERD(2)="No^leave the status the same",A1AERD("B")=2
 	D SET^A1AERD K A1AERD S X=$S("Y"[$E(X,1):A1AEX,1:$C($A(A1AEOLD)+32)) W !?3,"...status ",$S(A1AEX=X:"",1:"'not' "),"changed to ",A1AEOPT
 	Q
 	;
@@ -131,7 +133,7 @@ ESSMSG	; Send message to Remedy to let it know that a patch has been
 	. S CAT=$E(CAT,2,999)
 	S XMTEXT(1)=STAT_$$LJ^XLFSTR(PID,30)_$$LJ^XLFSTR("",30)_$$LJ^XLFSTR(REL,22)_$$LJ^XLFSTR(COMP,22)_PRI_$$LJ^XLFSTR(CAT,23)
 	S XMINSTR("FROM")="POSTMASTER"
-	D SENDMSG^XMXAPI(DUZ,"NPM/ESS Transaction","XMTEXT","ESSRESOURCE@MED.VA.GOV",.XMINSTR)
+	D SENDMSG^XMXAPI(DUZ,"NPM/ESS Transaction","XMTEXT","G.A1AE PACKAGE RELEASE@FORUM.OSEHRA.ORG",.XMINSTR) ; VEN/SMH - changed.
 	Q
 	;
 ASKTST	Q:'$D(^A1AE(11005.1,DA,0))
