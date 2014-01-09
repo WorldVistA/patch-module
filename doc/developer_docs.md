@@ -62,6 +62,8 @@ When you add a patch using Add a Patch option, the following happens
  * At this point the input template \[A1AE ADD/EDIT PATCHES\] is invoked.
  * This template is rather complex. Here it is. Comments inline.
 
+Template:
+
  	S A1AETVR=$P(^A1AE(11005,DA,0),U,3),A1AEST=$P(^A1AE(11005,DA,0),U,8),A1AEKIDS=0 S:A1AEST'="u" DIE("NO^")="OUTOK" S Y=$S(A1AEST="c":"@3",A1AEST="v":"@10",A1AEST="e":"@20",A1AEST="r":"@30",A1AEST="x":"@10",1:"@5")
  	@3
  	PATCH SUBJECT  //When we add a patch, we start here.
