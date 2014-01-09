@@ -1,10 +1,11 @@
-A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module;2014-01-07  6:29 PM
+A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module;2014-01-08  8:00 PM
  ;;
  ; NB: Order matters here. Each test depends on the one before it.
  D EN^XTMUNIT($T(+0),1) QUIT
  ;
 STARTUP ; Delete all test data
  N DIK,DA ; fur Fileman
+ S DUZ=.5 ; Must be defined for auditing.
  N PKGAB S PKGAB="ZZZ"
  ; Get entry from package file if it exists.
  N PKIEN S PKIEN=$O(^DIC(9.4,"C",PKGAB,0))
@@ -42,12 +43,27 @@ MKPKG() ; Create a new package
  QUIT IEN(1)
  ;
 MKUSRTST ; @TEST Make Users in NEW PERSON (#200) File
+ S DUZ(0)="@" ; Necessary for the keys multiple which checks this in the Input Transform
+ D DELUSR("PATCHMODULE,DEVELOPER")
+ D DELUSR("PATCHMODULE,COMPLETER")
+ D DELUSR("PATCHMODULE,VERIFER")
+
  S DEV=$$MKUSR("PATCHMODULE,DEVELOPER","A1AE DEVELOPER")
  S COM=$$MKUSR("PATCHMODULE,COMPLETER","A1AE DEVELOPER")
  S VER=$$MKUSR("PATCHMODULE,VERIFER","A1AE PHVER")
- D ASSERT(DEV)
- D ASSERT(COM)
- D ASSERT(VER)
+ S DUZ(0)=""
+ ;
+ ; Assert the user IEN, the presence of an access code, the presence of a mail box
+ D ASSERT(DEV),ASSERT($L($P(^VA(200,DEV,0),U,3))),ASSERT($D(^XMB(3.7,DEV,0)))
+ D ASSERT(COM),ASSERT($L($P(^VA(200,COM,0),U,3))),ASSERT($D(^XMB(3.7,COM,0)))
+ D ASSERT(VER),ASSERT($L($P(^VA(200,VER,0),U,3))),ASSERT($D(^XMB(3.7,VER,0)))
+ ;
+ QUIT
+ ;
+DELUSR(NAME) ; Remove user and their mailbox
+ N DA S DA=$O(^VA(200,"B",NAME,0)) Q:'DA
+ S DUZ=.5 D TERMMBOX^XMXAPIB(DA) ; DUZ must be .5 for this to work
+ N DIK S DIK="^VA(200," D ^DIK
  QUIT
  ;
 MKUSR(NAME,KEY) ; Make Users for the Package
@@ -64,6 +80,14 @@ MKUSR(NAME,KEY) ; Make Users for the Package
  N DIC S DIC(0)="" ; An XREF in File 200 requires this.
  D UPDATE^DIE("E",$NA(C0XFDA),$NA(C0XIEN),$NA(C0XERR)) ; Typical UPDATE
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ K C0XFDA
+ S C0XFDA(200,C0XIEN(1)_",",2)=$TR(NAME,",",".") ; Access Code
+ D FILE^DIE("",$NA(C0XFDA),$NA(C0XERR))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ I $D(^XMB(3.7,C0XIEN(1),0))[0 N Y S Y=C0XIEN(1) D NEW^XM ;Make sure has a Mailbox
+ ;
  Q C0XIEN(1) ;Provider IEN ;
  ;
 PKGADD ; @TEST - Add package to Patch Module
@@ -102,6 +126,28 @@ VERSETUP ; @TEST Setup version
  D ASSERT($D(^A1AE(11007,A1AEPKIF,"V",2,0)))
  QUIT
  ;
+DELMSGS ; @TEST Delete all Messages in Q-PATCH basket.
+ N XMDUZ,XMK,XMZ
+ S XMDUZ=.5
+ N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
+ S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
+ S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,XMK,1,XMZ)) Q:'XMZ  D KL^XMA1B
+ D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))="")
+ QUIT
+ ;
+MAILKIDS ; @TEST Mail a KIDS build to XXX@Q-PATCH.OSEHRA.ORG
+ N MESS,LN0,LN
+ N I F I=1:1 S LN0=$T(KIDS+I),LN=$P(LN0,";;",2,99) S MESS(I,0)=LN Q:LN["$END KID"
+ N FLAGS S FLAGS("TYPE")="K"
+ S DUZ=.5
+ D SENDMSG^XMXAPI(DUZ,"ZZZ*2.0*1",$NA(MESS),"XXX@Q-PATCH.OSEHRA.ORG",.FLAGS,.MESSAGEIEN)
+ D ASSERT(MESSAGEIEN)
+ QUIT
+ ;
+QUE ; @TEST Get Postmaster Basket for Q-PATCH in variable QUE.
+ D QUE^A1AEM
+ D ASSERT(QUE>1000) ; Assert that it is a forwarding que in the Postmaster basket.
+ QUIT
  ;
 PATCHNO ; @TEST Obtain next patch number
  ; Next two lines required by API.
@@ -133,29 +179,6 @@ PATCHROU ; @TEST Add routine set in Message file a la 1+5^A1AEPH1
  D CHKEQ(^A1AE(11005.1,DA,2,1,0),"No routines included")
  QUIT
  ;
-QUE ; @TEST Get Postmaster Basket for Q-PATCH in variable QUE.
- D QUE^A1AEM
- D ASSERT(QUE>1000) ; Assert that it is a forwarding que in the Postmaster basket.
- QUIT
- ;
-DELMSGS ; @TEST Delete all Messages in Q-PATCH basket.
- ; ZEXCEPT: QUE
- N XMDUZ,XMK,XMZ
- S XMDUZ=.5
- S XMK=QUE
- S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,XMK,1,XMZ)) Q:'XMZ  D KL^XMA1B
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))="")
- QUIT
- ;
-MAILKIDS ; @TEST Mail a KIDS build to XXX@Q-PATCH.OSEHRA.ORG
- N MESS,LN0,LN
- N I F I=1:1 S LN0=$T(KIDS+I),LN=$P(LN0,";;",2,99) S MESS(I,0)=LN Q:LN["$END KID"
- N FLAGS S FLAGS("TYPE")="K"
- S DUZ=.5
- D SENDMSG^XMXAPI(DUZ,"ZZZ*2.0*1",$NA(MESS),"XXX@Q-PATCH.OSEHRA.ORG",.FLAGS,.MESSAGEIEN)
- D ASSERT(MESSAGEIEN)
- QUIT
- ;
  ;
 LOC ; @TEST Get messages matching A1AEPD in Q-PATCH queue
  D LOC^A1AEM
@@ -167,6 +190,18 @@ PATCHCR ; @TEST Create a Patch
  S IENS=DA_","
  S FDA(11005,IENS,"PATCH SUBJECT")="TEST"
  S FDA(11005,IENS,"PRIORITY")="e" ; emergency
+ D FILE^DIE("E",$NA(FDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ K FDA
+ ;
+ ; Category of patch
+ ; S FDA(11005.05,"+1,"_IENS,.01)="d" // won't work. There is also a db.
+ ; S FDA(11005.05,"+2,"_IENS,.01)="i" // ditto! inf is also there. Boo!
+ ; S FDA(11005.05,"+3,"_IENS,.01)="p" // ditto! pp.
+ S FDA(11005.05,"+4,"_IENS,.01)="r"
+ D UPDATE^DIE("E",$NA(FDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ K FDA
  ;
  ; This loads the message text into field PATCH DESCRIPTION in 11005
  ; ZEXPECT A1AELINE
@@ -180,13 +215,13 @@ PATCHCR ; @TEST Create a Patch
  ;
  ; This loads the KIDS build from either the Mail Message or the File System.
  ; Stores it in MESSAGE TEXT in file 11005.1. Template does a Backwards Jump.
- ; NB: I don't know yet how to load from the File System
  D ASKS^A1AEM1
  D ASSERT($O(^A1AE(11005.1,1,2,0))>0)
  D ASSERT(^A1AE(11005,1,"P",1,0)="ZOSV2GTM^B7008460^**275,425**")
- QUIT
- ; NB: Developer of template (Wally probably) forgot to put @8 in the template.
- ; S:A1AEKIDS Y="@8"
+ ;
+ ; Because ^A1AECOPY and ^A1AECOPR both reference Packman
+ ; formats in SETUTI, it's most likely that Wally intended for us to skip this.
+ ; ^A1AECOPY uses Cache's ZLOAD.
  ; 
  ; ROUTINE NAME
  ;    ROUTINE NAME
@@ -195,13 +230,25 @@ PATCHCR ; @TEST Create a Patch
  ;    D ^A1AECOPR
  ;    DESCRIPTION OF ROUTINE CHANGES
  ;    ROUTINE CHECKSUM
- ; DISPLAY ROUTINE PATCH LIST//Yes
- ; W !,"editing comments only seen by releasers/developers"
- ; INTERNAL COMMENTS
+ ; @8
+ S FDA(11005,IENS,"DISPLAY ROUTINE PATCH LIST")="Yes"
+ N DIERR
+ D FILE^DIE("E",$NA(FDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ N WP
+ S WP(1,0)="Test Comments"
+ N DIERR
+ D WP^DIE(11005,IENS,16,"K",$NA(WP))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ; PATCH RELEASE CHECK
  ;    ALL
  ; W !
  ; @10
+ K A1AETVR,A1AEST,A1AEKIDS
+ D CHKEQ(^A1AE(11005,1,"X",1,0),"Test Comments")
+ D CHKEQ(^A1AE(11005,1,5),1)
+ QUIT
  ; STATUS OF PATCH
  ; S Y=$S(X="e":"@20",X="r":"@30",1:"@99")
  ; @20
@@ -211,7 +258,21 @@ PATCHCR ; @TEST Create a Patch
  ; RETIRED AFTER VERSION
  ; RETIREMENT COMMENTS
  ; @99
- K A1AETVR,A1AEST,A1AEKIDS
+ ;
+PATCHCOM ; @TEST Complete a Patch
+ S DUZ=COM ; Now I am the completer
+ N A1AEPDSAV S A1AEPDSAV=A1AEPD
+ N FDA
+ S FDA(11005,1_",",8)="c" D FILE^DIE("E",$NA(FDA))
+ D CHKEQ($P(^A1AE(11005,1,0),U,8),"c")
+ S A1AEPD=A1AEPDSAV
+ QUIT
+ ;
+PATCHVER ; @TEST Verify a Patch
+ S DUZ=VER ; Now I am the verifier
+ N FDA
+ S FDA(11005,1_",",8)="v" D FILE^DIE("E",$NA(FDA))
+ D CHKEQ($P(^A1AE(11005,1,0),U,8),"v")
  QUIT
  ;
 PATCH999 ; #TEST Try to exceed 999
@@ -235,15 +296,13 @@ PATCH999 ; #TEST Try to exceed 999
 CHKEQ(X,Y,Z) S Z=$G(Z) D CHKEQ^XTMUNIT(X,Y,Z) QUIT
 ASSERT(X,Y) S Y=$G(Y) D CHKTF^XTMUNIT(X,Y) QUIT
  ;
- ; Other convenience methods
-FN(F,NAME) ; Get field number
- Q $O(^DD(F,"B",NAME,0))
- ;
 KIDS ;;
- ;;$TXT Created by TESTMASTER,USER at VEN.SMH101.COM  (KIDS) on Thursday, 01/07/14 
- ;;at 15:55
+ ;;$TXT Created by TESTMASTER,USER at VEN.SMH101.COM  (KIDS) on Thursday, 01/07/14 at 15:55
+ ;;
+ ;; This patch is the result of the Unit Test routine.
+ ;; Please ignore it.
  ;; 
- ;;ZZZ*2.0*1
+ ;; Patch ID: ZZZ*2.0*1
  ;; 
  ;;$END TXT
  ;;$KID ZZZ*1.0*1
