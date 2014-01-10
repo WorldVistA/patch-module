@@ -1,4 +1,4 @@
-A1AEUTL	; RMO,MJK/ALBANY ;2014-01-06  6:18 PM
+A1AEUTL	; RMO,MJK/ALBANY ;2014-01-10  2:19 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	;logic to get and set seq#
 SEQ	L +^A1AE(11007,A1AEPKIF,"V",A1AEVR,"PR"):60
@@ -42,13 +42,13 @@ NUM	;
 	S $P(^A1AE(11007,A1AEPKIF,"V",0),"^",3)=A1AEVR ; Why??
 	S A1AENB=^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)
 	;
-SETNUM	;S (X1,X)=A1AEPK_"*"_A1AEVR_"*"_A1AENB F I=1:1 S X1=$O(^A1AE(A1AEFL,"B",X1)) Q:X1'[$P(X,"*",1,2)  S:$P(X1,"*",3)>A1AENB A1AENB=$P(X1,"*",3)
-	S X=A1AEPK_"*"_A1AEVR_"*"_A1AENB,XEND=A1AEPK_"*"_A1AEVR_"*999"
-	I $O(^A1AE(11005,"AB",A1AEPK_"*"_A1AEVR))[(A1AEPK_"*"_A1AEVR) DO
-	.S XEND1=$TR($P($O(^A1AE(11005,"AB",XEND),-1),"*",3)," ","")
-	.I XEND1<A1AENB
-	.E  S A1AENB=XEND1+1,$P(X,"*",3)=A1AENB
-	.K XEND,XEND1
+SETNUM	; New Logic - VEN/SMH for v2.4 - using new AB index
+        S X=A1AEPK_"*"_A1AEVR_"*"_A1AENB                                    ; Start ZZZ*2*last number per package file.
+        I $D(^A1AE(11005,"AB",A1AEPK,A1AEVR)) D                             ; If package/version has patches already
+        . N XEND S XEND=$O(^A1AE(11005,"AB",A1AEPK,A1AEVR,""),-1)           ; Get last patch (greatest number)
+        . I XEND<A1AENB                                                     ; If our number is greater or equal to the greatest, ok
+        . E  S A1AENB=XEND+1,$P(X,"*",3)=A1AENB                             ; else our patch is one greater than greatest.
+        ;
 	;returns x for patch,a1aenb
 	S DIC="^A1AE(A1AEFL,",DIC(0)=$G(DIC(0),"LE") ; VEN/SMH old : DIC(0)="LE"
 	D ^DIC

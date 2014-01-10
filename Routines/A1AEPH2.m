@@ -1,4 +1,4 @@
-A1AEPH2	;  REW/WCIOFO,RMO,MJK/ALBANY ;2014-01-09  5:52 PM
+A1AEPH2	;  REW/WCIOFO,RMO,MJK/ALBANY ;2014-01-10  2:17 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 	;
@@ -54,20 +54,14 @@ DQ5	;
 	;use entry# of print driver for namespace
 	S A1AEDJDH=$J_"."_$P($H,",",2) K ^TMP("A1AE5",A1AEDJDH) S TMP="" ; REW added seconds in case user tries to run a second listing before the first finishes
 	;
-	;setup the version and dba except for xm
-	S TREV=A1AEPK_"*"_A1AEVR_"*" DO  S TREV=A1AEPK_"*999*" DO:A1AEPK'="XM"
-	.S FREV=TREV_"  0"
-	.S TREV=TREV_"999"
-	.F  S FREV=$O(^A1AE(11005,"AB",FREV)) Q:FREV]]TREV  Q:FREV'[A1AEPK  DO
-	..Q:'$L(FREV)
-	..Q:'+$O(^(FREV,0))
-	..DO:$S<6000  Q:'$D(TMP)
-	...S ^TMP("A1AE5",A1AEDJDH,$O(^(0)))=""
-	...I D(TMP) MERGE ^TMP=TMP K TMP
-	..Q:'$D(TMP)
-	..S TMP("A1AE5",A1AEDJDH,$O(^(0)))=""
+        ; VEN/SMH - Changed logic here for v 2.4 with new AB index
+        ; Regular Patches
+        N I S I=""
+        F  S I=$O(^A1AE(11005,"AB",A1AEPK,A1AEVR,I)) Q:'I  S ^TMP("A1AE5",A1AEDJDH,$O(^(I,0)))=""
+        ; DBA Patches (DBA = version 999)
+        N I S I=""
+        I A1AEPK'="XM" F  S I=$O(^A1AE(11005,"AB",A1AEPK,999,I)) Q:'I  S ^TMP("A1AE5",A1AEDJDH,$O(^(I,0)))=""
 DIP5	;
-	I $D(TMP)>1 MERGE ^TMP=TMP K TMP
 	;I '$D(^TMP("A1AE5",A1AEDJDH)) W !?10,"No summary available" Q
 	K FREV,TREV S BY(0)="^TMP(""A1AE5"","_A1AEDJDH_",",L(0)=1 
 	S IOP=A1AEDEV
