@@ -167,3 +167,72 @@ The message going to Forum looks like this:
 If everything works correctly, the checksums will be loaded to the routine
 multiple in 11005.1 if a message for the patch cannot be found in Q-PATCH 
 queue or the user says not to load it.
+
+## A X-refs on 11005:
+
+  AB    MUMPS
+            Field:  PATCH DESIGNATION  (11005,.01)
+                    1)= S A1AEX=$L($P(X,"*",3)),^A1AE(11005,"AB",$P(X,"*",1,2)_
+                    "*"_$E("  ",A1AEX<3,3-A1AEX)_$P(X,"*",3),DA)="" K A1AEX
+                    2)= S A1AEX=$L($P(X,"*",3)) K ^A1AE(11005,"AB",$P(X,"*",1,2
+                    )_"*"_$E("  ",A1AEX<3,3-A1AEX)_$P(X,"*",3),DA),A1AEX
+  AP    MUMPS
+            Field:  PRIORITY  (11005,7)
+                    1)= S ^A1AE(11005,"AP",+$P(^A1AE(11005,DA,0),U,2),+$P(^(0),
+                    U,3),X,+$P(^(0),U,4),DA)=""
+                    2)= K ^A1AE(11005,"AP",+$P(^A1AE(11005,DA,0),U,2),+$P(^(0),
+                    U,3),X,+$P(^(0),U,4),DA)
+
+  AS    MUMPS
+            Field:  STATUS OF PATCH  (11005,8)
+                    1)= S ^A1AE(11005,"AS",+$P(^A1AE(11005,DA,0),U,2),+$P(^(0),
+                    U,3),X,+$P(^(0),U,4),DA)=""
+                    2)= K ^A1AE(11005,"AS",+$P(^A1AE(11005,DA,0),U,2),+$P(^(0),
+                    U,3),X,+$P(^(0),U,4),DA)
+
+  AV    MUMPS
+            Field:  DATE PATCH VERIFIED  (11005,11)
+                    1)= S:$P(^A1AE(11005,DA,0),U,8)="v" ^A1AE(11005,"AV",+$P(^A
+                    1AE(11005,DA,0),U,2),9999999-X,DA)=""
+                    2)= K ^A1AE(11005,"AV",+$P(^A1AE(11005,DA,0),U,2),9999999-X
+                    ,DA)
+
+  AU    MUMPS    WHOLE FILE (#11005)
+            Field:  LAST TIME PRINTED  (11005.02,3)
+                    1)= S ^A1AE(11005,"AU",+$P(^A1AE(11005,DA(1),2,DA,0),U,1),+
+                    $P(^A1AE(11005,DA(1),0),U,2),9999999-X)=""
+                    2)= K ^A1AE(11005,"AU",+$P(^A1AE(11005,DA(1),2,DA,0),U,1),+
+                    $P(^A1AE(11005,DA(1),0),U,2),9999999-X)
+
+  AC    MUMPS    WHOLE FILE (#11005)
+            Field:  CATEGORY OF PATCH  (11005.05,.01)
+                    1)= S ^A1AE(11005,"AC",+$P(^A1AE(11005,DA(1),0),U,2),+$P(^(
+                    0),U,3),X,+$P(^(0),U,4),DA(1),DA)=""
+                    2)= K ^A1AE(11005,"AC",+$P(^A1AE(11005,DA(1),0),U,2),+$P(^(
+                    0),U,3),X,+$P(^(0),U,4),DA(1),DA)
+
+Modified Indexes.
+  AB (#1023)    FIELD    MUMPS    IR    SORTING ONLY
+      Short Descr:  Index used to figure out next patch numbers and walk
+                    through the patches
+        Set Logic:  N P1,P2,P3,A S A="*",P1=$P(X,A),P2=$P(X,A,2),P3=$P(X,A,3) S
+                     ^A1AE(11005,"AB",P1,P2,P3,DA)=""
+       Kill Logic:  N P1,P2,P3,A S A="*",P1=$P(X,A),P2=$P(X,A,2),P3=$P(X,A,3) K
+                     ^A1AE(11005,"AB",P1,P2,P3,DA)
+       Whole Kill:  K ^A1AE(11005,"AB")
+             X(1):  PATCH DESIGNATION  (11005,.01)  (Subscr 1)  (forwards)
+
+Failed Unit tests after change:
+A1AEPH25^A1AEUT1 - Test Report 5^A1AEPH2 - no failure message provided
+
+....
+A1AEPH21^A1AEUT1 - Test Report 1^A1AEPH2 - no failure message provided
+
+.....
+.....
+.....
+
+Ran 1 Routine, 19 Entry Tags
+Checked 98 tests, with 2 failures and encountered 0 errors.
+
+I fixed these and now everything works.
