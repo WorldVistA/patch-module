@@ -1,5 +1,5 @@
-A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module;2014-01-09  7:58 PM
- ;;
+A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module;2014-01-22  7:13 PM
+ ;;2.4;PATCH MODULE;
  ; NB: Order matters here. Each test depends on the one before it.
  D EN^XTMUNIT($T(+0),1,1) QUIT
  ;
@@ -12,23 +12,58 @@ STARTUP ; Delete all test data
  ; If package is there, delete everything that belongs to it
  I PKIEN D 
  . S DA="" F  S DA=$O(^A1AE(11005,"D",PKIEN,DA)) Q:'DA  D
- . . F DIK="^A1AE(11005,","^A1AE(11005.1," D ^DIK  ; PM Patch and Message files: Prob w/ Message file now.
+ . . F DIK="^A1AE(11005,","^A1AE(11005.1," D ^DIK  ; PM Patch and Message files
  . S DIK="^A1AE(11007,",DA=PKIEN D ^DIK  ; PM Package File
  . S DIK="^DIC(9.4,",DA=PKIEN D ^DIK  ; Package file
+ ;
+ ; Delete the Stream Entries.
+ S DIK="^A1AE(11007.1," S DA=0 F  S DA=$O(^A1AE(11007.1,DA)) Q:'DA  D ^DIK
  ;
  QUIT
  ;
 SHUTDOWN ; but don't delete test data here. I want to see it.
+ ; ZEXCEPT: XTMUNIT,XTMULIST - belong to M-Unit and are scoped there.
  K (DUZ,IO,XTMUNIT,XTMULIST)
  QUIT
-
+ ;
 SETUP ;
  QUIT
-
+ ;
 TEARDOWN ;
  QUIT
-
+ ;
+MKSTREAM ; @TEST Make OSEHRA Stream
+ N % S %=$$PRIMSTRM^A1AEUTL()
+ D CHKEQ(%,10**6+1,"No primary stream should give us 1m+1")
+ D ASSERT($D(^A1AE(11007.1,1,0)),"VA Stream should be created by default")
+ ;
+ ; Create OSEHRA Patch Stream
+ N FDA,IENS,IEN
+ S IENS="+1,",IEN(1)=10001
+ S FDA(11007.1,IENS,.01)="OSEHRA PATCH STREAM"
+ S FDA(11007.1,IENS,2)="YES"
+ N DIERR,ERR
+ D UPDATE^DIE("E",$NA(FDA),$NA(IEN),$NA(ERR))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ ; OSEHRA Patch stream is now primary
+ N % S %=$$PRIMSTRM^A1AEUTL()
+ D CHKEQ(%,10001)
+ ;
+ ; Get the old primary stream
+ N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"PRIM",1,""))
+ I 'OLDPRIM S OLDPRIM=1
+ ;
+ ; Make VA patch stream primary then switch back. Test APRIM X-ref logic.
+ N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
+ D CHKEQ($$PRIMSTRM^A1AEUTL(),1)
+ ;
+ N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
+ D CHKEQ($$PRIMSTRM^A1AEUTL(),10001)
+ QUIT
+ ;
 MKPKGTST ; @TEST Make Package in Package (#9.4) File
+ ; ZEXCEPT: PKIEN - leak to the symbol table
  S PKIEN=$$MKPKG()
  D ASSERT(PKIEN)
  QUIT
@@ -43,12 +78,13 @@ MKPKG() ; Create a new package
  QUIT IEN(1)
  ;
 MKUSRTST ; @TEST Make Users in NEW PERSON (#200) File
+ ; ZEXCEPT: DEV,COM,VER,USR - Create these here and leak to the ST
  S DUZ(0)="@" ; Necessary for the keys multiple which checks this in the Input Transform
  D DELUSR("PATCHMODULE,DEVELOPER")
  D DELUSR("PATCHMODULE,COMPLETER")
  D DELUSR("PATCHMODULE,VERIFER")
  D DELUSR("PATCHMODULE,USER")
-
+ ;
  S DEV=$$MKUSR("PATCHMODULE,DEVELOPER","A1AE DEVELOPER")
  S COM=$$MKUSR("PATCHMODULE,COMPLETER","A1AE DEVELOPER")
  S VER=$$MKUSR("PATCHMODULE,VERIFER","A1AE PHVER")
@@ -94,15 +130,17 @@ MKUSR(NAME,KEY) ; Make Users for the Package
  Q C0XIEN(1) ;Provider IEN ;
  ;
 PKGADD ; @TEST - Add package to Patch Module
+ ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
  N A1AE S A1AE(0)="ML" ; Multiple indexes/Laygo
- S X="ZZZ" ; Input to ^DIC
+ N X S X="ZZZ" ; Input to ^DIC
  D PKG^A1AEUTL
  D CHKEQ(A1AEPK,"ZZZ") ; PK abbr is ZZZ
  D ASSERT(A1AEPKIF) ; Must be positive
  QUIT
  ;
 PKGSETUP ; @TEST Setup package in Patch module
- ; ZEXCEPT: A1AEPKIF
+ ; ZEXCEPT: A1AEPKIF - Created by PKGADD
+ ; ZEXCEPT: VER,DEV,COM,USR - Created by MKUSRTST
  N IENS S IENS=A1AEPKIF_","
  N FDA,DIERR
  S FDA(11007,IENS,2)="NO" ; USER SELECTION PERMITTED//^S X="NO"
@@ -124,8 +162,9 @@ PKGSETUP ; @TEST Setup package in Patch module
  QUIT
  ;
 VERSETUP ; @TEST Setup version
- ; ZEXCEPT: A1AEPKIF
- S A1AE(0)="L",X=2 ; X is version number; input to ^DIC
+ ; ZEXCEPT: A1AEPKIF - Created by PKGADD
+ ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
+ N X,A1AE S A1AE(0)="L",X=2 ; X is version number; input to ^DIC
  D VER^A1AEUTL
  D CHKEQ(A1AEVR,2)
  D ASSERT($D(^A1AE(11007,A1AEPKIF,"V",2,0)))
@@ -141,8 +180,10 @@ DELMSGS ; @TEST Delete all Messages in Q-PATCH basket.
  QUIT
  ;
 MAILKIDS ; @TEST Mail a KIDS build to XXX@Q-PATCH.OSEHRA.ORG
+ ; ZEXCEPT: MESSAGEIEN - Leak to symbol table
+ ; ZEXCEPT: A1AEUT1PD - Used by this routine. Overrides default patch name for UT checks.
  N MESS,LN0,LN
- N I F I=1:1 S LN0=$T(KIDS+I),LN=$P(LN0,";;",2,99) S MESS(I,0)=LN Q:LN["$END KID"
+ N I F I=1:1 S LN0=$T(KIDS+I^A1AEUT2),LN=$P(LN0,";;",2,99) S MESS(I,0)=LN Q:LN["$END KID"
  N FLAGS S FLAGS("TYPE")="K" ; KIDS
  S DUZ=.5
  N PD S PD=$G(A1AEUT1PD,"ZZZ*2.0*1")
@@ -151,48 +192,64 @@ MAILKIDS ; @TEST Mail a KIDS build to XXX@Q-PATCH.OSEHRA.ORG
  QUIT
  ;
 QUE ; @TEST Get Postmaster Basket for Q-PATCH in variable QUE.
+ ; ZEXCEPT: QUE
  D QUE^A1AEM
  D ASSERT(QUE>1000) ; Assert that it is a forwarding que in the Postmaster basket.
  QUIT
  ;
 PATCHNO ; @TEST Obtain next patch number
  ; Next two lines required by API.
+ ; ZEXCEPT: A1AENB - Created by NUM^A1AEUTL
+ ; ZEXCEPT: A1AEUT1PN - Used by this Unit Testing routine to override default patch no
+ ; ZEXCEPT: DEV,COM,VER,USR
+ ; ZEXCEPT: A1AEPD - Created by PKGADD
+ ; ZEXCEPT: A1AESTREAM - Gets the stream used in NUM^A1AEUTL.
  N A1AEFL,A1AETY
  S A1AEFL=11005,A1AETY="PH"
+ S A1AESTREAM=$$PRIMSTRM^A1AEUTL()
  S DUZ=DEV
+ N DIC,DINUM
  S DIC("S")="I $D(^A1AE(11007,+Y,A1AETY,DUZ,0))"
  S DINUM=$O(^A1AE(A1AEFL," "),-1)+1
  S DIC("DR")="5///TEST"
  S DIC(0)="L"
  D NUM^A1AEUTL
- D CHKEQ(A1AENB,$G(A1AEUT1PN,1))
+ D CHKEQ(A1AENB,$G(A1AEUT1PN,A1AESTREAM))
  D ASSERT(A1AEPD["ZZZ*2")
  D ASSERT($D(^A1AE(11005,"D",A1AEPKIF)))
  QUIT
  ;
 PATCHSET ; @TEST Set-Up patch a la 1+3^A1AEPH1
  ; ZEXCEPT: DA - leaked by NUM^A1AEUTL
- ; ZEXCEPT: A1AEPKIF, A1AEVR, A1AENB
+ ; ZEXCEPT: A1AEPKIF,A1AEVR,A1AENB
  S $P(^A1AE(11005,DA,0),"^",8)="u"
  S $P(^(0),"^",9)=DUZ
  S $P(^(0),"^",12)=DT
  S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
- D CHKEQ($$GET1^DIQ(11005,A1AENB,8),"UNDER DEVELOPMENT")
+ D CHKEQ($$GET1^DIQ(11005,DA,8),"UNDER DEVELOPMENT")
  QUIT
  ;
 PATCHROU ; @TEST Add routine set in Message file a la 1+5^A1AEPH1
+ ; NB: There is an error here. You MUST LEAK the DIC(0) variable as it is reused from a previous call.
+ ; ZEXCEPT: DA - leaked by NUM^A1AEUTL
+ NEW DIC,X,DINUM,DD,DO,DE,DQ,DR
+ S DIC(0)="L"
  S (X,DINUM)=DA,DIC="^A1AE(11005.1,",DIC("DR")="20///"_"No routines included" K DD,DO D FILE^DICN K DE,DQ,DR,DIC("DR")
  D CHKEQ(^A1AE(11005.1,DA,2,1,0),"No routines included")
  QUIT
  ;
  ;
-LOC ; @TEST Get messages matching A1AEPD in Q-PATCH queue
+LOC ; @TEST Get messages matching A1AEPD in Q-PATCH queue in variable A1AERD
+ ; ZEXCEPT: A1AEPD,A1AERD,A1AEUT1PD - patch description, return variable
  D LOC^A1AEM
  D ASSERT(A1AERD(1)[$G(A1AEUT1PD,"ZZZ*2.0*1"))
  QUIT
  ;
 PATCHCR ; @TEST Create a Patch
+ ; ZEXCEPT: DA - leaked by NUM^A1AEUTL
+ ; ZEXCEPT: MESSAGEIEN - leaked by MAILKIDS
  N FDA,IENS
+ N DIERR
  S IENS=DA_","
  S FDA(11005,IENS,"PATCH SUBJECT")="TEST"
  S FDA(11005,IENS,"PRIORITY")="e" ; emergency
@@ -210,17 +267,20 @@ PATCHCR ; @TEST Create a Patch
  K FDA
  ;
  ; This loads the message text into field PATCH DESCRIPTION in 11005
- ; ZEXPECT A1AELINE
+ N A1AELINE ; returned by LINE^A1AECOPD
+ N X,AXMZ ; X - User Input; AXMZ = Patch Message IEN
  S AXMZ=MESSAGEIEN,X="ALL" D LINE+2^A1AECOPD ; Returns A1AELINE: # of lines.
- S A1AEFRLN=1,A1AETOLN=A1AELINE ; from to 
+ ;
+ N A1AEFRLN,A1AETOLN S A1AEFRLN=1,A1AETOLN=A1AELINE ; from to 
  D SETUTI^A1AECOPD ; Set util global
  D ASSERT($O(^UTILITY($J,"A1AECP",0))>0)
- S A1AELNIN=0,A1AEBOT=0 ; necessary for below
+ N A1AELNIN,A1AEBOT S A1AELNIN=0,A1AEBOT=0 ; necessary for below
  D COPY^A1AECOPD ; copy into patch description
  D ASSERT($O(^A1AE(11005,DA,"D",0))>0) ; Assert that it was copied into PATCH DESCRIPTION
  ;
  ; This loads the KIDS build from either the Mail Message or the File System.
  ; Stores it in MESSAGE TEXT in file 11005.1. Template does a Backwards Jump.
+ ; ZEXCEPT: A1AEKIDS - ASKS^A1AEM1 leaks that when it detects the the Mail message type is a KIDS message.
  D ASKS^A1AEM1
  D ASSERT($O(^A1AE(11005.1,DA,2,0))>0)
  D ASSERT(^A1AE(11005,DA,"P",1,0)="ZOSV2GTM^B7008460^**275,425**")
@@ -251,6 +311,7 @@ PATCHCR ; @TEST Create a Patch
  ;    ALL
  ; W !
  ; @10
+ ; ZEXCEPT: A1AETVR,A1AEST - Copied from Input Template. I don't have a clue what these do now.
  K A1AETVR,A1AEST,A1AEKIDS
  D CHKEQ(^A1AE(11005,DA,"X",1,0),"Test Comments")
  D CHKEQ(^A1AE(11005,DA,5),1)
@@ -266,6 +327,9 @@ PATCHCR ; @TEST Create a Patch
  ; @99
  ;
 PATCHCOM ; @TEST Complete a Patch
+ ; ZEXCEPT: COM - Created by MKUSRTST
+ ; ZEXCEPT: A1AEPD - Created by PKGADD
+ ; ZEXCEPT: DA - leaked by NUM^A1AEUTL
  S DUZ=COM ; Now I am the completer
  N A1AEPDSAV S A1AEPDSAV=A1AEPD
  N FDA
@@ -275,6 +339,8 @@ PATCHCOM ; @TEST Complete a Patch
  QUIT
  ;
 PATCHVER ; @TEST Verify a Patch
+ ; ZEXCEPT: DA - leaked by NUM^A1AEUTL
+ ; ZEXCEPT: VER - Created by MKUSRTST
  S DUZ=VER ; Now I am the verifier
  N FDA
  S FDA(11005,DA_",",8)="v" D FILE^DIE("E",$NA(FDA))
@@ -282,12 +348,12 @@ PATCHVER ; @TEST Verify a Patch
  QUIT
  ;
 PATCH2 ; @TEST Create a second patch - complete this one
- K DIC
+ N DIC
  D PKGADD,VERSETUP
  N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*2" ; override patch in mail kids
  D MAILKIDS
  D QUE
- N A1AEUT1PN S A1AEUT1PN=2 ; override patch number
+ N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+1 ; override patch number
  D PATCHNO,PATCHSET,PATCHROU
  D LOC
  D PATCHCR
@@ -295,20 +361,22 @@ PATCH2 ; @TEST Create a second patch - complete this one
  QUIT
  ;
 PATCH3 ; @TEST Create a third patch - don't complete or verify
- K DIC
+ N DIC
  D PKGADD,VERSETUP
  N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*3" ; override patch in mail kids
  D MAILKIDS
  D QUE
- N A1AEUT1PN S A1AEUT1PN=3 ; override patch number
+ N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+2 ; override patch number
  D PATCHNO,PATCHSET,PATCHROU
  D LOC
  D PATCHCR
  QUIT
  ;
 A1AEPH25 ; @TEST Test Report 5^A1AEPH2
+ ; ZEXCEPT: DEV - Created by MKUSRTST
  S DUZ=DEV
- K DIC
+ N %ZIS
+ N DIC
  D PKGADD,VERSETUP
  N A1AEREV S A1AEREV=1
  N A1AEDEV S A1AEDEV="HFS;80;99999"
@@ -323,6 +391,7 @@ A1AEPH25 ; @TEST Test Report 5^A1AEPH2
  U IO
  N ARR,CNT
  S CNT=1
+ N X
  F  R X:0 Q:$$STATUS^%ZISH()  I $E(X,1,3)="ZZZ" S ARR(CNT)=X,CNT=CNT+1
  U $P D CLOSE^%ZISH("FILE1")
  D ASSERT($D(ARR))
@@ -331,18 +400,22 @@ A1AEPH25 ; @TEST Test Report 5^A1AEPH2
  QUIT
  ;
 A1AEPH21 ; @TEST Test Report 1^A1AEPH2
+ ; ZEXCEPT: DEV - Created by MKUSRTST
  ; Index: AB - By designation
  ; Index: AC - By category
  ; Index: AP - By priority
  ; Index: AS - By Status
- F A1AEIX="AB","AC","AP","AS" D
+ N A1AEHD ; Header - used below
+ N A1AEIX F A1AEIX="AB","AC","AP","AS" D
  . S DUZ=DEV
- . K DIC
+ . N DIC,DIS
  . D PKGADD,VERSETUP
+ . N A1AES ; Suppress asking for sorting by status
  . S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=""c""",A1AEHD="Completed/NotReleased DHCP Patches Report",A1AES=""
  . N A1AEHDSAV S A1AEHDSAV=A1AEHD ; HD is killed off
  . S DIC("S")="I $S($D(^A1AE(11007,+Y,""PH"",DUZ,0)):1,'$D(^A1AE(11007,+Y,""PB"",DUZ,0)):0,$P(^(0),U,2)=""V"":1,1:0)"
  . N FN S FN="A1AEPH21-"_A1AEIX_".TXT"
+ . N POP
  . D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),FN,"W")
  . I POP D FAIL^XTMUNIT("IO problems") QUIT
  . D START^A1AEPH3
@@ -356,366 +429,39 @@ A1AEPH21 ; @TEST Test Report 1^A1AEPH2
  . N % S %(FN)="",%=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
  QUIT
  ;
-PATCH999 ; #TEST Try to exceed 999
+PATCH999 ; #TEST Try to exceed 999 - not applicable any more
+ ; ZEXCEPT: DEV - Created by MKUSRTST
+ ;
+ ; Get the old primary stream
+ N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"PRIM",1,""))
+ I 'OLDPRIM S OLDPRIM=1
+ ;
+ ; Make VA patch stream primary
+ N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
+ ;
+ N DIC ; don't leak this to the next calls
  ; Next two lines required by API.
- K DIC ; don't leak this to the next calls
  N A1AEFL,A1AETY
  S A1AEFL=11005,A1AETY="PH"
  D PKGADD,VERSETUP
  S DUZ=DEV
  S DIC("S")="I $D(^A1AE(11007,+Y,A1AETY,DUZ,0))"
  N CNT S CNT=0
+ ; ZEXCEPT: A1AENB - leaked by NUM^A1AEUTL
  F  D  Q:(A1AENB>999)  Q:(CNT>1010)
- . S DINUM=$O(^A1AE(A1AEFL," "),-1)+1
+ . N DINUM  ; S DINUM=$O(^A1AE(A1AEFL," "),-1)+1
  . S DIC("DR")=".001///10;5///TEST"
  . S DIC(0)="L"
  . D NUM^A1AEUTL
  . S CNT=CNT+1
  . I CNT>1010 S $EC=",U-INIFITE-LOOP,"
  D CHKEQ(A1AENB,1000)
+ ;
+ ; Get old primary back
+ N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
  QUIT
  ;
  ; Convenience Methods for M-Unit
 CHKEQ(X,Y,Z) S Z=$G(Z) D CHKEQ^XTMUNIT(X,Y,Z) QUIT
 ASSERT(X,Y) S Y=$G(Y) D CHKTF^XTMUNIT(X,Y) QUIT
  ;
-KIDS ;;
- ;;$TXT Created by TESTMASTER,USER at VEN.SMH101.COM  (KIDS) on Thursday, 01/07/14 at 15:55
- ;;
- ;; This patch is the result of the Unit Test routine.
- ;; Please ignore it.
- ;; 
- ;; Patch ID: ZZZ*2.0*1
- ;; 
- ;;$END TXT
- ;;$KID ZZZ*1.0*1
- ;;**INSTALL NAME**
- ;;ZZZ*1.0*1
- ;;"BLD",9277,0)
- ;;ZZZ*1.0*1^TEST PACKAGE^0^3140102^y
- ;;"BLD",9277,1,0)
- ;;^^1^1^3140102^
- ;;"BLD",9277,1,1,0)
- ;;TEST TEST
- ;;"BLD",9277,4,0)
- ;;^9.64PA^^
- ;;"BLD",9277,6.3)
- ;;2
- ;;"BLD",9277,"KRN",0)
- ;;^9.67PA^779.2^20
- ;;"BLD",9277,"KRN",.4,0)
- ;;.4
- ;;"BLD",9277,"KRN",.401,0)
- ;;.401
- ;;"BLD",9277,"KRN",.402,0)
- ;;.402
- ;;"BLD",9277,"KRN",.403,0)
- ;;.403
- ;;"BLD",9277,"KRN",.5,0)
- ;;.5
- ;;"BLD",9277,"KRN",.84,0)
- ;;.84
- ;;"BLD",9277,"KRN",3.6,0)
- ;;3.6
- ;;"BLD",9277,"KRN",3.8,0)
- ;;3.8
- ;;"BLD",9277,"KRN",9.2,0)
- ;;9.2
- ;;"BLD",9277,"KRN",9.8,0)
- ;;9.8
- ;;"BLD",9277,"KRN",9.8,"NM",0)
- ;;^9.68A^1^1
- ;;"BLD",9277,"KRN",9.8,"NM",1,0)
- ;;ZOSV2GTM^^0^B7008460
- ;;"BLD",9277,"KRN",9.8,"NM","B","ZOSV2GTM",1)
- ;;
- ;;"BLD",9277,"KRN",19,0)
- ;;19
- ;;"BLD",9277,"KRN",19.1,0)
- ;;19.1
- ;;"BLD",9277,"KRN",101,0)
- ;;101
- ;;"BLD",9277,"KRN",409.61,0)
- ;;409.61
- ;;"BLD",9277,"KRN",771,0)
- ;;771
- ;;"BLD",9277,"KRN",779.2,0)
- ;;779.2
- ;;"BLD",9277,"KRN",870,0)
- ;;870
- ;;"BLD",9277,"KRN",8989.51,0)
- ;;8989.51
- ;;"BLD",9277,"KRN",8989.52,0)
- ;;8989.52
- ;;"BLD",9277,"KRN",8994,0)
- ;;8994
- ;;"BLD",9277,"KRN","B",.4,.4)
- ;;
- ;;"BLD",9277,"KRN","B",.401,.401)
- ;;
- ;;"BLD",9277,"KRN","B",.402,.402)
- ;;
- ;;"BLD",9277,"KRN","B",.403,.403)
- ;;
- ;;"BLD",9277,"KRN","B",.5,.5)
- ;;
- ;;"BLD",9277,"KRN","B",.84,.84)
- ;;
- ;;"BLD",9277,"KRN","B",3.6,3.6)
- ;;
- ;;"BLD",9277,"KRN","B",3.8,3.8)
- ;;
- ;;"BLD",9277,"KRN","B",9.2,9.2)
- ;;
- ;;"BLD",9277,"KRN","B",9.8,9.8)
- ;;
- ;;"BLD",9277,"KRN","B",19,19)
- ;;
- ;;"BLD",9277,"KRN","B",19.1,19.1)
- ;;
- ;;"BLD",9277,"KRN","B",101,101)
- ;;
- ;;"BLD",9277,"KRN","B",409.61,409.61)
- ;;
- ;;"BLD",9277,"KRN","B",771,771)
- ;;
- ;;"BLD",9277,"KRN","B",779.2,779.2)
- ;;
- ;;"BLD",9277,"KRN","B",870,870)
- ;;
- ;;"BLD",9277,"KRN","B",8989.51,8989.51)
- ;;
- ;;"BLD",9277,"KRN","B",8989.52,8989.52)
- ;;
- ;;"BLD",9277,"KRN","B",8994,8994)
- ;;
- ;;"BLD",9277,"QUES",0)
- ;;^9.62^^
- ;;"MBREQ")
- ;;0
- ;;"PKG",223,-1)
- ;;1^1
- ;;"PKG",223,0)
- ;;TEST PACKAGE^ZZZ^FOR FORUM
- ;;"PKG",223,22,0)
- ;;^9.49I^1^1
- ;;"PKG",223,22,1,0)
- ;;1.0
- ;;"PKG",223,22,1,"PAH",1,0)
- ;;1^3140102
- ;;"PKG",223,22,1,"PAH",1,1,0)
- ;;^^1^1^3140102
- ;;"PKG",223,22,1,"PAH",1,1,1,0)
- ;;TEST TEST
- ;;"QUES","XPF1",0)
- ;;Y
- ;;"QUES","XPF1","??")
- ;;^D REP^XPDH
- ;;"QUES","XPF1","A")
- ;;Shall I write over your |FLAG| File
- ;;"QUES","XPF1","B")
- ;;YES
- ;;"QUES","XPF1","M")
- ;;D XPF1^XPDIQ
- ;;"QUES","XPF2",0)
- ;;Y
- ;;"QUES","XPF2","??")
- ;;^D DTA^XPDH
- ;;"QUES","XPF2","A")
- ;;Want my data |FLAG| yours
- ;;"QUES","XPF2","B")
- ;;YES
- ;;"QUES","XPF2","M")
- ;;D XPF2^XPDIQ
- ;;"QUES","XPI1",0)
- ;;YO
- ;;"QUES","XPI1","??")
- ;;^D INHIBIT^XPDH
- ;;"QUES","XPI1","A")
- ;;Want KIDS to INHIBIT LOGONs during the install
- ;;"QUES","XPI1","B")
- ;;NO
- ;;"QUES","XPI1","M")
- ;;D XPI1^XPDIQ
- ;;"QUES","XPM1",0)
- ;;PO^VA(200,:EM
- ;;"QUES","XPM1","??")
- ;;^D MG^XPDH
- ;;"QUES","XPM1","A")
- ;;Enter the Coordinator for Mail Group '|FLAG|'
- ;;"QUES","XPM1","B")
- ;;
- ;;"QUES","XPM1","M")
- ;;D XPM1^XPDIQ
- ;;"QUES","XPO1",0)
- ;;Y
- ;;"QUES","XPO1","??")
- ;;^D MENU^XPDH
- ;;"QUES","XPO1","A")
- ;;Want KIDS to Rebuild Menu Trees Upon Completion of Install
- ;;"QUES","XPO1","B")
- ;;NO
- ;;"QUES","XPO1","M")
- ;;D XPO1^XPDIQ
- ;;"QUES","XPZ1",0)
- ;;Y
- ;;"QUES","XPZ1","??")
- ;;^D OPT^XPDH
- ;;"QUES","XPZ1","A")
- ;;Want to DISABLE Scheduled Options, Menu Options, and Protocols
- ;;"QUES","XPZ1","B")
- ;;NO
- ;;"QUES","XPZ1","M")
- ;;D XPZ1^XPDIQ
- ;;"QUES","XPZ2",0)
- ;;Y
- ;;"QUES","XPZ2","??")
- ;;^D RTN^XPDH
- ;;"QUES","XPZ2","A")
- ;;Want to MOVE routines to other CPUs
- ;;"QUES","XPZ2","B")
- ;;NO
- ;;"QUES","XPZ2","M")
- ;;D XPZ2^XPDIQ
- ;;"RTN")
- ;;1
- ;;"RTN","ZOSV2GTM")
- ;;0^1^B7008460
- ;;"RTN","ZOSV2GTM",1,0)
- ;;%ZOSV2 ;ISF/RWF - More GT.M support routines ;10/18/06  14:29
- ;;"RTN","ZOSV2GTM",2,0)
- ;; ;;8.0;KERNEL;**275,425**;Jul 10, 1995;Build 2
- ;;"RTN","ZOSV2GTM",3,0)
- ;; Q
- ;;"RTN","ZOSV2GTM",4,0)
- ;; ;SAVE: DIE open array reference.
- ;;"RTN","ZOSV2GTM",5,0)
- ;; ;      XCN is the starting value to $O from.
- ;;"RTN","ZOSV2GTM",6,0)
- ;;SAVE(RN) ;Save a routine
- ;;"RTN","ZOSV2GTM",7,0)
- ;; N %,%F,%I,%N,SP,$ETRAP
- ;;"RTN","ZOSV2GTM",8,0)
- ;; S $ETRAP="S $ECODE="""" Q"
- ;;"RTN","ZOSV2GTM",9,0)
- ;; S %I=$I,SP=" ",%F=$$RTNDIR^%ZOSV()_$TR(RN,"%","_")_".m"
- ;;"RTN","ZOSV2GTM",10,0)
- ;; O %F:(newversion:noreadonly:blocksize=2048:recordsize=2044) U %F
- ;;"RTN","ZOSV2GTM",11,0)
- ;; F  S XCN=$O(@(DIE_XCN_")")) Q:XCN'>0  S %=@(DIE_XCN_",0)") Q:$E(%,1)="$"  I $E(
- ;;%)'=";" W $P(%,SP)_$C(9)_$P(%,SP,2,99999),!
- ;;"RTN","ZOSV2GTM",12,0)
- ;; C %F ;S %N=$$NULL
- ;;"RTN","ZOSV2GTM",13,0)
- ;; ZLINK RN
- ;;"RTN","ZOSV2GTM",14,0)
- ;; ;C %N
- ;;"RTN","ZOSV2GTM",15,0)
- ;; U %I
- ;;"RTN","ZOSV2GTM",16,0)
- ;; Q
- ;;"RTN","ZOSV2GTM",17,0)
- ;;NULL() ;Open and use null to hide talking.  Return open name
- ;;"RTN","ZOSV2GTM",18,0)
- ;; ;Doesn't work for compile errors
- ;;"RTN","ZOSV2GTM",19,0)
- ;; N %N S %N=$S($ZV["VMS":"NLA0:",1:"/dev/nul")
- ;;"RTN","ZOSV2GTM",20,0)
- ;; O %N U %N
- ;;"RTN","ZOSV2GTM",21,0)
- ;; Q %N
- ;;"RTN","ZOSV2GTM",22,0)
- ;; ;
- ;;"RTN","ZOSV2GTM",23,0)
- ;;DEL(RN) ;Delete a routine file, both source and object.
- ;;"RTN","ZOSV2GTM",24,0)
- ;; N %N,%DIR,%I,$ETRAP
- ;;"RTN","ZOSV2GTM",25,0)
- ;; S $ETRAP="S $ECODE="""" Q"
- ;;"RTN","ZOSV2GTM",26,0)
- ;; S %I=$I,%DIR=$$RTNDIR^%ZOSV,RN=$TR(RN,"%","_")
- ;;"RTN","ZOSV2GTM",27,0)
- ;; I $L($ZSEARCH(%DIR_RN_".m",244)) ZSYSTEM "DEL "_%DIR_X_".m;*"
- ;;"RTN","ZOSV2GTM",28,0)
- ;; I $L($ZSEARCH(%DIR_RN_".obj",244)) ZSYSTEM "DEL "_%DIR_X_".obj;*"
- ;;"RTN","ZOSV2GTM",29,0)
- ;; I $L($ZSEARCH(%DIR_RN_".o",244)) ZSYSTEM "rm -f "_%DIR_X_".o"
- ;;"RTN","ZOSV2GTM",30,0)
- ;; Q
- ;;"RTN","ZOSV2GTM",31,0)
- ;; ;LOAD: DIF open array to receive the routine lines.
- ;;"RTN","ZOSV2GTM",32,0)
- ;; ;      XCNP The starting index -1.
- ;;"RTN","ZOSV2GTM",33,0)
- ;;LOAD(RN) ;Load a routine
- ;;"RTN","ZOSV2GTM",34,0)
- ;; N %
- ;;"RTN","ZOSV2GTM",35,0)
- ;; S %N=0 F XCNP=XCNP+1:1 S %N=%N+1,%=$T(+%N^@RN) Q:$L(%)=0  S @(DIF_XCNP_",0)")=%
- ;;"RTN","ZOSV2GTM",36,0)
- ;; Q
- ;;"RTN","ZOSV2GTM",37,0)
- ;; ;
- ;;"RTN","ZOSV2GTM",38,0)
- ;;LOAD2(RN) ;Load a routine
- ;;"RTN","ZOSV2GTM",39,0)
- ;; N %,%1,%F,%N,$ETRAP
- ;;"RTN","ZOSV2GTM",40,0)
- ;; S %I=$I,%F=$$RTNDIR^%ZOSV()_$TR(RN,"%","_")_".m"
- ;;"RTN","ZOSV2GTM",41,0)
- ;; O %F:(readonly):1 Q:'$T  U %F
- ;;"RTN","ZOSV2GTM",42,0)
- ;; F XCNP=XCNP+1:1 R %1:1 Q:'$T!$ZEOF  S @(DIF_XCNP_",0)")=$TR(%1,$C(9)," ")
- ;;"RTN","ZOSV2GTM",43,0)
- ;; C %F I $L(%I) U %I
- ;;"RTN","ZOSV2GTM",44,0)
- ;; Q
- ;;"RTN","ZOSV2GTM",45,0)
- ;; ;
- ;;"RTN","ZOSV2GTM",46,0)
- ;;RSUM(RN) ;Calculate a RSUM value
- ;;"RTN","ZOSV2GTM",47,0)
- ;; N %,DIF,XCNP,%N,Y,$ETRAP K ^TMP("RSUM",$J)
- ;;"RTN","ZOSV2GTM",48,0)
- ;; S $ETRAP="S $ECODE="""" Q"
- ;;"RTN","ZOSV2GTM",49,0)
- ;; S Y=0,DIF="^TMP(""RSUM"",$J,",XCNP=0 D LOAD2(RN)
- ;;"RTN","ZOSV2GTM",50,0)
- ;; F %=1,3:1 S %1=$G(^TMP("RSUM",$J,%,0)),%3=$F(%1," ") Q:'%3  S %3=$S($E(%1,%3)'=
- ;;";":$L(%1),$E(%1,%3+1)=";":$L(%1),1:%3-2) F %2=1:1:%3 S Y=$A(%1,%2)*%2+Y
- ;;"RTN","ZOSV2GTM",51,0)
- ;; K ^TMP("RSUM",$J)
- ;;"RTN","ZOSV2GTM",52,0)
- ;; Q Y
- ;;"RTN","ZOSV2GTM",53,0)
- ;; ;
- ;;"RTN","ZOSV2GTM",54,0)
- ;;RSUM2(RN) ;Calculate a RSUM2 value
- ;;"RTN","ZOSV2GTM",55,0)
- ;; N %,DIF,XCNP,%N,Y,$ETRAP K ^TMP("RSUM",$J)
- ;;"RTN","ZOSV2GTM",56,0)
- ;; S $ETRAP="S $ECODE="""" Q"
- ;;"RTN","ZOSV2GTM",57,0)
- ;; S Y=0,DIF="^TMP(""RSUM"",$J,",XCNP=0 D LOAD2(RN)
- ;;"RTN","ZOSV2GTM",58,0)
- ;; F %=1,3:1 S %1=$G(^TMP("RSUM",$J,%,0)),%3=$F(%1," ") Q:'%3  S %3=$S($E(%1,%3)'=
- ;;";":$L(%1),$E(%1,%3+1)=";":$L(%1),1:%3-2) F %2=1:1:%3 S Y=$A(%1,%2)*(%2+%)+Y
- ;;"RTN","ZOSV2GTM",59,0)
- ;; K ^TMP("RSUM",$J)
- ;;"RTN","ZOSV2GTM",60,0)
- ;; Q Y
- ;;"RTN","ZOSV2GTM",61,0)
- ;; ;
- ;;"RTN","ZOSV2GTM",62,0)
- ;;TEST(RN) ;Special GT.M Test to see if routine is here.
- ;;"RTN","ZOSV2GTM",63,0)
- ;; N %F,%X
- ;;"RTN","ZOSV2GTM",64,0)
- ;; S %F=$$RTNDIR^%ZOSV()_$TR(RN,"%","_")_".m"
- ;;"RTN","ZOSV2GTM",65,0)
- ;; S %X=$ZSEARCH("X.X",245),%X=$ZSEARCH(%F,245)
- ;;"RTN","ZOSV2GTM",66,0)
- ;; Q %X
- ;;"VER")
- ;;8.0^22.0
- ;;$END KID ZZZ*1.0*1
