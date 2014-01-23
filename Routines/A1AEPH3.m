@@ -1,4 +1,4 @@
-A1AEPH3	; RMO,MJK/ALBANY ;2014-01-10  2:15 PM
+A1AEPH3	; RMO,MJK/ALBANY ;2014-01-10  3:25 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92;Build 2
 DIP	;
@@ -19,6 +19,6 @@ PRT1	I $D(^A1AE(11005,D0,0)) X DIS(0) I $T K DXS D HD^A1AEPH2,^A1AEP K DN,DXS,^U
 	Q
 DESG	; VEN/SMH - Print by designation
 	F A1AEVR=A1AEVR,999 D
-        . N I S I="" ; Patch number
-        . F  S I=$O(^A1AE(11005,"AB",A1AEPK,A1AEVR,I)) Q:'I  S D0=+$O(^(I,0)) D PRT1
+        . N A1AENB S A1AENB="" ; Patch number
+        . F  S A1AENB=$O(^A1AE(11005,"AB",A1AEPK,A1AEVR,A1AENB)) Q:'A1AENB  S D0=+$O(^(A1AENB,0)) D PRT1
 	G Q^A1AEPH2
