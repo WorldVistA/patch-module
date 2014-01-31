@@ -110,6 +110,3 @@ Data was loaded into the database from the OSEHRA repository (located in ~osehra
 
 	for z in ~osehra/zwr/*.zwr ; do cp -v "${z}" x ; mupip load x ; done
 	rm x
-
-## Submitted by
-Larry D. Landis, Fourth Watch Business Continuity Services
