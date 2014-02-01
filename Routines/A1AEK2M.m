@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-01-29  8:21 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-01-31  9:38 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -59,81 +59,87 @@ A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-01-29  8:21
  ; <contents>
  ;$END KID ZZZ*1.0*1
  ;
- ; TODO: Develop a good way to get the sequence number
+ ; TODO: Develop a good way to get the sequence number - get from analyzing the patch.
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
- ; TODO: Load text with patch - See Cam's DBAM2KID routine.
  ; TODO: Remove text for KIDS build if it exists.
  ; TODO: Make sure we get the subjects right even if it is an original HFS file.
  ;
 DBAKID2M ; Restore patches from HFS files to MailMan ;9/28/02  12:53
  ; Get path to HFS patches
  ; Order through all messages
- I '$D(DUZ) D ^XUP
- S SAVEDUZ=DUZ,DUZ=.5
- S DIR(0)="F^2:60",DIR("A")="Full path, up to but not including patch names" D ^DIR G:Y="^" EXIT S ROOT=Y
+ N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
+ N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
+ S DIR(0)="F^2:60",DIR("A")="Full path, up to but not including patch names" D ^DIR
+ QUIT:Y="^"
+ N ROOT S ROOT=Y  ; where we load files from...
  ;
-SILENT ; Don't talk. Pass ROOT and SAVEDUZ in Symbol Table
+SILENT ; Don't talk. Pass ROOT in Symbol Table
  ; Boo -- now it talks.
- K FILE
+ N FILE ; retrun array -- needs to be renamed to plural.
  ;
  ; Load text files first
+ N ARRAY
  S ARRAY("*.TXT")=""
  S ARRAY("*.txt")=""
- S Y=$$LIST^%ZISH(ROOT,"ARRAY","FILE") I 'Y W !,"Error getting directory list" G EXIT
+ N Y S Y=$$LIST^%ZISH(ROOT,"ARRAY","FILE") I 'Y W !,"Error getting directory list" QUIT
  ;
- ; Loop through each text patch.
- K ERROR S PATCH="" F  S PATCH=$O(FILE(PATCH)) Q:PATCH=""  D  Q:$D(ERROR)
+ ; Loop through each text patches.
+ N ERROR
+ N PATCH S PATCH=""
+ F  S PATCH=$O(FILE(PATCH)) Q:PATCH=""  D LOAD(ROOT,PATCH,.ERROR) Q:$D(ERROR)
+ QUIT
+ ;
+LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
+ ;
+ ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
+ K ^TMP($J,"TXT")
+ N Y S Y=$$FTG^%ZISH(ROOT,PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
+ ;
+ ; TODO: If the original text patch doesn't come with $TXT and $END TXT, need to add them just after this.
+ K ^TMP($J,"MSG") ; Message array eventually to be mailed.
+ M ^TMP($J,"MSG")=^TMP($J,"TXT") ; Load the text document associated with the patch.
+ ;
+ N LASTSUB S LASTSUB=$O(^TMP($J,"TXT"," "),-1)
+ ;
+ ; Load KIDS message starting into the last subscript + 1 from the text node
+ ; TODO: Only ask if the TXT indicates that there is a KIDS file. Patch could be informational.
+ N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
+ I KIDFIL="" D
+ . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
+ . N FILE
+ . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
+ . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
+ . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
+ ;
+ K ^TMP($J,"KID")
+ I $L(KIDFIL) D  Q:$D(ERROR)
+ . N Y S Y=$$FTG^%ZISH(ROOT,KIDFIL,$NA(^TMP($J,"KID",LASTSUB+1,0)),3) I 'Y W !,"Error copying KIDS to global" S ERROR=1 Q
+ . M ^TMP($J,"MSG")=^TMP($J,"KID") ; Load the KIDS build
  . ;
- . ; Load TXT message that corresponds to KIDS
- . ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
- . K ^TMP($J,"TXT")
- . S Y=$$FTG^%ZISH(ROOT,PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
- . ;
- . ; TODO: If the original text patch doesn't come with $TXT and $END TXT, need to add them just after this.
- . K ^TMP($J,"MSG") ; Message array eventually to be mailed.
- . M ^TMP($J,"MSG")=^TMP($J,"TXT") ; Load the text document associated with the patch.
- . ;
- . N LASTSUB S LASTSUB=$O(^TMP($J,"TXT"," "),-1)
- . ;
- . ; Load KIDS message starting into the last subscript + 1 from the text node
- . ; TODO: Only ask if the TXT indicates that there is a KIDS file. Patch could be informational.
- . N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
- . I KIDFIL="" D
- . . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
- . . N FILE
- . . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
- . . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
- . . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
- . ;
- . K ^TMP($J,"KID")
- . I $L(KIDFIL) D  Q:$D(ERROR)
- .. S Y=$$FTG^%ZISH(ROOT,KIDFIL,$NA(^TMP($J,"KID",LASTSUB+1,0)),3) I 'Y W !,"Error copying KIDS to global" S ERROR=1 Q
- .. M ^TMP($J,"MSG")=^TMP($J,"KID") ; Load the KIDS build
- .. ;
- .. K ^TMP($J,"MSG",LASTSUB+1),^(LASTSUB+2),^(LASTSUB+3) ; Remove description lines from KIDS build.
- .. S ^TMP($J,"MSG",LASTSUB+4,0)="$KID "_^TMP($J,"MSG",LASTSUB+6,0) ; KIDS name after **INSTALL NAME**
- .. S Y=$O(^TMP($J,"MSG",""),-1) K ^TMP($J,"MSG",Y) ; remove 2nd **END**
- .. S ^TMP($J,"MSG",Y-1,0)="$END KID "_^TMP($J,"MSG",LASTSUB+6,0) ; replace 1st **END** with $END KID KIDS Name
- . ; 
- . ; Mail Subject - TODO: obtain from the patch message
- . N XMSUBJ S XMSUBJ=""
- . I $D(^TMP($J,"KID")) D
- . . S XMSUBJ=$P(^TMP($J,"KID",LASTSUB+1,0),"Released ",2,99)
- . . I '$L(XMSUBJ) S XMSUBJ=^TMP($J,"KID",LASTSUB+6,0) ; NB: Doesn't handle multibuilds
- . I '$L(XMSUBJ) S XMSUBJ="Sam read this"
- . ;
- . ; Deliver the message
- . D SENDMSG^XMXAPI(.5,XMSUBJ,$NA(^TMP($J,"MSG")),"XXX@Q-PATCH.OSEHRA.ORG",,.XMZ) ; after
- . I $D(XMERR) W !,"MailMan error, see ^TMP(""XMERR"",$J)" S ERROR=1 Q
- . ; Set MESSAGE TYPE to KIDS build
- . S $P(^XMB(3.9,XMZ,0),"^",7)="K"
- W !,"Done"
-EXIT ; Exit point
- S DUZ=SAVEDUZ
- K ROOT,DIC,Y,DIR,FILE,PATCH,ERROR,SAVEDUZ,XMZ
+ . K ^TMP($J,"MSG",LASTSUB+1),^(LASTSUB+2),^(LASTSUB+3) ; Remove description lines from KIDS build.
+ . S ^TMP($J,"MSG",LASTSUB+4,0)="$KID "_^TMP($J,"MSG",LASTSUB+6,0) ; KIDS name after **INSTALL NAME**
+ . N Y S Y=$O(^TMP($J,"MSG",""),-1) K ^TMP($J,"MSG",Y) ; remove 2nd **END**
+ . S ^TMP($J,"MSG",Y-1,0)="$END KID "_^TMP($J,"MSG",LASTSUB+6,0) ; replace 1st **END** with $END KID KIDS Name
+ ; 
+ ; Mail Subject - TODO: obtain from the patch message
+ N XMSUBJ S XMSUBJ=""
+ I $D(^TMP($J,"KID")) D
+ . S XMSUBJ=$P(^TMP($J,"KID",LASTSUB+1,0),"Released ",2,99)
+ . I '$L(XMSUBJ) S XMSUBJ=^TMP($J,"KID",LASTSUB+6,0) ; NB: Doesn't handle multibuilds
+ I '$L(XMSUBJ) S XMSUBJ="Sam read this"
+ ;
+ ; Deliver the message
+ N XMERR,XMZ
+ D SENDMSG^XMXAPI(.5,XMSUBJ,$NA(^TMP($J,"MSG")),"XXX@Q-PATCH.OSEHRA.ORG",,.XMZ) ; after
+ I $D(XMERR) W !,"MailMan error, see ^TMP(""XMERR"",$J)" S ERROR=1 Q
+ ; Set MESSAGE TYPE to KIDS build
+ S $P(^XMB(3.9,XMZ,0),"^",7)="K"
+ ;
+ ; Kill temp globals
  K ^TMP($J,"KID"),^("TXT"),^("MSG")
- Q
+ ;
+ QUIT
  ;
 TXTFIL(ROOT,PATCH) ; Private; Find the text file that corresponds to a patch designation
  N NOEXT S NOEXT=$P(PATCH,".",1,$L(PATCH,".")-1) ; no extension name
@@ -243,6 +249,16 @@ SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
  W !,%
  QUIT
  ;
+ANALYZET ; @TEST Test Analyze
+ N ROOT S ROOT="/home/forum/testkids/"
+ N FILE S FILE="TIU-1_SEQ-252_PAT-256.TXT"
+ K ^TMP($J,"TXT")
+ N Y S Y=$$FTG^%ZISH(ROOT,FILE,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
+ ;
+ N RTN
+ D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
+ ZWRITE RTN
+ QUIT
  ; Convenience methods for M-Unit.
 ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
 CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
