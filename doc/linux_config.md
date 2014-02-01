@@ -1,7 +1,6 @@
 ﻿# Forum System Installation and Administration
 ## Purpose
 This is a writeup of how the OSEHRA Forum machines were built.
-Machine Creation
 
 ## Baseline Linux System
 Peter Li created the two machines, forum-a.osehra.org and forum-b.osehra.org.
