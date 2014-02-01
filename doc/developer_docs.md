@@ -212,15 +212,22 @@ queue or the user says not to load it.
                     0),U,3),X,+$P(^(0),U,4),DA(1),DA)
 
 Modified Indexes.
-  AB (#1023)    FIELD    MUMPS    IR    SORTING ONLY
+  New-Style Indexes:
+
+  AB (#1023)    FIELD    REGULAR    IR    SORTING ONLY
       Short Descr:  Index used to figure out next patch numbers and walk
                     through the patches
-        Set Logic:  N P1,P2,P3,A S A="*",P1=$P(X,A),P2=$P(X,A,2),P3=$P(X,A,3) S
-                     ^A1AE(11005,"AB",P1,P2,P3,DA)=""
-       Kill Logic:  N P1,P2,P3,A S A="*",P1=$P(X,A),P2=$P(X,A,2),P3=$P(X,A,3) K
-                     ^A1AE(11005,"AB",P1,P2,P3,DA)
+        Set Logic:  S ^A1AE(11005,"AB",X(2),X(3),X(4),DA)=""
+       Kill Logic:  K ^A1AE(11005,"AB",X(2),X(3),X(4),DA)
        Whole Kill:  K ^A1AE(11005,"AB")
-             X(1):  PATCH DESIGNATION  (11005,.01)  (Subscr 1)  (forwards)
+             X(1):  PATCH DESIGNATION  (11005,.01)  (forwards)
+             X(2):  Computed Code: S X=$P(X(1),"*")
+                      (Subscr 1)
+             X(3):  Computed Code: S X=$P(X(1),"*",2)
+                      (Subscr 2)
+             X(4):  Computed Code: S X=$P(X(1),"*",3)
+                      (Subscr 3)
+
 
 Failed Unit tests after change:
 A1AEPH25^A1AEUT1 - Test Report 5^A1AEPH2 - no failure message provided
@@ -236,3 +243,7 @@ Ran 1 Routine, 19 Entry Tags
 Checked 98 tests, with 2 failures and encountered 0 errors.
 
 I fixed these and now everything works.
+
+## A1AEK2M - Load KIDS messages into Patch Module
+Currently working on that. That idea is to use the TXT files in a specific
+directory to drive the loading of the KIDS files. It's in progress right now.
