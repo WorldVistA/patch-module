@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-01-31  9:38 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-03  5:11 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -251,13 +251,20 @@ SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
  ;
 ANALYZET ; @TEST Test Analyze
  N ROOT S ROOT="/home/forum/testkids/"
- N FILE S FILE="TIU-1_SEQ-252_PAT-256.TXT"
- K ^TMP($J,"TXT")
- N Y S Y=$$FTG^%ZISH(ROOT,FILE,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- ;
- N RTN
- D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
- ZWRITE RTN
+ N A S A("*.TXT")=""
+ N FILE
+ N % S %=$$LIST^%ZISH(ROOT,$NA(A),$NA(FILE))
+ N J S J=""
+ F  S J=$O(FILE(J)) Q:J=""  D
+ . K ^TMP($J,"TXT")
+ . N Y S Y=$$FTG^%ZISH(ROOT,J,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
+ . I ^TMP($J,"TXT",2,0)'["$TXT Created by " D  ; ENELOW,JASON at MNTVBB.FO-ALBANY.DOMAIN.EXT  (KIDS)
+ . . S ^(0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV"
+ . . S ^($O(^TMP($J,"TXT"," "),-1)+1,0)="$END TXT"
+ . N RTN
+ . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
+ . ZWRITE RTN
+ . WRITE !!!
  QUIT
  ; Convenience methods for M-Unit.
 ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
