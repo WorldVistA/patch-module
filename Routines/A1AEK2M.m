@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-03  5:11 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-07  6:35 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -59,20 +59,28 @@ A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-03  5:11
  ; <contents>
  ;$END KID ZZZ*1.0*1
  ;
- ; TODO: Develop a good way to get the sequence number - get from analyzing the patch.
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
- ; TODO: Remove text for KIDS build if it exists.
- ; TODO: Make sure we get the subjects right even if it is an original HFS file.
  ;
 DBAKID2M ; Restore patches from HFS files to MailMan ;9/28/02  12:53
  ; Get path to HFS patches
  ; Order through all messages
+ N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
  N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
- S DIR(0)="F^2:60",DIR("A")="Full path, up to but not including patch names" D ^DIR
+ S DIR(0)="F^2:60",DIR("A")="Full path of patches to load, up to but not including patch names" 
+ S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-PP"))
+ D ^DIR
  QUIT:Y="^"
  N ROOT S ROOT=Y  ; where we load files from...
+ S ^DISV(OLDDUZ,"A1AEK2M-PP")=Y
+ ;
+ S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch" 
+ S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MP"))
+ D ^DIR
+ QUIT:Y="^"
+ S ROOT("MP")=Y
+ S ^DISV(OLDDUZ,"A1AEK2M-MP")=Y
  ;
 SILENT ; Don't talk. Pass ROOT in Symbol Table
  ; Boo -- now it talks.
@@ -95,25 +103,43 @@ LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
  ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
  K ^TMP($J,"TXT")
  N Y S Y=$$FTG^%ZISH(ROOT,PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
+ D CLEANHF($NA(^TMP($J,"TXT"))) ; add $TXT/$END TXT if necessary
  ;
- ; TODO: If the original text patch doesn't come with $TXT and $END TXT, need to add them just after this.
+ ; Analyze message and extract data from it.
+ N RTN ; RPC style return
+ N $ET,$ES S $ET="G ANATRAP^A1AEK2M" ; try/catch
+ D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
+ ;
  K ^TMP($J,"MSG") ; Message array eventually to be mailed.
- M ^TMP($J,"MSG")=^TMP($J,"TXT") ; Load the text document associated with the patch.
+ ;
+ ; Move the description into the msg array, making sure we have room for the $TXT.
+ N I F I=0:0 S I=$O(RTN("DESC",I)) Q:'I  S ^TMP($J,"MSG",I+1,0)=RTN("DESC",I)
+ S ^TMP($J,"MSG",1,0)=RTN("$TXT") ; $TXT
+ N LS S LS=$O(^TMP($J,"MSG"," "),-1)
+ S ^TMP($J,"MSG",LS+1,0)="$END TXT" ; $END TXT
+ K I,LS
  ;
  N LASTSUB S LASTSUB=$O(^TMP($J,"TXT"," "),-1)
  ;
- ; Load KIDS message starting into the last subscript + 1 from the text node
- ; TODO: Only ask if the TXT indicates that there is a KIDS file. Patch could be informational.
- N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
- I KIDFIL="" D
- . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
- . N FILE
- . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
- . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
- . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
+ ; Info only patch?
+ N INFOONLY S INFOONLY=0 ; Info Only patch?
+ N I F I=0:0 S I=$O(RTN("CAT",I)) Q:'I  I RTN("CAT",I)="Informational" S INFOONLY=1
+ K I
  ;
+ ; Load KIDS message starting into the last subscript + 1 from the text node
+ ; Only if not informational!!!
+ I 'INFOONLY D
+ . N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
+ . I KIDFIL="" D
+ . . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
+ . . N FILE
+ . . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
+ . . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
+ . . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
+ ;
+ ; Here we load the KIDS file if we have a filename.
  K ^TMP($J,"KID")
- I $L(KIDFIL) D  Q:$D(ERROR)
+ I $D(KIDFIL),$L(KIDFIL) D  Q:$D(ERROR)
  . N Y S Y=$$FTG^%ZISH(ROOT,KIDFIL,$NA(^TMP($J,"KID",LASTSUB+1,0)),3) I 'Y W !,"Error copying KIDS to global" S ERROR=1 Q
  . M ^TMP($J,"MSG")=^TMP($J,"KID") ; Load the KIDS build
  . ;
@@ -122,12 +148,10 @@ LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
  . N Y S Y=$O(^TMP($J,"MSG",""),-1) K ^TMP($J,"MSG",Y) ; remove 2nd **END**
  . S ^TMP($J,"MSG",Y-1,0)="$END KID "_^TMP($J,"MSG",LASTSUB+6,0) ; replace 1st **END** with $END KID KIDS Name
  ; 
- ; Mail Subject - TODO: obtain from the patch message
- N XMSUBJ S XMSUBJ=""
- I $D(^TMP($J,"KID")) D
- . S XMSUBJ=$P(^TMP($J,"KID",LASTSUB+1,0),"Released ",2,99)
- . I '$L(XMSUBJ) S XMSUBJ=^TMP($J,"KID",LASTSUB+6,0) ; NB: Doesn't handle multibuilds
- I '$L(XMSUBJ) S XMSUBJ="Sam read this"
+ ; Mail Subject
+ N XMSUBJ S XMSUBJ=RTN("DESIGNATION")_" SEQ# "_RTN("SEQ")
+ ;
+ N PATSUBJ S PATSUBJ=RTN("SUBJECT") ; Not used right now. Will be used when we file directly into patch file.
  ;
  ; Deliver the message
  N XMERR,XMZ
@@ -199,7 +223,31 @@ SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
  I $L(Y,U)=2 Q $P(Y,U,2)
  E  QUIT ""
  ;
-ANAMESS(RTN,MESSAGE) ; Analyze patch message 
+CLEANHF(MSGGLO) ; Private... Clean header and footer in message global
+ ; WARNING - Naked all over inside the do block.
+ N S S S=$O(@MSGGLO@("")) ; first numeric sub.
+ I @MSGGLO@(S,0)'["$TXT Created by " D
+ . ; First line is invalid. Try various patterns.
+ . N I F I=1:1 N PATT S PATT=$T(CLNPATT+I),PATT=$P(PATT,";;",2) Q:($$TRIM^XLFSTR(PATT)=">>END<<")  D
+ . . I $$TRIM^XLFSTR(^(0))=$$TRIM^XLFSTR(PATT) S ^(0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV  (KIDS)"
+ . ; If still not there, put in first node before the message.
+ . I ^(0)'["$TXT Created by " S @MSGGLO@(S-1,0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV  (KIDS)"
+ ;
+ N LASTSUB S LASTSUB=$O(@MSGGLO@(" "),-1)
+ I @MSGGLO@(LASTSUB,0)'["$END TXT" S @MSGGLO@(LASTSUB+1,0)="$END TXT"
+ QUIT
+ ;
+CLNPATT ;; Headers to substitute if present using a contains operator. 1st one is just a blank -- INTENTIONAL
+ ;;
+ ;;*********************
+ ;;Original message:
+ ;;This informational patch
+ ;;>>END<<
+ ;
+ANATRAP ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
+ ; YOU MUST NEW $ET AND $ES AND SET $ET="GOTO ANATRAP^A1AEK2M2"
+ I $EC[",U-NOT-MESSAGE," WRITE !,X_" IS NOT A PATCH MESSAGE",! S $ET="Q:$ES  S $EC=""""" QUIT
+ QUIT
  ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 11005/11005.1 directly)
@@ -249,7 +297,7 @@ SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
  W !,%
  QUIT
  ;
-ANALYZET ; @TEST Test Analyze
+ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  N ROOT S ROOT="/home/forum/testkids/"
  N A S A("*.TXT")=""
  N FILE
@@ -258,14 +306,43 @@ ANALYZET ; @TEST Test Analyze
  F  S J=$O(FILE(J)) Q:J=""  D
  . K ^TMP($J,"TXT")
  . N Y S Y=$$FTG^%ZISH(ROOT,J,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . I ^TMP($J,"TXT",2,0)'["$TXT Created by " D  ; ENELOW,JASON at MNTVBB.FO-ALBANY.DOMAIN.EXT  (KIDS)
- . . S ^(0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV"
- . . S ^($O(^TMP($J,"TXT"," "),-1)+1,0)="$END TXT"
+ . D CLEANHF($NA(^TMP($J,"TXT")))
  . N RTN
  . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
- . ZWRITE RTN
- . WRITE !!!
+ . D ASSERT($L(RTN("SEQ")))
+ . D ASSERT($L(RTN("SUBJECT")))
  QUIT
+ ;
+ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
+ ; REALLY REALLY NOT SAC COMPLIANT.
+ I +$SY'=47 QUIT ; Test Works only on GT.M/Unix
+ N OLDPWD S OLDPWD=$ZDIRECTORY
+ N P S P="cmdpipe"
+ O P:(shell="/bin/sh":command="mkdir osehra-repo")::"pipe"
+ U P C P
+ S $ZDIRECTORY=OLDPWD_"/"_"osehra-repo"
+ O P:(shell="/bin/sh":command="git clone --depth=0 https://github.com/OSEHRA/VistA":READONLY:PARSE)::"pipe"
+ U P
+ N X F  R X:1 Q:$ZEOF  ; just loop around until we are done.
+ C P
+ O P:(shell="/bin/sh":command="find . -name '*.TXT'")::"pipe"
+ U P
+ N X F  U P R X Q:$ZEOF  U $P D
+ . K ^TMP($J,"TXT")
+ . N Y S Y=$$FTG^%ZISH($ZD,X,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
+ . D CLEANHF($NA(^TMP($J,"TXT"))) ; Clean header and footer.
+ . N RTN
+ . N $ET,$ES ; We do a try catch with ANALYZE^A1AEK2M2
+ . S $ET="G ANATRAP^A1AEK2M"
+ . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
+ . D ASSERT($L(RTN("SEQ")))
+ . D ASSERT($L(RTN("SUBJECT")))
+ C P
+ S $ZDIRECTORY=OLDPWD
+ O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
+ U P C P
+ QUIT ; /END ANALYZE2
+ ;
  ; Convenience methods for M-Unit.
 ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
 CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
