@@ -1,4 +1,4 @@
-A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-02-03  5:17 PM
+A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-02-07  5:35 PM
  ;;2.4;PATCH MODULE;;
  ; Inspired by the VISTA XML Parser, a State Machine
  ;
@@ -17,6 +17,8 @@ ANALYZE(RTN,MSGGREF,OPT) ; Public Proc ; Analyze a message in global MSGGREF. Re
  F  QUIT:EOD  D SEEK() QUIT:EOD  D @STATE  ; CENTRAL READING LOOP
  QUIT
  ;
+ ; === REST OF EP'S ARE PRIVATE ===
+ ;
 SEEK(NOTRIM) ; Get next line
  ; ZEXCEPT: CREF,EOD,LINE,QL - Newd above
  ; ZEXCEPT: MSGGREF,OPT - Params
@@ -31,12 +33,15 @@ SEEK(NOTRIM) ; Get next line
 BEGIN ; Beginning of document
  ; ZEXCEPT: START,EOD - Global vars
  ; ZEXCEPT:LINE,STATE,RTN - Newed or Paramters elsewhere.
- I $E(LINE,1,4)="$TXT" S START=1,STATE="HEADER" QUIT
+ I $E(LINE,1,4)="$TXT" D  QUIT
+ . S START=1,STATE="HEADER"
+ . S RTN("$TXT")=$$TRIM^XLFSTR(LINE)
  I 'START S $EC=",U-NOT-IN-TXT,"
  QUIT
  ;
 HEADER ; Process Header
  ; ZEXCEPT:LINE,STATE,RTN - Newed or Paramters elsewhere.
+ I LINE'["========================" S $EC=",U-NOT-MESSAGE,"
  D ASSERT(LINE["====")
  ;
  ; 1st line
@@ -65,6 +70,10 @@ PREREQ ; Pre-requisite patches
  ; ZEXCEPT:LINE,STATE,RTN - Newed or Paramters elsewhere.
  ; Associated patches: (v)PSJ*5*111   <<= must be installed BEFORE `PSJ*5*216'
  ;                     (v)PSJ*5*179   <<= must be installed BEFORE `PSJ*5*216'
+ ; -- OR --
+ ; Associated patches: (v)TIU*1*227       install with patch       `TIU*1*274'
+ ;                     (v)TIU*1*261       install with patch       `TIU*1*274'
+ ;
  I LINE="" D SEEK()  ; Get next line if it's empty
  I LINE'["Associated patches:" S STATE="SUBJECT" QUIT
  ;
@@ -72,7 +81,8 @@ PREREQ ; Pre-requisite patches
  D  F  D SEEK() Q:LINE=""  D
  . N I S I=$O(RTN("PREREQ",""),-1)+1
  . S RTN("PREREQ",I)=$P(LINE,"(v)",2) ; get patch number
- . S RTN("PREREQ",I)=$P(RTN("PREREQ",I),"<<=") ; remove the <<=
+ . I RTN("PREREQ",I)["<<=" S RTN("PREREQ",I)=$P(RTN("PREREQ",I),"<<=") ; remove the <<=
+ . I RTN("PREREQ",I)["install with patch" S RTN("PREREQ",I)=$P(RTN("PREREQ",I),"install")
  . S RTN("PREREQ",I)=$$TRIM^XLFSTR(RTN("PREREQ",I)) ; remove spaces
  ;
  S STATE="SUBJECT"
