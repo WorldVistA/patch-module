@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-07  6:35 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-24  8:06 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -62,47 +62,60 @@ A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-07  6:35
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
  ;
-DBAKID2M ; Restore patches from HFS files to MailMan ;9/28/02  12:53
+DBAKID2M ; Restore patches from HFS files to MailMan
  ; Get path to HFS patches
  ; Order through all messages
  N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
  N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
- S DIR(0)="F^2:60",DIR("A")="Full path of patches to load, up to but not including patch names" 
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-PP"))
+ S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names" 
+ S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-SB"))
  D ^DIR
  QUIT:Y="^"
- N ROOT S ROOT=Y  ; where we load files from...
- S ^DISV(OLDDUZ,"A1AEK2M-PP")=Y
+ N ROOT S ROOT("SB")=Y  ; where we load files from... Single Build Root
+ S ^DISV(OLDDUZ,"A1AEK2M-SB")=Y
  ;
  S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch" 
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MP"))
+ S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MB"))
  D ^DIR
  QUIT:Y="^"
- S ROOT("MP")=Y
- S ^DISV(OLDDUZ,"A1AEK2M-MP")=Y
+ S ROOT("MB")=Y ; Multi Build Root
+ S ^DISV(OLDDUZ,"A1AEK2M-MB")=Y
  ;
-SILENT ; Don't talk. Pass ROOT in Symbol Table
- ; Boo -- now it talks.
- N FILE ; retrun array -- needs to be renamed to plural.
+SILENT ; Don't talk. Pass ROOT in Symbol Table.
+ ; Fall through from above, but can be silently called if you pass ROOT in ST.
+ ; All output is sent via EN^DDIOL. Set DIQUIET to redirect to a global.
+ N FILES ; retrun array
  ;
  ; Load text files first
  N ARRAY
  S ARRAY("*.TXT")=""
  S ARRAY("*.txt")=""
- N Y S Y=$$LIST^%ZISH(ROOT,"ARRAY","FILE") I 'Y W !,"Error getting directory list" QUIT
+ N Y S Y=$$LIST^%ZISH(ROOT("SB"),"ARRAY","FILES") I 'Y W !,"Error getting directory list" QUIT
  ;
  ; Loop through each text patches.
  N ERROR
  N PATCH S PATCH=""
- F  S PATCH=$O(FILE(PATCH)) Q:PATCH=""  D LOAD(ROOT,PATCH,.ERROR) Q:$D(ERROR)
+ N CANTLOAD ; Patches for whom we cannot find a KIDS file
+ F  S PATCH=$O(FILES(PATCH)) Q:PATCH=""  D LOAD(.ROOT,PATCH,.ERROR,.CANTLOAD) Q:$D(ERROR)
+ ;
+ ; Print out the patches we couldn't find.
+ I $D(CANTLOAD) D
+ . N I S I=""
+ . F  S I=$O(CANTLOAD(I)) Q:I=""  D EN^DDIOL("Patch "_I_" from "_CANTLOAD(I)_" doesn't have a KIDS file")
+ . D EN^DDIOL("Please load these KIDS files manually into the patch module.")
  QUIT
  ;
-LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
+LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS and mail.
+ ; ROOT = File system directory (Ref)
+ ; PATCH = File system .TXT patch name (including the .TXT) (Value)
+ ; ERROR = Ref variable to indicate error.
+ ; CANTLOAD = Ref variable containing the KIDS patches we can't load b/c we can't find them.
  ;
  ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
  K ^TMP($J,"TXT")
- N Y S Y=$$FTG^%ZISH(ROOT,PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
+ D EN^DDIOL("Loading description "_PATCH)
+ N Y S Y=$$FTG^%ZISH(ROOT("SB"),PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
  D CLEANHF($NA(^TMP($J,"TXT"))) ; add $TXT/$END TXT if necessary
  ;
  ; Analyze message and extract data from it.
@@ -128,25 +141,14 @@ LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
  ;
  ; Load KIDS message starting into the last subscript + 1 from the text node
  ; Only if not informational!!!
- I 'INFOONLY D
- . N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
- . I KIDFIL="" D
- . . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
- . . N FILE
- . . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
- . . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
- . . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
- ;
- ; Here we load the KIDS file if we have a filename.
  K ^TMP($J,"KID")
- I $D(KIDFIL),$L(KIDFIL) D  Q:$D(ERROR)
- . N Y S Y=$$FTG^%ZISH(ROOT,KIDFIL,$NA(^TMP($J,"KID",LASTSUB+1,0)),3) I 'Y W !,"Error copying KIDS to global" S ERROR=1 Q
- . M ^TMP($J,"MSG")=^TMP($J,"KID") ; Load the KIDS build
- . ;
- . K ^TMP($J,"MSG",LASTSUB+1),^(LASTSUB+2),^(LASTSUB+3) ; Remove description lines from KIDS build.
- . S ^TMP($J,"MSG",LASTSUB+4,0)="$KID "_^TMP($J,"MSG",LASTSUB+6,0) ; KIDS name after **INSTALL NAME**
- . N Y S Y=$O(^TMP($J,"MSG",""),-1) K ^TMP($J,"MSG",Y) ; remove 2nd **END**
- . S ^TMP($J,"MSG",Y-1,0)="$END KID "_^TMP($J,"MSG",LASTSUB+6,0) ; replace 1st **END** with $END KID KIDS Name
+ I 'INFOONLY D
+ . N KIDFIL S KIDFIL=$$KIDFIL(.ROOT,PATCH,.RTN,$NA(^TMP($J,"KID"))) ; Load the KIDS file
+ . I KIDFIL="" S CANTLOAD(RTN("DESIGNATION"))=PATCH ; if we can't find it, put it in this array.
+ ;
+ ; If we loaded the KIDS build, move it over.
+ I $D(^TMP($J,"KID")) D
+ . N I F I=1:1 Q:'$D(^TMP($J,"KID",I))  S ^TMP($J,"MSG",LASTSUB+I,0)=^TMP($J,"KID",I)
  ; 
  ; Mail Subject
  N XMSUBJ S XMSUBJ=RTN("DESIGNATION")_" SEQ# "_RTN("SEQ")
@@ -165,32 +167,111 @@ LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
  ;
  QUIT
  ;
-TXTFIL(ROOT,PATCH) ; Private; Find the text file that corresponds to a patch designation
- N NOEXT S NOEXT=$P(PATCH,".",1,$L(PATCH,".")-1) ; no extension name
- N TXTFIL0 ; Trial iteration variable
- N DONE
- N % F %="TXT","txt" D  Q:$G(DONE)
- . S TXTFIL0=NOEXT_"."_%
- . N POP
- . D OPEN^%ZISH("TXT0",ROOT,TXTFIL0,"R")
- . I POP S TXTFIL0="" QUIT
- . S DONE=1
- . D CLOSE^%ZISH("TXT0")
- QUIT $G(TXTFIL0)
+KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresponds to a patch designation
+ ; ROOT: Ref, File system roots (MP = Multibuild folder)
+ ; PATCH: Val, Text file name
+ ; TXTINFO: Ref, the analyzed Text array
+ ; KIDGLO: Name, the Global into which to load the KIDS contents in PM format.
  ;
-KIDFIL(ROOT,PATCH) ; Private; Find the KIDS file that corresponds to a patch designation
- ; Idea: Maybe read a few lines to id the file.
+ ; This code is pretty iterative. It keeps trying different things until it finds the patch.
+ ;
  N NOEXT S NOEXT=$P(PATCH,".",1,$L(PATCH,".")-1) ; no extension name
  N KIDFIL0 ; Trial iteration variable
- N DONE
+ N DONE ; Loop exit
+ ;
+ ; Try by file name!
  N % F %="KID","kid","KIDS","kids","KIDs","kidS" D  Q:$G(DONE)
  . S KIDFIL0=NOEXT_"."_%
  . N POP
- . D OPEN^%ZISH("KID0",ROOT,KIDFIL0,"R")
+ . D OPEN^%ZISH("KID0",ROOT("SB"),KIDFIL0,"R")
  . I POP S KIDFIL0="" QUIT
- . S DONE=1
  . D CLOSE^%ZISH("KID0")
+ . ;
+ . ; Okay. At this point we confirmed that the file exists. Is it right though?
+ . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+ . N % S %=$$FTG^%ZISH(ROOT("SB"),KIDFIL0,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+ . I '% S $EC=",U-FILE-DISAPPEARED,"
+ . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+ . ;
+ . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
+ . ; Loop through every patch in the file and make sure at least one matches.
+ . N P S P="" 
+ . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
+ . I $G(DONE) DO  QUIT
+ . . M @KIDGLO=^TMP($J,"ANKID",P)
+ . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_KIDFIL0) 
+ ;
+ ; If we don't have it, get all KIDS files and grab any one that has the
+ ; patch number in its name.
+ I $G(KIDFIL0)="" D  ; Still we don't have it.
+ . N A S A("*.ki*")="",A("*.KI*")=""  ; Search for these files
+ . N FILES  ; rtn array by name
+ . N % S %=$$LIST^%ZISH(ROOT("SB"),$NA(A),$NA(FILES)) ; ls
+ . I '% S $EC=",U-DIRECTORY-DISAPPEARED," ; should never happen
+ . K %,A ; bye
+ . ;
+ . N F S F="" ; file looper
+ . N DONE ; control flag
+ . ; here's the core search for the file name containing a patch number
+ . F  S F=$O(FILES(F)) Q:F=""  I F[$P(TXTINFO("DESIGNATION"),"*",3) D  Q:$G(DONE)
+ . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+ . . N % S %=$$FTG^%ZISH(ROOT("SB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+ . . I '% S $EC=",U-FILE-DISAPPEARED,"
+ . . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+ . . ;
+ . . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
+ . . ; Loop through every patch in the file and make sure at least one matches.
+ . . N P S P="" 
+ . . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
+ . . I $G(DONE) DO  QUIT
+ . . . M @KIDGLO=^TMP($J,"ANKID",P)
+ . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F) 
+ . . . S KIDFIL0=F
+ ;
+ ; Now we have the hard case. We still don't have the file. 
+ ; Let's look in the Multibuilds directory
+ I $G(KIDFIL0)="" D
+ . N A S A("*.kid")="",A("*.KID")=""  ; Search for these files
+ . S A("*.kid?")="",A("*.KID?")=""    ; and these too; but not the .json ones.
+ . N FILES  ; rtn array by name
+ . N % S %=$$LIST^%ZISH(ROOT("MB"),$NA(A),$NA(FILES)) ; ls
+ . I '% S $EC=",U-DIRECTORY-DISAPPEARED," ; should never happen
+ . K %,A ; bye
+ . ;
+ . N F S F="" ; file looper
+ . N DONE ; control flag
+ . ; Analyze each Multibuild
+ . F  S F=$O(FILES(F)) Q:F=""  D  Q:$G(DONE)
+ . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+ . . D EN^DDIOL("Analyzing Multibuild file "_F) ; print out b/c this takes longer
+ . . N % S %=$$FTG^%ZISH(ROOT("MB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+ . . I '% S $EC=",U-FILE-DISAPPEARED,"
+ . . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+ . . ;
+ . . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
+ . . ; Loop through every patch in the file and make sure at least one matches.
+ . . N P S P="" 
+ . . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
+ . . I $G(DONE) D  QUIT
+ . . . M @KIDGLO=^TMP($J,"ANKID",P)
+ . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F) 
+ . . . S KIDFIL0=F 
+ ;
+ ; If we still can't find it. Oh well! Can't do nuthin.
+ K ^TMP($J,"TKID"),^("ANKID")
  QUIT $G(KIDFIL0)
+ ;
+SELFILQ ; Public; Interactive entry point... ; TODO
+ ; This code is a NO-OP right now.
+ ; I probably would use it in the future, but not now.
+ ; ZEXCEPT: ROOT,PATCH
+ N KIDFIL
+ N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
+ N FILE
+ N Y S Y=$$LIST^%ZISH(ROOT("SB"),$NA(ARRAY),$NA(FILE))
+ I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
+ S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
+ QUIT KIDFIL
  ;
 SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
  ; FILES = Ref List of files from LIST^%ZISH
@@ -249,6 +330,12 @@ ANATRAP ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
  I $EC[",U-NOT-MESSAGE," WRITE !,X_" IS NOT A PATCH MESSAGE",! S $ET="Q:$ES  S $EC=""""" QUIT
  QUIT
  ;
+K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
+ N %
+ I PATCH[" " S %=$L(PATCH," "),PATCH=$P(PATCH," ",1,%-1)_"*"_$P(PATCH," ",%)_"*0"
+ I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
+ Q PATCH
+ ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 11005/11005.1 directly)
  N XMDUZ,XMK,XMZ
@@ -262,7 +349,8 @@ CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 
 MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
  ; ZEXCEPT: ROOT,SAVEDUZ - killed in EXIT.
  S (SAVEDUZ,DUZ)=.5
- S ROOT="/home/forum/testkids/"
+ S ROOT("SB")="/home/forum/testkids/"
+ S ROOT("MB")="/home/osehra/VistA/Packages/MultiBuilds/"
  D SILENT
  ;
  ; Get Q-PATCH basket
@@ -276,13 +364,6 @@ MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
  . N PN S PN=$P(SUB,"*")
  . D ASSERT($L(PN)>1,"Subject incorrect")
  . D ASSERT($E(^XMB(3.9,I,2,1,0),1,4)="$TXT","Message "_I_" doesn't have TXT nodes")
- QUIT
- ;
-TXTFILT ; @TEST Test that the logic for text file location works
- N ROOT S ROOT="/home/forum/testkids/"
- N PATCH S PATCH="TIU-1_SEQ-252_PAT-256.KIDS"
- N % S %=$$TXTFIL(ROOT,PATCH)
- D CHKEQ(%,"TIU-1_SEQ-252_PAT-256.TXT")
  QUIT
  ;
 SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
@@ -341,7 +422,7 @@ ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
  S $ZDIRECTORY=OLDPWD
  O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
  U P C P
- QUIT ; /END ANALYZE2
+ QUIT  ; /END ANALYZE2
  ;
  ; Convenience methods for M-Unit.
 ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
