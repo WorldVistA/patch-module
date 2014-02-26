@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-24  8:06 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-25  8:28 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -68,14 +68,14 @@ DBAKID2M ; Restore patches from HFS files to MailMan
  N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
  N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
- S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names" 
+ S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
  S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-SB"))
  D ^DIR
  QUIT:Y="^"
  N ROOT S ROOT("SB")=Y  ; where we load files from... Single Build Root
  S ^DISV(OLDDUZ,"A1AEK2M-SB")=Y
  ;
- S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch" 
+ S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch"
  S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MB"))
  D ^DIR
  QUIT:Y="^"
@@ -120,7 +120,7 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  ;
  ; Analyze message and extract data from it.
  N RTN ; RPC style return
- N $ET,$ES S $ET="G ANATRAP^A1AEK2M" ; try/catch
+ N $ET,$ES S $ET="D ANATRAP^A1AEK2M(PATCH)" ; try/catch
  D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
  ;
  K ^TMP($J,"MSG") ; Message array eventually to be mailed.
@@ -138,6 +138,8 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  N INFOONLY S INFOONLY=0 ; Info Only patch?
  N I F I=0:0 S I=$O(RTN("CAT",I)) Q:'I  I RTN("CAT",I)="Informational" S INFOONLY=1
  K I
+ ;
+ I INFOONLY D EN^DDIOL(PATCH_" is an Info Only patch.")
  ;
  ; Load KIDS message starting into the last subscript + 1 from the text node
  ; Only if not informational!!!
@@ -195,19 +197,21 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  . ;
  . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
  . ; Loop through every patch in the file and make sure at least one matches.
- . N P S P="" 
+ . N P S P=""
  . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
  . I $G(DONE) DO  QUIT
  . . M @KIDGLO=^TMP($J,"ANKID",P)
- . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_KIDFIL0) 
+ . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_KIDFIL0)
  ;
  ; If we don't have it, get all KIDS files and grab any one that has the
  ; patch number in its name.
  I $G(KIDFIL0)="" D  ; Still we don't have it.
- . N A S A("*.ki*")="",A("*.KI*")=""  ; Search for these files
+ . N A S A("*.kid")="",A("*.KID")=""  ; Search for these files
+ . S A("*.kid?")="",A("*.KID?")=""    ; and these too; but not the .json ones.
  . N FILES  ; rtn array by name
  . N % S %=$$LIST^%ZISH(ROOT("SB"),$NA(A),$NA(FILES)) ; ls
- . I '% S $EC=",U-DIRECTORY-DISAPPEARED," ; should never happen
+ . ; I '% S $EC=",U-DIRECTORY-DISAPPEARED," ; should never happen; WRONG: It's a possibility.
+ . I '% QUIT  ; Try the multibuild directory next
  . K %,A ; bye
  . ;
  . N F S F="" ; file looper
@@ -221,16 +225,23 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  . . ;
  . . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
  . . ; Loop through every patch in the file and make sure at least one matches.
- . . N P S P="" 
+ . . N P S P=""
  . . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
  . . I $G(DONE) DO  QUIT
  . . . M @KIDGLO=^TMP($J,"ANKID",P)
- . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F) 
+ . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F)
  . . . S KIDFIL0=F
  ;
  ; Now we have the hard case. We still don't have the file. 
  ; Let's look in the Multibuilds directory
  I $G(KIDFIL0)="" D
+ . ; Set-up XTMP
+ . N XTMPS S XTMPS=$T(+0)
+ . N START S START=$$NOW^XLFDT()
+ . N PURGDT S PURGDT=$$FMADD^XLFDT(START,30)
+ . S ^XTMP(XTMPS,0)=PURGDT_U_START_U_"Analyzed Multibuilds Holding Area"
+ . ;
+ . ; Load the Multibuild file names
  . N A S A("*.kid")="",A("*.KID")=""  ; Search for these files
  . S A("*.kid?")="",A("*.KID?")=""    ; and these too; but not the .json ones.
  . N FILES  ; rtn array by name
@@ -242,20 +253,21 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  . N DONE ; control flag
  . ; Analyze each Multibuild
  . F  S F=$O(FILES(F)) Q:F=""  D  Q:$G(DONE)
- . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
- . . D EN^DDIOL("Analyzing Multibuild file "_F) ; print out b/c this takes longer
- . . N % S %=$$FTG^%ZISH(ROOT("MB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
- . . I '% S $EC=",U-FILE-DISAPPEARED,"
- . . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
- . . ;
+ . . D EN^DDIOL("Analyzing Multibuild file "_F) ; print out
+ . . I '$D(^XTMP(XTMPS,F)) D  ; If it isn't loaded already...
+ . . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+ . . . N % S %=$$FTG^%ZISH(ROOT("MB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+ . . . I '% S $EC=",U-FILE-DISAPPEARED,"
+ . . . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+ . . . M ^XTMP(XTMPS,F)=^TMP($J,"ANKID") ; Put into XTMP
  . . ; Now, make sure that the TXT file's designation is the same as the KIDS' patch no.
  . . ; Loop through every patch in the file and make sure at least one matches.
- . . N P S P="" 
- . . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
+ . . N P S P=""
+ . . F  S P=$O(^XTMP(XTMPS,F,P)) Q:P=""  I $$K2PMD(P)=TXTINFO("DESIGNATION") S DONE=1 QUIT
  . . I $G(DONE) D  QUIT
- . . . M @KIDGLO=^TMP($J,"ANKID",P)
- . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F) 
- . . . S KIDFIL0=F 
+ . . . M @KIDGLO=^XTMP(XTMPS,F,P)
+ . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F)
+ . . . S KIDFIL0=F
  ;
  ; If we still can't find it. Oh well! Can't do nuthin.
  K ^TMP($J,"TKID"),^("ANKID")
@@ -325,9 +337,9 @@ CLNPATT ;; Headers to substitute if present using a contains operator. 1st one i
  ;;This informational patch
  ;;>>END<<
  ;
-ANATRAP ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
- ; YOU MUST NEW $ET AND $ES AND SET $ET="GOTO ANATRAP^A1AEK2M2"
- I $EC[",U-NOT-MESSAGE," WRITE !,X_" IS NOT A PATCH MESSAGE",! S $ET="Q:$ES  S $EC=""""" QUIT
+ANATRAP(PATCH) ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
+ ; YOU MUST NEW $ET AND $ES AND SET $ET="DO ANATRAP^A1AEK2M2(PATCH)"
+ I $EC[",U-NOT-MESSAGE," WRITE !,PATCH_" IS NOT A PATCH MESSAGE",! S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
  QUIT
  ;
 K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
@@ -336,94 +348,3 @@ K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by
  I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
  Q PATCH
  ;
-TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
-CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 11005/11005.1 directly)
- N XMDUZ,XMK,XMZ
- S XMDUZ=.5
- N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
- S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
- S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,XMK,1,XMZ)) Q:'XMZ  D KL^XMA1B
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))="")
- QUIT
- ;
-MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
- ; ZEXCEPT: ROOT,SAVEDUZ - killed in EXIT.
- S (SAVEDUZ,DUZ)=.5
- S ROOT("SB")="/home/forum/testkids/"
- S ROOT("MB")="/home/osehra/VistA/Packages/MultiBuilds/"
- D SILENT
- ;
- ; Get Q-PATCH basket
- N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
- N XMK S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
- ;
- ; Assert that it has messages
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))>0)
- N I S I=0 F  S I=$O(^XMB(3.7,.5,2,XMK,1,I)) Q:'I  D
- . N SUB S SUB=$P(^XMB(3.9,I,0),"^")
- . N PN S PN=$P(SUB,"*")
- . D ASSERT($L(PN)>1,"Subject incorrect")
- . D ASSERT($E(^XMB(3.9,I,2,1,0),1,4)="$TXT","Message "_I_" doesn't have TXT nodes")
- QUIT
- ;
-SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
- N ROOT S ROOT="/home/forum/testkids/"
- N ARRAY S ARRAY("*")=""
- N FILE
- N % S %=$$LIST^%ZISH(ROOT,"ARRAY","FILE")
- I '% S $EC=",U-WRONG-DIRECTORY,"
- N % S %=$$SELFIL(.FILE)
- W !,%
- N % S %=$$SELFIL(.FILE,".TXT")
- W !,%
- QUIT
- ;
-ANALYZE1 ; @TEST Test Analyze on just the TIU patches
- N ROOT S ROOT="/home/forum/testkids/"
- N A S A("*.TXT")=""
- N FILE
- N % S %=$$LIST^%ZISH(ROOT,$NA(A),$NA(FILE))
- N J S J=""
- F  S J=$O(FILE(J)) Q:J=""  D
- . K ^TMP($J,"TXT")
- . N Y S Y=$$FTG^%ZISH(ROOT,J,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF($NA(^TMP($J,"TXT")))
- . N RTN
- . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
- . D ASSERT($L(RTN("SEQ")))
- . D ASSERT($L(RTN("SUBJECT")))
- QUIT
- ;
-ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
- ; REALLY REALLY NOT SAC COMPLIANT.
- I +$SY'=47 QUIT ; Test Works only on GT.M/Unix
- N OLDPWD S OLDPWD=$ZDIRECTORY
- N P S P="cmdpipe"
- O P:(shell="/bin/sh":command="mkdir osehra-repo")::"pipe"
- U P C P
- S $ZDIRECTORY=OLDPWD_"/"_"osehra-repo"
- O P:(shell="/bin/sh":command="git clone --depth=0 https://github.com/OSEHRA/VistA":READONLY:PARSE)::"pipe"
- U P
- N X F  R X:1 Q:$ZEOF  ; just loop around until we are done.
- C P
- O P:(shell="/bin/sh":command="find . -name '*.TXT'")::"pipe"
- U P
- N X F  U P R X Q:$ZEOF  U $P D
- . K ^TMP($J,"TXT")
- . N Y S Y=$$FTG^%ZISH($ZD,X,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF($NA(^TMP($J,"TXT"))) ; Clean header and footer.
- . N RTN
- . N $ET,$ES ; We do a try catch with ANALYZE^A1AEK2M2
- . S $ET="G ANATRAP^A1AEK2M"
- . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
- . D ASSERT($L(RTN("SEQ")))
- . D ASSERT($L(RTN("SUBJECT")))
- C P
- S $ZDIRECTORY=OLDPWD
- O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
- U P C P
- QUIT  ; /END ANALYZE2
- ;
- ; Convenience methods for M-Unit.
-ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
-CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
