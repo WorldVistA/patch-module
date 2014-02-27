@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ; 2/25/14 5:41pm
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-02-26  1:57 PM
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -63,7 +63,7 @@ IN ;Called from the Input transform file 11005, field .01
  I $D(^A1AE(A1AEX,"B",X)) W !?3,"Another error designation with the '",X,"' specification already exists" K X Q
  Q
  ;
-PKG K A1AEPKIF,A1AEPK S DIC("A")="Select PACKAGE: ",DIC="^A1AE(11007,",DIC(0)=$S($D(A1AE(0)):A1AE(0),1:"AEMQZ") W ! D ^DIC K DIC,A1AE(0) Q:Y<0  S A1AEPKIF=+Y
+PKG K A1AEPKIF,A1AEPK S DIC("A")="Select PACKAGE: ",DIC="^A1AE(11007,",DIC(0)=$S($D(A1AE(0)):A1AE(0),1:"AEMQZ") D ^DIC K DIC,A1AE(0) Q:Y<0  S A1AEPKIF=+Y
  I $D(^DIC(9.4,A1AEPKIF,0)) S A1AEPKNM=$P(^(0),"^",1),A1AEPK=$P(^(0),"^",2)
  Q
  ;
