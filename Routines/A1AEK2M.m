@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-25  8:28 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-27  11:45 AM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -120,8 +120,13 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  ;
  ; Analyze message and extract data from it.
  N RTN ; RPC style return
+ ;
+ ;
+ ; N OET S OET=$ET
  N $ET,$ES S $ET="D ANATRAP^A1AEK2M(PATCH)" ; try/catch
  D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
+ ; S $ET=OET
+ ; K OET
  ;
  K ^TMP($J,"MSG") ; Message array eventually to be mailed.
  ;
@@ -156,6 +161,12 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  N XMSUBJ S XMSUBJ=RTN("DESIGNATION")_" SEQ# "_RTN("SEQ")
  ;
  N PATSUBJ S PATSUBJ=RTN("SUBJECT") ; Not used right now. Will be used when we file directly into patch file.
+ ;
+ ; debug
+ S $ET="B"
+ ; debug
+ D PKGADD(RTN("DESIGNATION")) ; Add to DHCP Package file
+ D PKGSETUP(.RTN)             ; And set it up.
  ;
  ; Deliver the message
  N XMERR,XMZ
@@ -236,6 +247,8 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  ; Let's look in the Multibuilds directory
  I $G(KIDFIL0)="" D
  . ; Set-up XTMP
+ . ; NB: NO LOCKS B/C IT'S OKAY FOR MULTIPLE USERS TO FILE THIS SIMULTANEOUSLY
+ . ; NB (CONT): THERE ARE NO COUNTERS WHICH NEED TO BE SYNCHRONIZED.
  . N XTMPS S XTMPS=$T(+0)
  . N START S START=$$NOW^XLFDT()
  . N PURGDT S PURGDT=$$FMADD^XLFDT(START,30)
@@ -339,7 +352,7 @@ CLNPATT ;; Headers to substitute if present using a contains operator. 1st one i
  ;
 ANATRAP(PATCH) ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
  ; YOU MUST NEW $ET AND $ES AND SET $ET="DO ANATRAP^A1AEK2M2(PATCH)"
- I $EC[",U-NOT-MESSAGE," WRITE !,PATCH_" IS NOT A PATCH MESSAGE",! S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
+ I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
  QUIT
  ;
 K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
@@ -348,3 +361,67 @@ K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by
  I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
  Q PATCH
  ;
+PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
+ ; Input: Designation: Patch designation AAA*1*22; By value
+ ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
+ ;
+ S DESIGNATION=$$K2PMD(DESIGNATION) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
+ ;
+ ; When doing lookups for laygo, only look in the Package file's C index for designation.
+ N DIC S DIC("PTRIX",11007,.01,9.4)="C"
+ N A1AE S A1AE(0)="XL" ; X-Large; I mean eXact match, Laygo
+ N X S X=$P(DESIGNATION,"*") ; Input to ^DIC
+ D PKG^A1AEUTL
+ ; ZEXCEPT: Y leaks from PKG^A1AEUTL
+ I $P($G(Y),U,3) D EN^DDIOL("Added Package "_DESIGNATION_" to "_$P(^A1AE(11007,0),U))
+ ;
+ ; Check that the output variables from PKG^A1AEUTL are defined.
+ D ASSERT(A1AEPKIF) ; Must be positive
+ D ASSERT(A1AEPK=$P(DESIGNATION,"*")) ; PK must be the AAA
+ D ASSERT($L(A1AEPKNM)) ; Must be defined.
+ QUIT
+ ;
+PKGSETUP(TXTINFO) ; @TEST Setup package in Patch module
+ ; ZEXCEPT: A1AEPKIF - Created by PKGADD
+ N IENS S IENS=A1AEPKIF_","
+ N A1AEFDA,DIERR
+ S A1AEFDA(11007,IENS,2)="NO" ; USER SELECTION PERMITTED//^S X="NO"
+ S A1AEFDA(11007,IENS,4)="NO" ; FOR TEST SITE ONLY?//^S X="NO"
+ S A1AEFDA(11007,IENS,5)="YES" ; ASK PATCH DESCRIPTION COPY
+ D FILE^DIE("EKT",$NA(A1AEFDA)) ; External, lock, transact
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ N A1AEFDA
+ S A1AEFDA(11007.02,"?+1,"_IENS,.01)="`"_$$MKUSR(TXTINFO("VER"),"A1AE PHVER")  ; SUPPORT PERSONNEL
+ S A1AEFDA(11007.02,"?+1,"_IENS,2)="V"  ; VERIFY PERSONNEL
+ S A1AEFDA(11007.03,"?+2,"_IENS,.01)="`"_$$MKUSR(TXTINFO("DEV"),"A1AE DEVELOPER") ; DEVELOPMENT PERSONNEL
+ S A1AEFDA(11007.03,"?+3,"_IENS,.01)="`"_$$MKUSR(TXTINFO("COM"),"A1AE DEVELOPER") ; DITTO
+ D UPDATE^DIE("E",$NA(A1AEFDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PB")))  ; Verifier Nodes
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PH")))  ; Developer Nodes
+ QUIT
+ ;
+MKUSR(NAME,KEY) ; Make Users for the Package
+ Q:$O(^VA(200,"B",NAME,0)) $O(^(0)) ; Quit if the entry exists with entry
+ ;
+ ; Get initials
+ D STDNAME^XLFNAME(.NAME,"CP")
+ N INI S INI=$E(NAME("GIVEN"))_$E(NAME("MIDDLE"))_$E(NAME("FAMILY"))
+ ;
+ ; File user with key
+ N A1AEFDA,A1AEIEN,A1AEERR,DIERR
+ S A1AEFDA(200,"?+1,",.01)=NAME ; Name
+ S A1AEFDA(200,"?+1,",1)=INI ; Initials
+ S A1AEFDA(200,"?+1,",28)="NONE" ; Mail Code
+ S:$L($G(KEY)) A1AEFDA(200.051,"?+3,?+1,",.01)="`"_$O(^DIC(19.1,"B",KEY,""))
+ ;
+ N DIC S DIC(0)="" ; An XREF in File 200 requires this.
+ D UPDATE^DIE("E",$NA(A1AEFDA),$NA(A1AEIEN),$NA(A1AEERR)) ; Typical UPDATE
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ Q A1AEIEN(1) ;Provider IEN ;
+ ;
+ASSERT(X,Y) ; Assertion engine
+ I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"
+ QUIT
