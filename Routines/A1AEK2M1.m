@@ -1,4 +1,4 @@
-A1AEK2M1 ; VEN/SMH - Analyze KIDS file and extract information;2014-02-24  3:32 PM
+A1AEK2M1 ; VEN/SMH - Analyze KIDS file and extract information;2014-02-25  12:35 PM
  ;;2.4;PATCH MODULE;;
  ; Inspired by the VISTA XML Parser, a State Machine
  ;
@@ -97,35 +97,3 @@ RED(X) ; Convenience method for Sam to see things on the screen.
  ;
  ;
  ;
- ; == M-Unit Test follow below ==
-TEST D EN^XTMUNIT($T(+0),1,1) QUIT
- ;
-TESTSB ; @TEST Load Single build KIDS file
- N F S F="/home/osehra/VistA/Packages/Text Integration Utility/Patches/TIU_1.0_239/TIU-1_SEQ-239_PAT-239.KID"
- N PATH S PATH=$P(F,"/",1,$L(F,"/")-1)
- N FILE S FILE=$P(F,"/",$L(F,"/"))
- ;
- K ^TMP($J,"KID"),^("ANKID")
- ;
- N % S %=$$FTG^%ZISH(PATH,FILE,$NA(^TMP($J,"KID",1,0)),3)
- I '% D FAIL^XTMUNIT("Can't open file") QUIT
- ;
- D ANALYZE($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"KID")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","TIU*1.0*239")),"KIDS file not loaded")
- QUIT
- ;
-TESTMB ; @TEST Load Multibuild KIDS file
- N F S F="/home/osehra/VistA/Packages/MultiBuilds/TERATOGENIC_MEDICATIONS_ORDER_CHECKS.KID"
- N PATH S PATH=$P(F,"/",1,$L(F,"/")-1)
- N FILE S FILE=$P(F,"/",$L(F,"/"))
- ;
- K ^TMP($J,"KID"),^("ANKID")
- ;
- N % S %=$$FTG^%ZISH(PATH,FILE,$NA(^TMP($J,"KID",1,0)),3)
- I '% D FAIL^XTMUNIT("Can't open file") QUIT
- ;
- D ANALYZE($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"KID")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","OR*3.0*357")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","PXRM*2.0*22")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","TERATOGENIC MEDICATIONS ORDER CHECKS 1.0")))
- QUIT
