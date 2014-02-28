@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-27  11:45 AM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-27  6:52 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -66,7 +66,7 @@ DBAKID2M ; Restore patches from HFS files to MailMan
  ; Get path to HFS patches
  ; Order through all messages
  N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
- N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
+ ; N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
  S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
  S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-SB"))
@@ -165,8 +165,15 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  ; debug
  S $ET="B"
  ; debug
- D PKGADD(RTN("DESIGNATION")) ; Add to DHCP Package file
- D PKGSETUP(.RTN)             ; And set it up.
+ ;
+ ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
+ D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
+ D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
+ D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
+ N DA S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"KID"))) ; ZEXCEPT: A1AENB,A1AEPD
+ D ASSERT(DA)                            ; Assert that we obtained an IEN
+ D ASSERT($P($$K2PMD(RTN("DESIGNATION")),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
+ D ASSERT($$K2PMD(RTN("DESIGNATION"))=A1AEPD) ; Assert that the designation is the same as the Patch Designation
  ;
  ; Deliver the message
  N XMERR,XMZ
@@ -369,7 +376,7 @@ PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
  ;
  ; When doing lookups for laygo, only look in the Package file's C index for designation.
  N DIC S DIC("PTRIX",11007,.01,9.4)="C"
- N A1AE S A1AE(0)="XL" ; X-Large; I mean eXact match, Laygo
+ N A1AE S A1AE(0)="XLM" ; eXact match, Laygo, Multiple Indexes
  N X S X=$P(DESIGNATION,"*") ; Input to ^DIC
  D PKG^A1AEUTL
  ; ZEXCEPT: Y leaks from PKG^A1AEUTL
@@ -381,7 +388,7 @@ PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
  D ASSERT($L(A1AEPKNM)) ; Must be defined.
  QUIT
  ;
-PKGSETUP(TXTINFO) ; @TEST Setup package in Patch module
+PKGSETUP(A1AEPKIF,TXTINFO) ; Private; Setup package in Patch module
  ; ZEXCEPT: A1AEPKIF - Created by PKGADD
  N IENS S IENS=A1AEPKIF_","
  N A1AEFDA,DIERR
@@ -402,7 +409,7 @@ PKGSETUP(TXTINFO) ; @TEST Setup package in Patch module
  D ASSERT($D(^A1AE(11007,A1AEPKIF,"PH")))  ; Developer Nodes
  QUIT
  ;
-MKUSR(NAME,KEY) ; Make Users for the Package
+MKUSR(NAME,KEY) ; Private; Make Users for the Package
  Q:$O(^VA(200,"B",NAME,0)) $O(^(0)) ; Quit if the entry exists with entry
  ;
  ; Get initials
@@ -420,8 +427,88 @@ MKUSR(NAME,KEY) ; Make Users for the Package
  D UPDATE^DIE("E",$NA(A1AEFDA),$NA(A1AEIEN),$NA(A1AEERR)) ; Typical UPDATE
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
- Q A1AEIEN(1) ;Provider IEN ;
+ Q A1AEIEN(1) ;Provider IEN
+ ;
+VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
+ ; Input: - A1AEPKIF - Package IEN in 11007, value
+ ;        - DESIGNATION - Package designation (XXX*1*3)
+ ; Output: (In symbol table:) A1AEVR
+ ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
+ S DESIGNATION=$$K2PMD(DESIGNATION) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
+ N X,A1AE S A1AE(0)="L" ; X is version number; input to ^DIC
+ S X=$P(DESIGNATION,"*",2)
+ D VER^A1AEUTL ; Internal API
+ D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
+ QUIT
+ ;
+ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,KIDINFO) ; Private $$ ; Add patch to 11005
+ ; Input: TBD
+ ; Non-importing version is at NUM^A1AEUTL
+ N DESIGNATION S DESIGNATION=$$K2PMD(TXTINFO("DESIGNATION")) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
+ N X S X=DESIGNATION
+ S A1AENB=$P(X,"*",3) ; ZEXCEPT: A1AENB leak this
+ N A1AETY S A1AETY="PH"
+ N DIC,Y S DIC="^A1AE(11005,",DIC(0)="L" D ^DIC
+ ; ZEXCEPT: A1AEPD ; leak this
+ N DA
+ S DA=+Y,A1AEPD=$P(Y,"^",2),$P(^A1AE(11005,DA,0),"^",2,4)=A1AEPKIF_"^"_A1AEVR_"^"_A1AENB,^A1AE(11005,"D",A1AEPKIF,DA)=""
+ ;
+ ; Put stream
+ N FDA S FDA(11005,DA_",",.2)=$$GETSTRM(DESIGNATION) ; PATCH STREAM
+ N DIERR
+ D FILE^DIE("",$NA(FDA),$NA(ERR))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ ; Change status to Under Development and add developer in
+ S $P(^A1AE(11005,DA,0),U,8)="u"
+ ;
+ ; Get developer
+ N DEV
+ D  ; Protect DA from FM Monster
+ . N DA
+ . N NAME S NAME=TXTINFO("DEV")
+ . D STDNAME^XLFNAME(.NAME) ; Remove funny stuff (like dots at the end)
+ . S DEV=$$FIND1^DIC(200,"","QX",NAME,"B") ; Get developer
+ ;
+ D ASSERT(DEV,"Developer "_TXTINFO("DEV")_" couldn't be resolved")
+ ;
+ S $P(^A1AE(11005,DA,0),U,9)=DEV
+ ; File Date
+ N X,Y S X=TXTINFO("DEV","DATE") D ^%DT
+ S $P(^A1AE(11005,DA,0),U,12)=Y
+ ; Hand cross-reference
+ S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
+ ;
+ ; Add subject and priority
+ N FDA,IENS
+ N DIERR
+ S IENS=DA_","
+ S FDA(11005,IENS,"PATCH SUBJECT")=TXTINFO("SUBJECT")
+ S FDA(11005,IENS,"PRIORITY")=TXTINFO("PRIORITY")
+ D FILE^DIE("E",$NA(FDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ K FDA
+ ;
+ ;
+ ; TODO: Add KIDS fild to 11005.1 along with routines in routine mulitple
+ QUIT DA
+ ;
+GETSTRM(DESIGNATION) ; Private to package; $$; Get the Stream for a designation using a patch number
+ ; Input: DESIGNATION XXX*1.0*5
+ ; Output: Stream IEN in 11007.1
+ N PN
+ I $L(DESIGNATION,"*")>1 S PN=$P(DESIGNATION,"*",3)
+ E  S PN=0
+ I PN=0 QUIT 1  ; VA Patch Stream
+ N STRM
+ N I F I=0:0 S I=$O(^A1AE(11007.1,I)) Q:'I  D  Q:$G(STRM)
+ . N MIN S MIN=I
+ . N MAX S MAX=I+998
+ . I PN'<MIN&(PN'>MAX) S STRM=I  ; Really this is IF MIN<=PN<=MAX...
+ Q STRM
  ;
 ASSERT(X,Y) ; Assertion engine
- I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"
+ ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
+ I $D(XTMUNIT) D CHKTF^XTMUNIT(X,$G(Y)) QUIT  ; if we are inside M-Unit, assert using that engine.
+ I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"  ; otherwise, throw error if assertion fails.
  QUIT
