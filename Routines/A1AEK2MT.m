@@ -1,8 +1,32 @@
-A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-02-25  7:47 PM
+A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-02-27  5:26 PM
  ;;2.4;DHCP PATCH MODULE;
  ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 STARTUP ; M-Unit Start-up
+ I $D(DUZ)[0 D ^XUP
+ ; Make the user a surrogate to postmaster
+ N FDA 
+ S FDA(3.703,"?+1,.5,",.01)="`"_DUZ
+ S FDA(3.703,"?+1,.5,",1)="y" ; Read Priv
+ S FDA(3.703,"?+1,.5,",2)="y" ; Send Priv
+ D UPDATE^DIE("E",$NA(FDA),$NA(A1AEK2MTIEN))
+ ; Delete all the old data, ONLY IF WE ARE ON TEST
+ I '$$PROD^XUPROD() D
+ . D EN^DDIOL("Deleting all imported users.")
+ . N USR S USR=48
+ . N DA,DIK S DIK="^VA(200,"
+ . F  S USR=$O(^VA(200,USR)) Q:'USR  D
+ . . I $L($P(^VA(200,USR,0),U,3)) QUIT  ; Has access code... don't delete.
+ . . S DA=USR D ^DIK
+ . ;
+ . ; Now loop through the package file, and delete the A1AE Packages from our file
+ . D EN^DDIOL("Deleting imported package set-ups and imported patches")
+ . N PKG S PKG=0 F  S PKG=$O(^DIC(9.4,PKG)) Q:'PKG  D
+ . . N DA,DIK S DIK="^A1AE(11005,"
+ . . S DA="" F  S DA=$O(^A1AE(11005,"D",PKG,DA)) Q:'DA  D ^DIK
+ . . N DA,DIK S DIK="^A1AE(11007,"
+ . . I $D(^A1AE(11007,"B",PKG)) S DA=PKG D ^DIK
+ ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  S OLDPWD=$ZDIRECTORY
  D EN^DDIOL("Cloning the OSEHRA repository. This will take some time.")
@@ -17,6 +41,10 @@ STARTUP ; M-Unit Start-up
  QUIT
  ;
 SHUTDOWN ; M-Unit Shutdown
+ ; Delete surrogate for postmaster
+ N C S C=","
+ N FDA S FDA(3.703,A1AEK2MTIEN(1)_C_.5_C,.01)="@" D FILE^DIE("E",$NA(FDA))
+ ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  N P S P="cmdpipe"
  S $ZDIRECTORY=OLDPWD
@@ -41,9 +69,15 @@ CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 
  D PURGEIT^XMA3(.XMPARM)
  QUIT
  ;
+GETSTRM ; @TEST Test GETSTRM^A1AEK2M
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*55"),1)
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*0"),1)
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*10035"),10001)
+ QUIT
+ ;
 MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
  ; ZEXCEPT: ROOT,SAVEDUZ - killed in EXIT.
- S (SAVEDUZ,DUZ)=.5
+ ; N DUZ S DUZ=.5
  S ROOT("SB")="/home/forum/testkids/"
  S ROOT("MB")="/home/osehra/VistA/Packages/MultiBuilds/"
  D SILENT^A1AEK2M
@@ -155,7 +189,7 @@ LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
  ;
  ; Load each patch
  F  S PACKAGE=$O(PACKAGES(PACKAGE)) Q:PACKAGE=""  D
- . I $E(PACKAGE)="." QUIT
+ . I $E(PACKAGE)="." QUIT  ; .gitignore
  . I PACKAGE="MultiBuilds" QUIT
  . I PACKAGE="Uncategorized" QUIT
  . N A S A("VistA/Packages/"_PACKAGE_"/Patches/*")=""
