@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-02-26  1:57 PM
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-02-27  3:10 PM
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -59,7 +59,8 @@ IN ;Called from the Input transform file 11005, field .01
  I '$D(A1AETY) W !?3,"Please use the Edit Template." K X Q
  I A1AETY="PH",'$D(^A1AE(11007,X2,"V",+$P(X,"*",2),0)) W !?3,"'",$P(X,"*",2),"' is not a valid version number for this package" K X Q
  I A1AETY="PK",$D(^A1AE(11007,X2,"V",+$P(X,"*",2))) W !,?3,"'",$P(X,"*",2),"' is not a new package version." K X Q
- I '$D(^A1AE(11007,X2,$S(A1AEX=11005:"PH",1:"PB"),DUZ,0)) W !?3,"You are not an authorized user" K X Q
+ ; VEN/SMH - Add check for A1AE MGR besides the user
+ I '$D(^A1AE(11007,X2,$S(A1AEX=11005:"PH",1:"PB"),DUZ,0))&('$D(^XUSEC("A1AE MGR",DUZ))) W !?3,"You are not an authorized user" K X Q
  I $D(^A1AE(A1AEX,"B",X)) W !?3,"Another error designation with the '",X,"' specification already exists" K X Q
  Q
  ;
