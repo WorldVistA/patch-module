@@ -1,4 +1,4 @@
-A1AEMAL1	;ISC-Albany/JLU - creates the Patch mail message ;01/10/2007
+A1AEMAL1	;ISC-Albany/JLU - creates the Patch mail message ;2014-02-28  2:24 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	I $G(A1AERCR8) D
 	. S $P(^XMB(3.9,XMZ,0),"^",7)=$S($P(^A1AE(11005.1,DA,0),U,11)="K":"K",1:"X")
@@ -48,7 +48,7 @@ ADD(T)	;Inc E, Add text to Message.
 RO	;Add KIDS message
 	;1st line $txt
 	;fix for <undef> when 11005.1 stub not getting set
-	S ^XMB(3.9,XMZ,2,1,0)=$G(^A1AE(11005.1,DA,2,1,0))
+	S ^XMB(3.9,XMZ,2,1,0)=$G(^A1AE(11005.1,DA,2,1,0)) ; VEN/SMH - THIS IS THE LINE THAT PUTS '$TXT Created By' etc...
 	D ADD(""),ADD("")
 	D ADD("Packman Mail Message:")
 	D ADD("=====================")
