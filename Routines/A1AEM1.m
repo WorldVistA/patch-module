@@ -1,4 +1,4 @@
-A1AEM1	;ISC-Albany/pke - copy message ;6/14/07  16:26
+A1AEM1	;ISC-Albany/pke - copy message ;2014-02-28  2:53 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 MES	;copy mesage into file #11005.1
 	N X,Y,A1AERD,AN,GLOBAL,GLOBAL0,RTXT,RSTART,RVER,LINE2
@@ -197,5 +197,5 @@ HFS2(A1AEDA)	;Move Routine Info from HFS file to Routine sub-file.
 	. I A3>99 D UPDATE^DIE("","FDA") S A3=0 K FDA
 	. Q
 	I A3 D UPDATE^DIE("","FDA") K FDA
-	W !,"Routine Name's and Checksums moved."
+	D EN^DDIOL("Routine Name's and Checksums moved.")
 	Q
