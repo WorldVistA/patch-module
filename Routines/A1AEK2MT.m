@@ -1,9 +1,10 @@
-A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-02-27  5:26 PM
+A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-02-28  6:25 PM
  ;;2.4;DHCP PATCH MODULE;
  ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 STARTUP ; M-Unit Start-up
- I $D(DUZ)[0 D ^XUP
+ ; ZEXCEPT: OLDPWD,A1AEK2MTIEN
+ I $D(DUZ)[0 NEW  D ^XUP ; X-New. Protect our variables from XUP's global kill.
  ; Make the user a surrogate to postmaster
  N FDA 
  S FDA(3.703,"?+1,.5,",.01)="`"_DUZ
@@ -23,9 +24,10 @@ STARTUP ; M-Unit Start-up
  . D EN^DDIOL("Deleting imported package set-ups and imported patches")
  . N PKG S PKG=0 F  S PKG=$O(^DIC(9.4,PKG)) Q:'PKG  D
  . . N DA,DIK S DIK="^A1AE(11005,"
- . . S DA="" F  S DA=$O(^A1AE(11005,"D",PKG,DA)) Q:'DA  D ^DIK
+ . . S DA="" F  S DA=$O(^A1AE(11005,"D",PKG,DA)) Q:'DA  F DIK="^A1AE(11005,","^A1AE(11005.1,","^A1AE(11005.5," D ^DIK
  . . N DA,DIK S DIK="^A1AE(11007,"
  . . I $D(^A1AE(11007,"B",PKG)) S DA=PKG D ^DIK
+ . S $P(^A1AE(11005,0),U,3,4)=0_U_0 ; Zero out the header node so we start counting at zero
  ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  S OLDPWD=$ZDIRECTORY
@@ -42,13 +44,14 @@ STARTUP ; M-Unit Start-up
  ;
 SHUTDOWN ; M-Unit Shutdown
  ; Delete surrogate for postmaster
+ ; ZEXCEPT: OLDPWD,A1AEK2MTIEN ; Created in STARTUP
  N C S C=","
  N FDA S FDA(3.703,A1AEK2MTIEN(1)_C_.5_C,.01)="@" D FILE^DIE("E",$NA(FDA))
  ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  N P S P="cmdpipe"
  S $ZDIRECTORY=OLDPWD
- K OLDPWD
+ K OLDPWD,A1AEK2MTIEN
  ; Don't delete. Takes forever to clone again.
  ; O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
  ; U P C P
@@ -70,29 +73,9 @@ CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 
  QUIT
  ;
 GETSTRM ; @TEST Test GETSTRM^A1AEK2M
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*55"),1)
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*0"),1)
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M("AAA*2.0*10035"),10001)
- QUIT
- ;
-MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
- ; ZEXCEPT: ROOT,SAVEDUZ - killed in EXIT.
- ; N DUZ S DUZ=.5
- S ROOT("SB")="/home/forum/testkids/"
- S ROOT("MB")="/home/osehra/VistA/Packages/MultiBuilds/"
- D SILENT^A1AEK2M
- ;
- ; Get Q-PATCH basket
- N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
- N XMK S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
- ;
- ; Assert that it has messages
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))>0)
- N I S I=0 F  S I=$O(^XMB(3.7,.5,2,XMK,1,I)) Q:'I  D
- . N SUB S SUB=$P(^XMB(3.9,I,0),"^")
- . N PN S PN=$P(SUB,"*")
- . D ASSERT($L(PN)>1,"Subject incorrect")
- . D ASSERT($E(^XMB(3.9,I,2,1,0),1,4)="$TXT","Message "_I_" doesn't have TXT nodes")
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*55"),1)
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*0"),1)
+ D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*10035"),10001)
  QUIT
  ;
 SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
@@ -101,9 +84,9 @@ SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
  N FILE
  N % S %=$$LIST^%ZISH(ROOT,"ARRAY","FILE")
  I '% S $EC=",U-WRONG-DIRECTORY,"
- N % S %=$$SELFIL^A1AEK2M(.FILE)
+ N % S %=$$SELFIL^A1AEK2M0(.FILE)
  W !,%
- N % S %=$$SELFIL^A1AEK2M(.FILE,".TXT")
+ N % S %=$$SELFIL^A1AEK2M0(.FILE,".TXT")
  W !,%
  QUIT
  ;
@@ -116,7 +99,7 @@ ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  F  S J=$O(FILE(J)) Q:J=""  D
  . K ^TMP($J,"TXT")
  . N Y S Y=$$FTG^%ZISH(ROOT,J,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF^A1AEK2M($NA(^TMP($J,"TXT")))
+ . D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT")))
  . N RTN
  . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
  . D ASSERT($L(RTN("SEQ")))
@@ -132,10 +115,10 @@ ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
  N X F  U P R X:1 Q:$ZEOF  U $P D
  . K ^TMP($J,"TXT")
  . N Y S Y=$$FTG^%ZISH($ZD,X,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF^A1AEK2M($NA(^TMP($J,"TXT"))) ; Clean header and footer.
+ . D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT"))) ; Clean header and footer.
  . N RTN
  . N $ET,$ES ; We do a try catch with ANALYZE^A1AEK2M2
- . S $ET="D ANATRAP^A1AEK2M(X)"
+ . S $ET="D ANATRAP^A1AEK2M2(X)"
  . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
  . D ASSERT($L(RTN("SEQ")))
  . D ASSERT($L(RTN("SUBJECT")))
