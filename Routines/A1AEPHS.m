@@ -1,8 +1,10 @@
-A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-01-08  5:03 PM
+A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-03-03  3:21 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	;
 	;logic from dd,  U triggers test MESSAGE if underdevlopment
 	;I A1AEOLD="c","Uu"'[$E(X_0,1) Q  ;allow c=>u in template
+        Q:'$D(X)
+        S A1AEOLD=$P(^A1AE(11005,DA,0),U,8),A1AEPKIF=$P(^(0),U,2)
         N DIERR ; VEN/SMH - Don't allow DIERR to leak back to DBS Fileman calls
 	K TESTMES
 	I "Uu"[$E(X_0,1),A1AEOLD="u" S X="u",TESTMES=1
