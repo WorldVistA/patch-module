@@ -1,4 +1,4 @@
-A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-02-28  12:19 PM
+A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-04  2:50 PM
  ;;2.4;DHCP PATCH MODULE;;
  ;
  ; Conversion procedure from a VA PM HFS-extracted KIDS (complete):
@@ -103,7 +103,8 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  . N F S F="" ; file looper
  . N DONE ; control flag
  . ; here's the core search for the file name containing a patch number
- . F  S F=$O(FILES(F)) Q:F=""  I F[$P(TXTINFO("DESIGNATION"),"*",3) D  Q:$G(DONE)
+ . ; Make sure that the patch doesn't contain spaces (package release)
+ . F  S F=$O(FILES(F)) Q:F=""  I TXTINFO("DESIGNATION")'[" ",F[$P(TXTINFO("DESIGNATION"),"*",3) D  Q:$G(DONE)
  . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
  . . N % S %=$$FTG^%ZISH(ROOT("SB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
  . . I '% S $EC=",U-FILE-DISAPPEARED,"
@@ -117,6 +118,22 @@ KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresp
  . . . M @KIDGLO=^TMP($J,"ANKID",P)
  . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F)
  . . . S KIDFIL0=F
+ . ;
+ . ; Patch zero special case (package release)
+ . ; If true, analyze each file for the patch zero notation
+ . I KIDFIL0="",(TXTINFO("DESIGNATION")'["*"!($P(TXTINFO("DESIGNATION"),"*",3)=0)) D
+ . . N F S F=""
+ . . F  S F=$O(FILES(F)) Q:F=""  D
+ . . . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+ . . . N % S %=$$FTG^%ZISH(ROOT("SB"),F,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+ . . . I '% S $EC=",U-FILE-DISAPPEARED,"
+ . . . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+ . . . N P S P=""
+ . . . F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD^A1AEK2M(P)=$$K2PMD^A1AEK2M(TXTINFO("DESIGNATION")) S DONE=1 QUIT
+ . . . I $G(DONE) DO  QUIT
+ . . . . M @KIDGLO=^TMP($J,"ANKID",P)
+ . . . . D EN^DDIOL("Found patch "_TXTINFO("DESIGNATION")_" in "_F)
+ . . . . S KIDFIL0=F
  ;
  ; Now we have the hard case. We still don't have the file. 
  ; Let's look in the Multibuilds directory
@@ -170,8 +187,8 @@ GETSTRM(DESIGNATION) ; Private to package; $$; Get the Stream for a designation 
  I PN=0 QUIT 1  ; VA Patch Stream
  N STRM
  N I F I=0:0 S I=$O(^A1AE(11007.1,I)) Q:'I  D  Q:$G(STRM)
- . N MIN S MIN=I
- . N MAX S MAX=I+998
+ . N MIN S MIN=I-1 ; For Patch zero (e.g. package release XOBV*1.6*0)
+ . N MAX S MAX=I+998 ; up to 999
  . I PN'<MIN&(PN'>MAX) S STRM=I  ; Really this is IF MIN<=PN<=MAX...
  Q STRM
  ;
