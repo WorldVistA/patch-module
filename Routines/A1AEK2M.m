@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-28  6:56 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-04  3:04 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -104,21 +104,40 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  I $D(^TMP($J,"KID")) D
  . N I F I=1:1 Q:'$D(^TMP($J,"KID",I))  S ^TMP($J,"MSG",LASTSUB+I,0)=^TMP($J,"KID",I)
  ; 
- ; Mail Subject
- N XMSUBJ S XMSUBJ=RTN("DESIGNATION")_" SEQ# "_RTN("SEQ")
- ;
  ; debug
- S $ET="B"
+ ; S $ET="B"
  ; debug
  ;
+ ; Add dependencies in description (temporary or permanent... I don't know now).
+ I $O(RTN("PREREQ","")) D                              ; If we have prerequisites
+ . N LS S LS=$O(RTN("DESC"," "),-1)                    ; Get last sub
+ . N NS S NS=LS+1                                      ; New Sub
+ . S RTN("DESC",NS)=" ",NS=NS+1                        ; Empty line
+ . S RTN("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
+ . N I F I=1:1 Q:'$D(RTN("PREREQ",I))  S RTN("DESC",NS)=" - "_RTN("PREREQ",I),NS=NS+1
+ ;
+ ; Change designation into Patch Module format from KIDS format
+ S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
  ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
  D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
  D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
  D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
  N DA S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),$D(CANTLOAD(RTN("DESIGNATION"))),INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
  D ASSERT(DA)                            ; Assert that we obtained an IEN
- D ASSERT($P($$K2PMD(RTN("DESIGNATION")),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
- D ASSERT($$K2PMD(RTN("DESIGNATION"))=A1AEPD) ; Assert that the designation is the same as the Patch Designation
+ D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
+ D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
+ ; 
+ ; Now, add the Primary forked version of the patch
+ N DA D
+ . N DERIVEDPATCH M DERIVEDPATCH=RTN
+ . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
+ . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
+ . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
+ . S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),$D(CANTLOAD(RTN("DESIGNATION"))),INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . D ASSERT(DA)                            ; Assert that we obtained an IEN
+ . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
+ . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
+ ; 
  ;
  ; Deliver the message
  ; DON'T DO THIS ANYMORE -- WILL DELETE
@@ -142,8 +161,6 @@ K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by
 PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
  ; Input: Designation: Patch designation AAA*1*22; By value
  ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
- ;
- S DESIGNATION=$$K2PMD(DESIGNATION) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
  ;
  ; When doing lookups for laygo, only look in the Package file's C index for designation.
  N DIC S DIC("PTRIX",11007,.01,9.4)="C"
@@ -205,7 +222,6 @@ VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
  ;        - DESIGNATION - Package designation (XXX*1*3)
  ; Output: (In symbol table:) A1AEVR
  ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
- S DESIGNATION=$$K2PMD(DESIGNATION) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
  N X,A1AE S A1AE(0)="L" ; X is version number; input to ^DIC
  S X=$P(DESIGNATION,"*",2)
  D VER^A1AEUTL ; Internal API
@@ -215,8 +231,7 @@ VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
 ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Add patch to 11005
  ; Input: TBD
  ; Non-importing version is at NUM^A1AEUTL
- N DESIGNATION S DESIGNATION=$$K2PMD(TXTINFO("DESIGNATION")) ; Convert space format (XOBW 1.0) to PM format (XOBW*1*0)
- ;
+ N DESIGNATION S DESIGNATION=TXTINFO("DESIGNATION")
  ; Don't add a patch if it already exists in the system
  I $D(^A1AE(11005,"B",DESIGNATION)) DO   QUIT $O(^(DESIGNATION,""))
  . D EN^DDIOL($$RED^A1AEK2M1("Patch already exists. Not adding again."))
@@ -226,17 +241,21 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  N X S X=DESIGNATION
  S A1AENB=$P(DESIGNATION,"*",3) ; ZEXCEPT: A1AENB leak this
  N A1AETY S A1AETY="PH"
- N DIC,Y S DIC="^A1AE(11005,",DIC(0)="L" D ^DIC
- ; ZEXCEPT: A1AEPD ; leak this
- ; TODO: If we have time, do this the proper way with Fileman APIs.
- N DA
- S DA=+Y,A1AEPD=$P(Y,"^",2),$P(^A1AE(11005,DA,0),"^",2,4)=A1AEPKIF_"^"_A1AEVR_"^"_A1AENB,^A1AE(11005,"D",A1AEPKIF,DA)=""
+ N A1AEFL S A1AEFL=11005
+ N DIC,Y S DIC(0)="LX" ; Laygo, Exact match
+ ; ZEXCEPT: DA,A1AEPD Leaked by A1AEUTL
+ I $D(TXTINFO("ORIG-DESIGNATION")) D  ; Derived patch!!
+ . D SETNUM^A1AEUTL   ; This adds the patch based on the latest patch number
+ . N FDA S FDA(11005,DA_",",5.2)=TXTINFO("ORIG-DESIGNATION")                ; Derived from patch field
+ . N DIERR D FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"   ; File--external b/c this is a pointer.
+ E  D SETNUM1^A1AEUTL ; This forces the current patch number in. 
  ;
  ; Lock the record
  LOCK +^A1AE(11005,DA):0 E  S $EC=",U-FAILED-TO-LOCK," ; should never happen
  ;
  ; Put stream
- N FDA S FDA(11005,DA_",",.2)=$$GETSTRM^A1AEK2M0(DESIGNATION) ; PATCH STREAM
+ N STREAM S STREAM=$$GETSTRM^A1AEK2M0(DESIGNATION) ; PATCH STREAM
+ N FDA S FDA(11005,DA_",",.2)=STREAM
  N DIERR
  D FILE^DIE("",$NA(FDA),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
@@ -260,14 +279,14 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  ; Hand cross-reference
  S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
  ;
- ; Add subject and priority
+ ; Add subject and priority and a default and sequenece number
  N FDA,IENS
  N DIERR
  S IENS=DA_","
  S FDA(11005,IENS,"PATCH SUBJECT")=TXTINFO("SUBJECT")
  S FDA(11005,IENS,"PRIORITY")=TXTINFO("PRIORITY")
  S FDA(11005,IENS,"DISPLAY ROUTINE PATCH LIST")="Yes"
- D FILE^DIE("E",$NA(FDA))
+ D FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
  ; Get Categories from DD (abstractable function; maybe do that)
@@ -298,6 +317,8 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  ;
  ; Add Description to the patch
  ; Reference code is COPY^A1AECOPD, but this time we use Fileman
+ ;
+ ; Now put in the whole WP field in the file.
  N DIERR
  D WP^DIE(11005,IENS,5.5,"",$NA(TXTINFO("DESC")),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"         ; Chk for error
@@ -349,7 +370,23 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  . S FDA(11005,IENS,$S(N="COM":10,1:11))=Y ; 10=DATE PATCH COMPLETED; 11=DATE PATCH VERIFIED
  . D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
- ; TODO: Deal with associated patches
+ ; Now, put the patches into a review status
+ N FDA,DIERR S FDA(11005,IENS,8)="2r" D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ ; Now keep associated patches for later filing in a holding area
+ ; No locks necessary since no increments used.
+ N XTMPS S XTMPS=$T(+0)_"-ASSOCIATED-PATCHES"        ; Namespaced Sub in ^XTMP
+ N START S START=$$NOW^XLFDT()                       ; Now
+ N PURGDT S PURGDT=$$FMADD^XLFDT(START,365.24*2+1\1) ; Hold for two years
+ S ^XTMP(XTMPS,0)=PURGDT_U_START_U_"Associated Patches Holding Area"
+ N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S ^XTMP(XTMPS,DESIGNATION,TXTINFO("PREREQ",I))=""
+ ;
+ ;
+ ; Sequence number (only for VA patches and real patches not package releases)
+ N FDA,DIERR
+ I STREAM=1,$P(DESIGNATION,"*",3)'=0 S FDA(11005,IENS,"SEQUENTIAL RELEASE NUMBER")=TXTINFO("SEQ") ; Only file for VA patches
+ D:$D(FDA) FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
  LOCK -^A1AE(11005,DA)
  QUIT DA
  ;
