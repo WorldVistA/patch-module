@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-02-27  3:10 PM
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-03-03  7:18 PM
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -85,22 +85,28 @@ NUM ; Entry point for obtaining the next patch number
  S:'$D(^A1AE(11007,A1AEPKIF,"V",A1AEVR,"PH")) ^("PH")=A1AESTREAM     ; VEN/SMH - changed! Initial Patch number.
  S $P(^A1AE(11007,A1AEPKIF,"V",0),"^",3)=A1AEVR ; Why??              ; VEN/SMH - not my comment.
  S A1AENB=^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)                    ; if first patch, we start at stream top (TY="PH")
+ L -^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)                          ; Unlock
  ;
-SETNUM ; New Logic - VEN/SMH for v2.4 - using new AB index
+SETNUM ; Private Proc; Get lastest number and set; New Logic - VEN/SMH for v2.4 - using new AB index
+ I '$D(A1AESTREAM) S A1AESTREAM=$$PRIMSTRM()                         ; If called without fallthrough, re-init.
  S X=A1AEPK_"*"_A1AEVR_"*"_A1AENB                                    ; Start ZZZ*2*last number per package file.
  I $D(^A1AE(11005,"AB",A1AEPK,A1AEVR)) D                             ; If package/version has patches already
  . N XEND S XEND=$O(^A1AE(11005,"AB",A1AEPK,A1AEVR,A1AESTREAM+9999),-1) ; Get last patch in stream (greatest number)
  . I XEND<A1AENB                                                     ; If our number is greater or equal to the greatest, ok
  . E  S A1AENB=XEND+1,$P(X,"*",3)=A1AENB                             ; else our patch is one greater than greatest.
+ D SETNUM1                                                           ; VEN/SMH - This got abstraced out for reuse
+ I Y>0 D                                                             ; If we have a record, update the last used
+ . L +^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY):1 ELSE  QUIT           ; Try to lock for 1 sec, otherwise, quit. Acuracy not that imp.
+ . S ^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)=A1AENB                  ; Set last patch number used
+ . L -^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)                        ; Unlock
+ QUIT
  ;
- ;returns x for patch,a1aenb
+SETNUM1 ;returns x for patch,a1aenb
  S DIC="^A1AE(A1AEFL,",DIC(0)=$G(DIC(0),"LE") ; VEN/SMH old : DIC(0)="LE"
  D ^DIC
- I Y>0 S ^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)=A1AENB
- L -^A1AE(11007,A1AEPKIF,"V",A1AEVR,A1AETY)
  Q:Y<0
  S DA=+Y,A1AEPD=$P(Y,"^",2),$P(^A1AE(A1AEFL,DA,0),"^",2,4)=A1AEPKIF_"^"_A1AEVR_"^"_A1AENB,^A1AE(A1AEFL,"D",A1AEPKIF,DA)=""
- Q
+ QUIT
  ;
  ; /END NUM
  ;
