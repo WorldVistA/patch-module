@@ -1,4 +1,4 @@
-A1AECL1	;ISF/RWF - Released Patch ROUTINE file updater ;6/14/07  16:17
+A1AECL1	;ISF/RWF - Released Patch ROUTINE file updater ;2014-03-03  5:47 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	Q
 	;
@@ -52,7 +52,7 @@ RSUM(ROOT,RET)	;
 	I $$PATFL() Q
 	D BLDTMP
 	I $L($O(^TMP($J,"RTN","")))>0 D SUM
-	K ^TMP($J)
+	K ^TMP($J,"RTN") ; VEN/SMH - Don't kill the whole thing
 	Q
 	;
 PATFL()	;See if data is in the Patch file
@@ -75,7 +75,7 @@ SUM	;Build the RSUM's, Zero node is add/delete^nop^checksum
 	Q
 	;
 BLDTMP	;Build the TMP global to work from.
-	N IX K ^TMP($J)
+	N IX K ^TMP($J,"RTN") ; VEN/SMH - Don't kill ^($J) here!
 	S IX=0
 	;Skip until we find $KID, then skip 2 more
 	F  S IX=$O(@ROOT@(IX)) Q:IX'>0  S X=^(IX,0) Q:$E(X,1,4)="$KID"
