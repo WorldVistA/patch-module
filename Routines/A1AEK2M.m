@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-04  6:09 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-05  5:30 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -9,28 +9,84 @@ A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-04  6:09
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
  ;
-DBAKID2M ; Restore patches from HFS files to MailMan
+SD ; Restore patches from a single directory.
  ; Get path to HFS patches
  ; Order through all messages
- N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
  ; N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
  S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-SB"))
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-SB"))
  D ^DIR
  QUIT:Y="^"
  N ROOT S ROOT("SB")=Y  ; where we load files from... Single Build Root
- S ^DISV(OLDDUZ,"A1AEK2M-SB")=Y
+ S ^DISV(DUZ,"A1AEK2M-SB")=Y
  ;
- S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch"
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MB"))
+ S DIR(0)="F^2:255",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch"
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-MB"))
  D ^DIR
  QUIT:Y="^"
  S ROOT("MB")=Y ; Multi Build Root
- S ^DISV(OLDDUZ,"A1AEK2M-MB")=Y
+ S ^DISV(DUZ,"A1AEK2M-MB")=Y
+ D SILENT(.ROOT)
+ QUIT
  ;
-SILENT ; Don't talk. Pass ROOT in Symbol Table.
- ; Fall through from above, but can be silently called if you pass ROOT in ST.
+RECURSE ; Restore patches from a directory tree
+ ; TODO: Document and clean.
+ N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
+ S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-RP")) ; Recurse Path
+ D ^DIR
+ QUIT:Y="^"
+ N ROOT
+ S ROOT=Y
+ S ^DISV(DUZ,"A1AEK2M-RP")=ROOT
+ N LVL S LVL=0
+ N PATCHROOTS
+ S PATCHROOTS=ROOT
+ N MBROOT
+ S PATCHROOTS("MB")=$$RECURSE2(PATCHROOTS)
+ D RECURSE1(ROOT,.PATCHROOTS)
+ QUIT
+ ;
+RECURSE1(ROOT,PATCHROOTS) ; Recurser
+ ; TODO: Document and clean.
+ ; ZEXCEPT: LVL - Newed above
+ ; ZEXCEPT: L - no such variable. XINDEX is tripping up.
+ N % ; Throw away variable
+ S LVL=$G(LVL,0)
+ N ARRAY S ARRAY("*")=""
+ N FILES,TXTFILES
+ I $$DEFDIR^%ZISH(ROOT)="/"!('$$LIST^%ZISH(ROOT,"ARRAY","FILES")) QUIT  ; DEFDIR bug!
+ S ARRAY("*.txt")="",ARRAY("*.TXT")="",%=$$LIST^%ZISH(ROOT,"ARRAY","TXTFILES")
+ I $D(TXTFILES) S PATCHROOTS("SB")=ROOT D SILENT(.PATCHROOTS)
+ N F S F="" F  S F=$O(FILES(F)) Q:F=""  D
+ . I $E(F)="." QUIT  ; Hidden file
+ . W:$D(KBANDEBUG) ?LVL*5,F,!
+ . S LVL=LVL+1
+ . D RECURSE1(ROOT_F_"/")
+ . S LVL=LVL-1
+ QUIT
+ ;
+RECURSE2(ROOT) ; $$;Recurser to Find the Multibuild
+ ; TODO: Document and clean.
+ ; ZEXCEPT: MBROOT ; Newed at the caller
+ ; ZEXCEPT: LVL - Newed above
+ ; ZEXCEPT: L - no such variable. XINDEX is tripping up.
+ I $$UP^XLFSTR(ROOT)["MULTIBUILD" S MBROOT=ROOT
+ S LVL=$G(LVL,0)
+ N ARRAY S ARRAY("*")=""
+ N FILES
+ I $$DEFDIR^%ZISH(ROOT)="/"!('$$LIST^%ZISH(ROOT,"ARRAY","FILES")) QUIT ""  ; DEFDIR bug!
+ N F S F="" F  S F=$O(FILES(F)) Q:F=""  D  Q:$D(MBROOT)
+ . I $E(F)="." QUIT  ; Hidden file
+ . I $$DEFDIR^%ZISH(ROOT_F_"/")="/"!('$$LIST^%ZISH(ROOT_F_"/","ARRAY","FILES")) QUIT  ; DEFDIR bug!
+ . W:$D(KBANDEBUG) ?LVL*5,F,!
+ . S LVL=LVL+1
+ . N % S %=$$RECURSE2(ROOT_F_"/")
+ . S LVL=LVL-1
+ QUIT $G(MBROOT)
+ ;
+SILENT(ROOT) ; Don't talk.
  ; All output is sent via EN^DDIOL. Set DIQUIET to redirect to a global.
  N FILES ; retrun array
  ;
@@ -38,7 +94,7 @@ SILENT ; Don't talk. Pass ROOT in Symbol Table.
  N ARRAY
  S ARRAY("*.TXT")=""
  S ARRAY("*.txt")=""
- N Y S Y=$$LIST^%ZISH(ROOT("SB"),"ARRAY","FILES") I 'Y W !,"Error getting directory list" QUIT
+ N Y S Y=$$LIST^%ZISH(ROOT("SB"),"ARRAY","FILES") I 'Y D EN^DDIOL("Error getting directory list") QUIT
  ;
  ; Loop through each text patches.
  N ERROR
@@ -127,7 +183,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  . N I F I=1:1 Q:'$D(^TMP($J,"KID",I))  S ^TMP($J,"MSG",LASTSUB+I,0)=^TMP($J,"KID",I)
  ; 
  ; debug
- ; S $ET="B"
+ S $ET="B"
  ; debug
  ;
  ; Add dependencies in description (temporary or permanent... I don't know now).
@@ -146,7 +202,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
  D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
  D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
- N DA S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
  D ASSERT(DA)                            ; Assert that we obtained an IEN
  D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
  D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
@@ -158,7 +214,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
  . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
  . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
- . S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
  . D ASSERT(DA)                            ; Assert that we obtained an IEN
  . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
  . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
@@ -253,168 +309,6 @@ VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
  D VER^A1AEUTL ; Internal API
  D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
  QUIT
- ;
-ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Add patch to 11005
- ; Input: TBD
- ; Non-importing version is at NUM^A1AEUTL
- N DESIGNATION S DESIGNATION=TXTINFO("DESIGNATION")
- ; Don't add a patch if it already exists in the system
- I $D(^A1AE(11005,"B",DESIGNATION)) DO   QUIT $O(^(DESIGNATION,""))
- . D EN^DDIOL($$RED^A1AEK2M1("Patch already exists. Not adding again."))
- . S A1AENB=$P(DESIGNATION,"*",3) ; leak this
- . S A1AEPD=DESIGNATION ; and also this
- ;
- N X S X=DESIGNATION
- S A1AENB=$P(DESIGNATION,"*",3) ; ZEXCEPT: A1AENB leak this
- N A1AETY S A1AETY="PH"
- N A1AEFL S A1AEFL=11005
- N DIC,Y S DIC(0)="LX" ; Laygo, Exact match
- ; ZEXCEPT: DA,A1AEPD Leaked by A1AEUTL
- I $D(TXTINFO("ORIG-DESIGNATION")) D  ; Derived patch!!
- . D SETNUM^A1AEUTL   ; This adds the patch based on the latest patch number
- . N FDA S FDA(11005,DA_",",5.2)=TXTINFO("ORIG-DESIGNATION")                ; Derived from patch field
- . N DIERR D FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"   ; File--external b/c this is a pointer.
- E  D SETNUM1^A1AEUTL ; This forces the current patch number in. 
- ;
- ; Lock the record
- LOCK +^A1AE(11005,DA):0 E  S $EC=",U-FAILED-TO-LOCK," ; should never happen
- ;
- ; Put stream
- N STREAM S STREAM=$$GETSTRM^A1AEK2M0(DESIGNATION) ; PATCH STREAM
- N FDA S FDA(11005,DA_",",.2)=STREAM
- N DIERR
- D FILE^DIE("",$NA(FDA),$NA(ERR))
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- ;
- ; Change status to Under Development and add developer in
- ; TODO: If we have time, do this the proper way with Fileman APIs.
- S $P(^A1AE(11005,DA,0),U,8)="u"
- ;
- ; Get developer
- N DEV
- N NAME S NAME=TXTINFO("DEV")
- D STDNAME^XLFNAME(.NAME) ; Remove funny stuff (like dots at the end)
- S DEV=$$FIND1^DIC(200,"","QX",NAME,"B") ; Get developer
- ;
- D ASSERT(DEV,"Developer "_TXTINFO("DEV")_" couldn't be resolved")
- ;
- S $P(^A1AE(11005,DA,0),U,9)=DEV
- ; File Date
- N X,Y S X=TXTINFO("DEV","DATE") D ^%DT
- S $P(^A1AE(11005,DA,0),U,12)=Y
- ; Hand cross-reference
- S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
- ;
- ; Add subject and priority and a default and sequenece number
- N FDA,IENS
- N DIERR
- S IENS=DA_","
- S FDA(11005,IENS,"PATCH SUBJECT")=TXTINFO("SUBJECT")
- S FDA(11005,IENS,"PRIORITY")=TXTINFO("PRIORITY")
- S FDA(11005,IENS,"DISPLAY ROUTINE PATCH LIST")="Yes"
- D FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- ;
- ; Get Categories from DD (abstractable function; maybe do that)
- N CATDD D FIELD^DID(11005.05,.01,,"POINTER",$NA(CATDD))  ; Categories DD
- N CATS ; Categories
- ; d:DATA DICTIONARY;i:INPUT TEMPLATE;
- N I F I=1:1:$L(CATDD("POINTER"),";") D        ; for each
- . N CATIE S CATIE=$P(CATDD("POINTER"),";",I)  ; each
- . Q:CATIE=""                                  ; last piece is empty. Make sure we aren't tripped up.
- . N EXT,INT                                   ; External Internal forms
- . S INT=$P(CATIE,":"),EXT=$P(CATIE,":",2)     ; get these
- . S CATS(EXT)=INT                             ; set into array for use below
- K CATDD
- ;
- N FDA
- N I F I=1:1 Q:'$D(TXTINFO("CAT",I))  D        ; for each
- . N CAT S CAT=TXTINFO("CAT",I)                ; each
- . S CAT=$$UP^XLFSTR(CAT)                      ; uppercase. PM Title cases them.
- . I CAT["ENHANCE" S CAT=$P(CAT," ")           ; Remove parens from 'Enhancement (Mandatory)'
- . N INTCAT S INTCAT=CATS(CAT)                 ; Internal Category
- . S FDA(11005.05,"+"_I_","_IENS,.01)=INTCAT   ; Addition FDA
- N DIERR                                       ; Fileman error flag
- D UPDATE^DIE("",$NA(FDA),$NA(ERR))            ; Add data
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"         ; Chk for error
- D ASSERT($O(^A1AE(11005,+IENS,"C",0)))        ; Assert that there is at least one.
- K FDA
- K CATS                                        ; don't need this anymore
- ;
- ; Add Description to the patch
- ; Reference code is COPY^A1AECOPD, but this time we use Fileman
- ;
- ; Now put in the whole WP field in the file.
- N DIERR
- D WP^DIE(11005,IENS,5.5,"",$NA(TXTINFO("DESC")),$NA(ERR))
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"         ; Chk for error
- D ASSERT($O(^A1AE(11005,DA,"D",0))>0) ; Assert that it was copied into PATCH DESCRIPTION
- ;
- ; Now, load the full KIDS build
- ; Reference code: ^A1AEM1
- ;
- ; 1st Create stub entry in 11005.1, whether or not we have KIDS file to populate
- NEW DIC,X,DINUM,DD,DO,DE,DQ,DR
- S DIC(0)="L"
- S (X,DINUM)=DA,DIC="^A1AE(11005.1,",DIC("DR")="20///"_"No routines included" K DD,DO D FILE^DICN K DE,DQ,DR,DIC("DR")
- ;
- ; Now load either the KIDS file or the HFS data from the remote system that was sent to us
- I 'INFOONLY D                            ; Must be a patch with KIDS contents
- . I KIDMISSING D HFS2^A1AEM1(DA)         ; No KIDS file found ; NB: Deletes 2 node (field 20) on 11005.1
- . E  D                                   ; We have a KIDS file
- . . S $P(^A1AE(11005.1,DA,0),"^",11)="K" ; FND+19  ; Type of message is KIDS not DIFROM
- . . K ^A1AE(11005.1,DA,2)                ; TRASH+7 ; remove old KIDS build
- . . MERGE ^A1AE(11005.1,DA,2)=@PATCHMSG  ; FND+23  ; Load the new one in.
- . . N X,Y S X=TXTINFO("DEV","DATE") D ^%DT         ; Get developer send date
- . . S $P(^A1AE(11005.1,DA,2,0),"^",5)=Y  ; FND+29  ; ditto
- . . S $P(^A1AE(11005.1,DA,2,0),"^",2)="" ; FND+30  ; Message IEN; We didn't load this from Mailman
- . . S $P(^A1AE(11005.1,DA,2,0),"^",3)="" ; FND+31  ; Message date; ditto
- . . D RTNBLD^A1AEM1(DA)                  ; FND+32  ; Load the routine information into 11005 from KIDS message
- . . ; if we load KIDS get rid of HFS "shadow" copy of the KIDS
- . . I $D(^A1AE(11005.5,DA,0)) N DIK S DIK="^A1AE(11005.5," D ^DIK ; FND+34
- ;
- ; Assertions
- N HASRTN S HASRTN=0 ; Has Routines?
- N I F I=1:1 Q:'$D(TXTINFO("CAT",I))  I TXTINFO("CAT",I)="Routine" S HASRTN=1  ; oh yes it does
- I HASRTN,'KIDMISSING D ASSERT($O(^A1AE(11005,DA,"P",0)),"Patch says routine must be present") ; Routine information in Patch
- I 'KIDMISSING D ASSERT($O(^A1AE(11005.1,DA,2,0)),"11005.1 entry must exist for each loaded patch")
- ;
- ; Now, complete and verify the patch, but don't run the input transforms b/c they send mail messages
- ; NB: B/c of the Daisy chain triggers, the current DUZ and date will be used for users. 
- ; NB (cont): I will fix this in a sec.
- N N F N="COM","VER" D
- . N DUZ
- . N NAME S NAME=TXTINFO(N)
- . D STDNAME^XLFNAME(.NAME) ; Remove funny stuff (like dots at the end)
- . S DUZ=$$FIND1^DIC(200,"","QX",NAME,"B") ; Get developer
- . D ASSERT(DUZ,"User "_NAME_" couldn't be resolved")
- . N FDA,DIERR
- . I N="COM" S FDA(11005,IENS,8)="c" D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- . I N="VER" S FDA(11005,IENS,8)="v" D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- . N X,Y S X=TXTINFO(N,"DATE") D ^%DT
- . N FDA,DIERR
- . S FDA(11005,IENS,$S(N="COM":10,1:11))=Y ; 10=DATE PATCH COMPLETED; 11=DATE PATCH VERIFIED
- . D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- ;
- ; Now, put the patches into a review status
- N FDA,DIERR S FDA(11005,IENS,8)="2r" D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- ;
- ; Now keep associated patches for later filing in a holding area
- ; No locks necessary since no increments used.
- N XTMPS S XTMPS=$T(+0)_"-ASSOCIATED-PATCHES"        ; Namespaced Sub in ^XTMP
- N START S START=$$NOW^XLFDT()                       ; Now
- N PURGDT S PURGDT=$$FMADD^XLFDT(START,365.24*2+1\1) ; Hold for two years
- S ^XTMP(XTMPS,0)=PURGDT_U_START_U_"Associated Patches Holding Area"
- N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S ^XTMP(XTMPS,DESIGNATION,TXTINFO("PREREQ",I))=""
- ;
- ;
- ; Sequence number (only for VA patches and real patches not package releases)
- N FDA,DIERR
- I STREAM=1,$P(DESIGNATION,"*",3)'=0 S FDA(11005,IENS,"SEQUENTIAL RELEASE NUMBER")=TXTINFO("SEQ") ; Only file for VA patches
- D:$D(FDA) FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
- ;
- LOCK -^A1AE(11005,DA)
- QUIT DA
  ;
 ASSERT(X,Y) ; Assertion engine
  ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
