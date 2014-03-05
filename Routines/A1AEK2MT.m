@@ -1,4 +1,4 @@
-A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-02-28  6:25 PM
+A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-03-05  2:24 PM
  ;;2.4;DHCP PATCH MODULE;
  ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
@@ -183,8 +183,21 @@ LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
  . F  S PATCH=$O(PATCHES(PATCH)) Q:PATCH=""  D
  . . I PATCH="README.rst" QUIT
  . . S ROOT("SB")="VistA/Packages/"_PACKAGE_"/Patches/"_PATCH_"/"
- . . D SILENT^A1AEK2M
+ . . D SILENT^A1AEK2M(.ROOT)
  QUIT
+ ;
+LOADDUP ; @TEST - Try to duplicate the loaded patches
+ N ROOT
+ S ROOT("SB")="/home/forum/testkids/"
+ S ROOT("MB")="/home/sam/VistA/Packages/MultiBuilds/"
+ D SILENT^A1AEK2M(.ROOT)
+ N %1,%2
+ S %1=$O(^A1AE(11005,"ADERIVED","TIU*1*272",""))
+ D ASSERT(%1,"Entry must exist")
+ S %2=$O(^A1AE(11005,"ADERIVED","TIU*1*272",%1))
+ D ASSERT(%2="","There should not be a duplicated entry")
+ QUIT
+ ;
  ; Convenience methods for M-Unit.
 ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
 CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
