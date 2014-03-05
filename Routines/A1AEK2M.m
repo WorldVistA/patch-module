@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-04  3:04 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-04  6:09 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -43,21 +43,36 @@ SILENT ; Don't talk. Pass ROOT in Symbol Table.
  ; Loop through each text patches.
  N ERROR
  N PATCH S PATCH=""
- N CANTLOAD ; Patches for whom we cannot find a KIDS file
- F  S PATCH=$O(FILES(PATCH)) Q:PATCH=""  D LOAD(.ROOT,PATCH,.ERROR,.CANTLOAD) Q:$D(ERROR)
+ N RESULT ; Result of Load
+ F  S PATCH=$O(FILES(PATCH)) Q:PATCH=""  D LOAD(.ROOT,PATCH,.ERROR,.RESULT) Q:$D(ERROR)
  ;
  ; Print out the patches we couldn't find.
- I $D(CANTLOAD) D
- . N I S I=""
- . F  S I=$O(CANTLOAD(I)) Q:I=""  D EN^DDIOL("Patch "_I_" from "_CANTLOAD(I)_" doesn't have a KIDS file")
+ N I S I=""
+ F  S I=$O(RESULT(I)) Q:I=""  I $D(RESULT(I,"CANTLOAD")) D 
+ . D EN^DDIOL("Patch "_I_" from "_RESULT(I,"TXT")_" doesn't have a KIDS file")
  . D EN^DDIOL("Please load these KIDS files manually into the patch module.")
+ ;
+ ; Send bulletin regarding loaded patches
+ N WP,CNT S CNT=1
+ N I S I="" F  S I=$O(RESULT(I)) Q:I=""  D
+ . S WP(CNT)="Patch designated as "_I_" has been loaded into the Patch Module.",CNT=CNT+1
+ . S WP(CNT)="Text file: "_RESULT(I,"TXT"),CNT=CNT+1
+ . I '$D(RESULT(I,"CANTLOAD")) S WP(CNT)="KID file: "_RESULT(I,"KID"),CNT=CNT+1
+ . E  S WP(CNT)="KID file couldn't be loaded. Use the Edit Patch option to load the KIDS file in.",CNT=CNT+1
+ . S WP(CNT)="Patch Module Entries: ",CNT=CNT+1
+ . N J F J=0:0 S J=$O(RESULT(I,"MSG",J)) Q:'J  S WP(CNT)="Entry: "_J_" with designation "_$P(^A1AE(11005,J,0),U),CNT=CNT+1
+ . S WP(CNT)=" ",CNT=CNT+1
+ K I,CNT
+ N PARM S PARM(1)=$$GET1^DIQ(200,DUZ,.01)
+ D SENDBULL^XMXAPI(DUZ,"A1AE LOAD RELEASED PATCH",.PARM,$NA(WP))
+ ;
  QUIT
  ;
-LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS and mail.
+LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and mail.
  ; ROOT = File system directory (Ref)
  ; PATCH = File system .TXT patch name (including the .TXT) (Value)
  ; ERROR = Ref variable to indicate error.
- ; CANTLOAD = Ref variable containing the KIDS patches we can't load b/c we can't find them.
+ ; RESULT = Ref variable containing the results, including whether we could load the KIDS patch
  ;
  ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
  K ^TMP($J,"TXT")
@@ -98,7 +113,14 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  ; Only if not informational!!! -- THIS CHANGED NOW B/C VA HAS SOME PATCHES THAT ARE INFORMATIONAL AND HAVE KIDS BUILDS
  K ^TMP($J,"KID")
  N KIDFIL S KIDFIL=$$KIDFIL^A1AEK2M0(.ROOT,PATCH,.RTN,$NA(^TMP($J,"KID"))) ; Load the KIDS file
- I KIDFIL="",'INFOONLY S CANTLOAD(RTN("DESIGNATION"))=PATCH ; if we can't find it, and it isn't info, put it in this array.
+ ;
+ ; Fill in results array
+ S RESULT(RTN("DESIGNATION"),"TXT")=PATCH
+ S RESULT(RTN("DESIGNATION"),"KID")=KIDFIL
+ I INFOONLY S RESULT(RTN("DESIGNATION"),"KID")="Info Only Patch"
+ N CANTLOAD S CANTLOAD=0
+ ; if we can't find it, and it isn't info, put it in this array.
+ I KIDFIL="",'INFOONLY S RESULT(RTN("DESIGNATION"),"CANTLOAD")=PATCH,CANTLOAD=1
  ;
  ; If we loaded the KIDS build, move it over.
  I $D(^TMP($J,"KID")) D
@@ -116,27 +138,31 @@ LOAD(ROOT,PATCH,ERROR,CANTLOAD) ; Load TXT message, find KIDS, then load KIDS an
  . S RTN("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
  . N I F I=1:1 Q:'$D(RTN("PREREQ",I))  S RTN("DESC",NS)=" - "_RTN("PREREQ",I),NS=NS+1
  ;
+ ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
  ; Change designation into Patch Module format from KIDS format
+ N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
  S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
  ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
  D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
  D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
  D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
- N DA S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),$D(CANTLOAD(RTN("DESIGNATION"))),INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ N DA S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
  D ASSERT(DA)                            ; Assert that we obtained an IEN
  D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
  D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
  ; 
+ S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
  ; Now, add the Primary forked version of the patch
  N DA D
  . N DERIVEDPATCH M DERIVEDPATCH=RTN
  . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
  . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
  . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
- . S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),$D(CANTLOAD(RTN("DESIGNATION"))),INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . S DA=$$ADDPATCH(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
  . D ASSERT(DA)                            ; Assert that we obtained an IEN
  . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
  . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
+ . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
  ; 
  ;
  ; Deliver the message
