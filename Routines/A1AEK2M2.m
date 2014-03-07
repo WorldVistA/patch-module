@@ -1,4 +1,4 @@
-A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-02-28  11:55 AM
+A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-03-05  8:17 PM
  ;;2.4;PATCH MODULE;;
  ; Inspired by the VISTA XML Parser, a State Machine
  ;
@@ -180,6 +180,11 @@ ASSERT(X,Y) ; Assertion engine
  ;
 ANATRAP(PATCH) ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
  ; YOU MUST NEW $ET AND $ES AND SET $ET="DO ANATRAP^A1AEK2M2(PATCH)"
- I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
+ ; I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
+ I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") G UNWIND
  QUIT
  ;
+UNWIND ; Trap unwinder
+ S $ET="Q:($ES&$Q) -9  Q:$ES  S $EC="""""
+ S $EC=",UQUIT,"
+ QUIT  ; This is not hit
