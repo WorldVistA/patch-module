@@ -1,10 +1,10 @@
-A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-05  9:19 PM
+A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-06  4:55 PM
  ;;2.4;PATCH MODULE;;
  ; This routine reads patches coming via email from VA Forum
  ; and files them into this forum
  ;
- ; NOTE: POSTMASTER MUST HAVE A1AE MGR/ (OR IMPORT ONCE I CREATE THAT) KEY
- ;       FOR THIS TO WORK.
+ ; NOTE: POSTMASTER MUST HAVE A1AE IMPORT KEY FOR THIS TO WORK.
+ ; NOW I GIVE THE POSTMASTER THE KEY AUTOMATICALLY.
  ;
 EN ; Main entry point
  ; Mailman Server Variables
@@ -15,7 +15,11 @@ EN ; Main entry point
  ; ZEXCEPT: XMZ - Message IEN in 3.9
  I '$D(^XMB(3.9,XMZ)) QUIT  ; Just a failsafe... shouldn't happen in real life.
  ;
- ; TODO: Add key to post master.
+ ; Add the import key if we are the postmaster
+ I DUZ=.5,'$D(^XUSEC("A1AE IMPORT",DUZ)) D
+ . N FDA S FDA(200.051,"+1,.5,",.01)="`"_$O(^DIC(19.1,"B","A1AE IMPORT",""))
+ . N DIERR D UPDATE^DIE("E",$NA(FDA))
+ . I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
  ; Initial variables
  N CNT S CNT=1                      ; Internal counter
@@ -44,7 +48,6 @@ EN ; Main entry point
  ;
  ; Populate the result variable for the mail message
  ; TODO: Result variable populatation needs to be abstracted.
- ; TODO: Mail message that something has been loaded.
  N RESULT
  N CANTLOAD S CANTLOAD=0
  S RESULT(TXTINFO("DESIGNATION"),"TXT")="Mailed Patch"
@@ -62,7 +65,13 @@ EN ; Main entry point
  ; Load whole thing and split
  D ADD0^A1AEK2M(.TXTINFO,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY,.RESULT)
  ;
+ ; Mail bulletin
+ D MAIL^A1AEK2M(.RESULT)
+ ;
+ ; Remove Temp Globals
  K ^TMP($J,"KID"),^("TXT"),^("MSG")
+ ;
+ ; Remove original message from Mailman. XMZ is currently present in the ST.
  N XMSER S XMSER="S.A1AE LOAD RELEASED PATCH"
  D REMSBMSG^XMA1C
  QUIT
@@ -105,7 +114,7 @@ TEST ; Testing entry point by Wally
  QUIT
  ;
 UNITTEST D EN^XTMUNIT($T(+0),1) QUIT
-UT1 ; @TEST
+UT1 ; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
  ; TODO: Create the ZZZ package in 9.4
  N DIK,DA ; fur Fileman
  S DUZ=.5 ; Must be defined for auditing.
