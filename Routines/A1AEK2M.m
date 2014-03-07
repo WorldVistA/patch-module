@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-05  5:30 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-06  4:28 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -109,6 +109,12 @@ SILENT(ROOT) ; Don't talk.
  . D EN^DDIOL("Please load these KIDS files manually into the patch module.")
  ;
  ; Send bulletin regarding loaded patches
+ D MAIL(.RESULT)
+ ;
+ QUIT
+ ;
+MAIL(RESULT) ; Private Proc to Package; Mail the result of the load to 
+ ;  -> interested parties using the bulletin A1AE LOAD RELEASED PATCH
  N WP,CNT S CNT=1
  N I S I="" F  S I=$O(RESULT(I)) Q:I=""  D
  . S WP(CNT)="Patch designated as "_I_" has been loaded into the Patch Module.",CNT=CNT+1
@@ -121,7 +127,6 @@ SILENT(ROOT) ; Don't talk.
  K I,CNT
  N PARM S PARM(1)=$$GET1^DIQ(200,DUZ,.01)
  D SENDBULL^XMXAPI(DUZ,"A1AE LOAD RELEASED PATCH",.PARM,$NA(WP))
- ;
  QUIT
  ;
 LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and mail.
@@ -158,11 +163,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  N LASTSUB S LASTSUB=$O(^TMP($J,"TXT"," "),-1)
  ;
  ; Info only patch?
- N INFOONLY S INFOONLY=0 ; Info Only patch?
- N I F I=0:0 S I=$O(RTN("CAT",I)) Q:'I  I RTN("CAT",I)="Informational" S INFOONLY=1
- N I F I=0:0 S I=$O(RTN("CAT",I)) Q:'I  I RTN("CAT",I)="Routine" S INFOONLY=0   ; B/c somebody might screw up by adding addtional stuff.
- K I
- ;
+ N INFOONLY S INFOONLY=$$INFOONLY(.RTN) ; Info Only patch?
  I INFOONLY D EN^DDIOL(PATCH_" is an Info Only patch.")
  ;
  ; Load KIDS message starting into the last subscript + 1 from the text node
@@ -183,43 +184,15 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  . N I F I=1:1 Q:'$D(^TMP($J,"KID",I))  S ^TMP($J,"MSG",LASTSUB+I,0)=^TMP($J,"KID",I)
  ; 
  ; debug
- S $ET="B"
+ ; S $ET="B"
  ; debug
  ;
  ; Add dependencies in description (temporary or permanent... I don't know now).
- I $O(RTN("PREREQ","")) D                              ; If we have prerequisites
- . N LS S LS=$O(RTN("DESC"," "),-1)                    ; Get last sub
- . N NS S NS=LS+1                                      ; New Sub
- . S RTN("DESC",NS)=" ",NS=NS+1                        ; Empty line
- . S RTN("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
- . N I F I=1:1 Q:'$D(RTN("PREREQ",I))  S RTN("DESC",NS)=" - "_RTN("PREREQ",I),NS=NS+1
+ D PREREQAD(.RTN)
  ;
- ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
- ; Change designation into Patch Module format from KIDS format
- N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
- S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
- ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
- D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
- D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
- D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
- N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
- D ASSERT(DA)                            ; Assert that we obtained an IEN
- D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
- D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
- ; 
- S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
- ; Now, add the Primary forked version of the patch
- N DA D
- . N DERIVEDPATCH M DERIVEDPATCH=RTN
- . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
- . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
- . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
- . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
- . D ASSERT(DA)                            ; Assert that we obtained an IEN
- . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
- . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
- . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
- ; 
+ ; Load whole thing and split
+ D ADD0(.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY,.RESULT)
+ ;
  ;
  ; Deliver the message
  ; DON'T DO THIS ANYMORE -- WILL DELETE
@@ -232,6 +205,35 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  ; Kill temp globals
  K ^TMP($J,"KID"),^("TXT"),^("MSG")
  ;
+ QUIT
+ ;
+ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT) ; Wrapper around all addition functions
+ ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
+ ; Change designation into Patch Module format from KIDS format
+ ; 
+ N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
+ S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
+ ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
+ D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
+ D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
+ D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
+ N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ D ASSERT(DA)                            ; Assert that we obtained an IEN
+ D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
+ D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
+ ; 
+ S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
+ ; Now, add the Primary forked version of the patch
+ N DA D
+ . N DERIVEDPATCH M DERIVEDPATCH=RTN
+ . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
+ . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
+ . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
+ . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . D ASSERT(DA)                            ; Assert that we obtained an IEN
+ . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
+ . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
+ . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
  QUIT
  ;
 K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
@@ -309,6 +311,22 @@ VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
  D VER^A1AEUTL ; Internal API
  D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
  QUIT
+ ;
+INFOONLY(TXTINFO) ; Private to Package; Is this patch Info Only?
+ N INFOONLY S INFOONLY=0
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Informational" S INFOONLY=1
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Routine" S INFOONLY=0   ; B/c somebody might screw up by adding addtional stuff.
+ Q INFOONLY
+ ;
+PREREQAD(TXTINFO) ; Private to Package; Add pre-requisites to txt message
+ I $O(TXTINFO("PREREQ","")) D                              ; If we have prerequisites
+ . N LS S LS=$O(TXTINFO("DESC"," "),-1)                    ; Get last sub
+ . N NS S NS=LS+1                                      ; New Sub
+ . S TXTINFO("DESC",NS)=" ",NS=NS+1                        ; Empty line
+ . S TXTINFO("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
+ . N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S TXTINFO("DESC",NS)=" - "_TXTINFO("PREREQ",I),NS=NS+1
+ QUIT
+ ;
  ;
 ASSERT(X,Y) ; Assertion engine
  ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
