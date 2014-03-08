@@ -1,4 +1,4 @@
-A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-05  1:34 PM
+A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-07  6:16 PM
  ;;2.4;DHCP PATCH MODULE;;
  ;
  ; Conversion procedure from a VA PM HFS-extracted KIDS (complete):
@@ -284,15 +284,17 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  I $D(TXTINFO("ORIG-DESIGNATION")) D  ; Derived patch!!
  . D SETNUM^A1AEUTL   ; This adds the patch based on the latest patch number
  . N FDA S FDA(11005,DA_",",5.2)=TXTINFO("ORIG-DESIGNATION")                ; Derived from patch field
- . N DIERR D FILE^DIE("E",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"   ; File--external b/c this is a pointer.
+ . N DIERR D FILE^DIE("EK",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"   ; File--external b/c this is a pointer, lock
  E  D SETNUM1^A1AEUTL ; This forces the current patch number in. 
  ;
  ; Lock the record
  LOCK +^A1AE(11005,DA):0 E  S $EC=",U-FAILED-TO-LOCK," ; should never happen
  ;
- ; Put stream
+ ; Put stream, and that we are currently loading.
  N STREAM S STREAM=$$GETSTRM^A1AEK2M0(DESIGNATION) ; PATCH STREAM
- N FDA S FDA(11005,DA_",",.2)=STREAM
+ N FDA
+ S FDA(11005,DA_",",.2)=STREAM  ; Current Stream
+ S FDA(11005,DA_",",.21)=1      ; Currently Importing
  N DIERR
  D FILE^DIE("",$NA(FDA),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
@@ -407,8 +409,12 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY) ; Private $$ ; Ad
  . S FDA(11005,IENS,$S(N="COM":10,1:11))=Y ; 10=DATE PATCH COMPLETED; 11=DATE PATCH VERIFIED
  . D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
- ; Now, put the patches into a review status
- N FDA,DIERR S FDA(11005,IENS,8)="2r" D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ; Now, put the patches into a review status and remove the currently importing flag.
+ N FDA,DIERR
+ S FDA(11005,IENS,8)="2r" ; STATUS
+ S FDA(11005,IENS,.21)="@" ; CURRENTLY IMPORTING delete
+ D FILE^DIE("",$NA(FDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
  ; Now keep associated patches for later filing in a holding area
  ; No locks necessary since no increments used.
