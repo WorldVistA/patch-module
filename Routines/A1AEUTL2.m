@@ -1,4 +1,4 @@
-A1AEUTL2	;ISF/RWF - Utility: Routine Info ;09/04/2008  1075122.654128
+A1AEUTL2	;ISF/RWF - Utility: Routine Info ;2014-03-07  7:51 PM
 	;;2.3;Patch Module;;Oct 17, 2007;Build 8
 	Q
 	;Called from the FM Print template [A1AE STANDARD PRINT]
@@ -22,7 +22,7 @@ RTNINFO(MAL)	;
 	. ;See if we have a KIDS checksum
 	. S NEW="",NEW=$P(AX,U,2),PL=$P(AX,U,3),OLD=$P(AX,U,4)
 	. I PATCH D PTLBLD(PL,PATCH)
-	. I '$L(OLD) S OLD=$$BCS(RN) I $G(A1AENEW)="v" S $P(^A1AE(11005,D0,"P",D1,0),U,4)=OLD ;Save the old at the time of release
+	. I '$L(OLD) S OLD=$$BCS(D0,RN) I $G(A1AENEW)="v" S $P(^A1AE(11005,D0,"P",D1,0),U,4)=OLD ;Save the old at the time of release
 	. D OUT("Routine Name: "_RN)
 	. ;S:OLD=""!(OLD=NEW) OLD="n/a"
 	. S:OLD="" OLD="n/a"
@@ -45,9 +45,14 @@ RTNINFO(MAL)	;
 	K TMP("A1AEPL",$J)
 	Q
 	;
-BCS(RN)	;Get the Before CheckSum
+BCS(DA,RN)	;Get the Before CheckSum
 	N C,X
 	S C="",RN=$TR(RN,$C(34)) ;Remove any Quotes
+        N PD S PD=$$GET1^DIQ(11005,DA,.01)
+        N STREAM S STREAM=$$GETSTRM^A1AEK2M0(PD)
+        S X=$O(^A1AE(11007.1,STREAM,"RTN","B",RN,0))
+        I X>0 S C=$P(^A1AE(11007.1,10001,"RTN",X,0),U,2) QUIT C
+        ; Otherwise, try the routine file.
 	S X=$O(^DIC(9.8,"B",RN,0)) I X>0 S C=$P($G(^DIC(9.8,X,4)),U,2)
 	S:'$L(C) C="n/a"
 	Q C
