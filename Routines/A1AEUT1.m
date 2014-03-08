@@ -1,4 +1,4 @@
-A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-02-25  6:06 PM
+A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-03-07  7:38 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Change History:
@@ -15,6 +15,9 @@ A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-02-25  6:06 PM
  ; with DA.
  ;
  ; NB: Order matters here. Each test depends on the one before it.
+ ; TODO:
+ ; 1. Write a Unit Test to check for the presence of the checksums
+ ;    after a patch is verified in the stream file routine multiple.
  D EN^XTMUNIT($T(+0),1,1) QUIT
  ;
 STARTUP ; Delete all test data
@@ -242,6 +245,8 @@ PATCHSET ; @TEST Set-Up patch a la 1+3^A1AEPH1
  S $P(^(0),"^",9)=DUZ
  S $P(^(0),"^",12)=DT
  S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
+ N FDA,DIERR S FDA(11005,DA_",",.2)=$$GETSTRM^A1AEK2M0(A1AEPD)
+ D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  D CHKEQ($$GET1^DIQ(11005,DA,8),"UNDER DEVELOPMENT")
  QUIT
  ;
