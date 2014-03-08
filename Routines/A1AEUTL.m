@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-03-03  7:18 PM
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ; 3/6/14 8:08pm
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -34,7 +34,20 @@ A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-03-03  7:18 PM
  ; ID logic - if patch had status of cancel, it calculated as
  ; "cancel^0" instead of "cancel" before extracting just the first
  ; three characters; the results were correct, but the intermediate
- ; value was wrong.
+ ; value was wrong. Convert ID11005^A1AEUTL from write commands to
+ ; use of EN^DDIOL; delimit components in silent mode.
+ ;
+ ; 2014 03 04: (VEN/SMH) Now there is an Entry point SETNUM1 to set the
+ ; patch directly. SETNUM can now be invoked independently from NUM as
+ ; it does its own locks.
+ ;
+ ; 2014 03 06: (VEN/SMH) Add check for security key A1AE IMPORT besides
+ ; the user when importing, in IN.
+ ;
+ ; 2014 03 06: (VEN/TOAD) added new status abbreviations for
+ ; secondary patches to ID11005. Add conditional line 2 of write ID
+ ; for derived patches, to show "derived from [Stream]Subject".
+ ; in ID11005 and split out new function $$STRMSUBJ.
  ;
  ;
  ;logic to get and set seq#
@@ -59,12 +72,12 @@ IN ;Called from the Input transform file 11005, field .01
  I '$D(A1AETY) W !?3,"Please use the Edit Template." K X Q
  I A1AETY="PH",'$D(^A1AE(11007,X2,"V",+$P(X,"*",2),0)) W !?3,"'",$P(X,"*",2),"' is not a valid version number for this package" K X Q
  I A1AETY="PK",$D(^A1AE(11007,X2,"V",+$P(X,"*",2))) W !,?3,"'",$P(X,"*",2),"' is not a new package version." K X Q
- ; VEN/SMH - Add check for A1AE MGR besides the user
- I '$D(^A1AE(11007,X2,$S(A1AEX=11005:"PH",1:"PB"),DUZ,0))&('$D(^XUSEC("A1AE MGR",DUZ))) W !?3,"You are not an authorized user" K X Q
+ ; VEN/SMH - Add check for A1AE IMPORT besides the user
+ I '$D(^A1AE(11007,X2,$S(A1AEX=11005:"PH",1:"PB"),DUZ,0))&('$D(^XUSEC("A1AE IMPORT",DUZ))) W !?3,"You are not an authorized user" K X Q
  I $D(^A1AE(A1AEX,"B",X)) W !?3,"Another error designation with the '",X,"' specification already exists" K X Q
  Q
  ;
-PKG K A1AEPKIF,A1AEPK S DIC("A")="Select PACKAGE: ",DIC="^A1AE(11007,",DIC(0)=$S($D(A1AE(0)):A1AE(0),1:"AEMQZ") D ^DIC K DIC,A1AE(0) Q:Y<0  S A1AEPKIF=+Y
+PKG K A1AEPKIF,A1AEPK S DIC("A")="Select PACKAGE: ",DIC="^A1AE(11007,",DIC(0)=$S($D(A1AE(0)):A1AE(0),1:"AEMQZ") W ! D ^DIC K DIC,A1AE(0) Q:Y<0  S A1AEPKIF=+Y
  I $D(^DIC(9.4,A1AEPKIF,0)) S A1AEPKNM=$P(^(0),"^",1),A1AEPK=$P(^(0),"^",2)
  Q
  ;
@@ -166,7 +179,7 @@ PRIMSTRM() ; Return the Primary Stream for this FORUM Patch Module config
 ID11005 ; WRITE Identifier on DHCP Patches file (11005)
  ;;private;procedure;clean;output;SAC-compliant
  ; called by: ^DD(11005,0,"ID","WRITE")
- ; calls: none
+ ; calls: $$STREAM()
  ; input:
  ;   $X
  ;   file DHCP Patches (11005), current record:
@@ -180,7 +193,7 @@ ID11005 ; WRITE Identifier on DHCP Patches file (11005)
  ;       :file New Person (200)
  ;       :field Initial (1)
  ; output to current device (definition):
- ;   IEN  Designation  [Stream]Subject  Status  User
+ ;   IEN  Designation  Stream  Subject  Status  User
  ; output in silent mode:
  ;   [Stream]Subject|Status|User
  ;
@@ -204,12 +217,84 @@ ID11005 ; WRITE Identifier on DHCP Patches file (11005)
  ;   14           ZZZ*2*10001  [OV]TEST                          VER USP
  ;
  N ID S ID="" ; initialize identifier
+ I '$G(DIQUIET),$X<33 W ?32 ; align subject column
  N X S X=$X ; current X position
  N IDLEN S IDLEN=80-X ; maximum room for identifier
  N DELIM S DELIM=" " ; write ID component delimiter, default to space
  I $G(DIQUIET) S DELIM="|" ; | delim in silent mode
  ;
  N PATCH S PATCH=^(0) ; DHCP Patches record's header
+ N NODE5 S NODE5=$G(^(5)) ; DHCP Patches record's node 5
+ ;
+ ; [Stream]Subject
+ S ID=$$STRMSUBJ(.IDLEN,PATCH,DELIM)
+ ;
+ ; padding:
+ N PAD S $P(PAD," ",IDLEN-8)="" ; create pad
+ I '$G(DIQUIET) S ID=ID_PAD ; add pad to ID
+ ;
+ ; Status:
+ N STATUS S STATUS=$P(PATCH,U,8) ; field Status of Patch (8)
+ N DDSTATUS S DDSTATUS=^DD(11005,8,0) ; definition of field 8, header
+ N DDSET S DDSET=$P(DDSTATUS,U,3) ; definition of set of codes
+ N STATCODE S STATCODE=$P($P(DDSET,STATUS_":",2),";") ; external val
+ I $E(STATUS)=2 D  ; special abbreviations for secondary statuses
+ . I STATUS="2r" S STATCODE="2IR" Q  ; in review
+ . I STATUS="2u" S STATCODE="2UN" Q  ; secondary development
+ . I STATUS="2c" S STATCODE="2CO" Q  ; secondary completion
+ . I STATUS="2v" S STATCODE="2VE" Q  ; secondary release
+ . I STATUS="2n" S STATCODE="2NO" Q  ; not for secondary release
+ S ID=ID_$E(STATCODE,1,3)_DELIM ; add Status to ID
+ ;
+ ; User:
+ N USERENTR S USERENTR=+$P(PATCH,U,9) ; field User Entering (9)
+ N USER S USER=$G(^VA(200,USERENTR,0)) ; New Person record's header
+ N INITIAL S INITIAL=$P(USER,U,2) ; field Initial (1) of file 200
+ I INITIAL="" S INITIAL="unknown" ; if no user or no initials
+ S ID=ID_$E(INITIAL,1,3) ; add User to ID
+ ;
+ ; output write ID:
+ N TAB S TAB=$S(X<33:32,1:X-1) ; tab for terminal
+ I $G(DIQUIET) S TAB=0 ; don't tab for GUI
+ D EN^DDIOL(ID,"","?"_TAB) ; output the write ID
+ ;
+ N DERIVED S DERIVED=$P(NODE5,U,2) ; field Derived from Patch
+ Q:'DERIVED  ; line 2 of identifier is only for derived patches
+ N ORIG S ORIG=$G(^A1AE(11005,DERIVED,0)) ; derived patch's header
+ Q:ORIG=""  ; if no real patch, then no line 2
+ ;
+ ; derived from [Stream]Subject
+ S IDLEN=45 ; plenty of room
+ N IDLINE2 S IDLINE2="derived from "_$$STRMSUBJ(.IDLEN,ORIG,DELIM)
+ S IDLINE2=$P(IDLINE2,"]")_"]"_$P(ORIG,U) ; **FIX THIS LATER**
+ ;
+ ; output write ID:
+ S TAB=32 ; tab for terminal
+ I $G(DIQUIET) S TAB=0 ; don't tab for GUI
+ D EN^DDIOL(IDLINE2,"","!?"_TAB) ; output the write ID
+ ;
+ QUIT  ; end of ID11005
+ ;
+ ;
+STRMSUBJ(IDLEN,PATCH,DELIM) ; [Stream]Subject
+ ;;private;function;clean;silent;SAC-compliant
+ ; called by: ID11005
+ ; calls: none
+ ; throughput:
+ ;   IDLEN: length available left for identifier, updated
+ ; input:
+ ;   PATCH = patch's header node value
+ ;   DELIM = ID-field delimiter
+ ;   file DHCP Patches (11005), current record:
+ ;     field Patch Stream (.2)
+ ;       :file DHCP Patch Stream (11007.1)
+ ;       :field Abbreviation (.05)
+ ;     field Patch Subject (5)
+ ;     field Status of Patch (8)
+ ;       :DD definition of set of codes
+ ; output = [Stream]Subject
+ ;
+ N ID S ID="" ; return value
  ;
  ; Stream:
  N STREAMDA S STREAMDA=$P(PATCH,U,20) ; field Patch Stream (.2)
@@ -225,30 +310,7 @@ ID11005 ; WRITE Identifier on DHCP Patches file (11005)
  S ID=ID_SUBJABB_DELIM ; add Subject to ID
  S IDLEN=IDLEN-$L(SUBJABB) ; decrease room
  ;
- ; padding:
- N PAD S $P(PAD," ",IDLEN-8)="" ; create pad
- I '$G(DIQUIET) S ID=ID_PAD ; add pad to ID
- ;
- ; Status:
- N STATUS S STATUS=$P(PATCH,U,8) ; field Status of Patch (8)
- N DDSTATUS S DDSTATUS=^DD(11005,8,0) ; definition of field 8, header
- N DDSET S DDSET=$P(DDSTATUS,U,3) ; definition of set of codes
- N STATCODE S STATCODE=$P($P(DDSET,STATUS_":",2),";") ; external val
- S ID=ID_$E(STATCODE,1,3)_DELIM ; add Status to ID
- ;
- ; User:
- N USERENTR S USERENTR=+$P(PATCH,U,9) ; field User Entering (9)
- N USER S USER=$G(^VA(200,USERENTR,0)) ; New Person record's header
- N INITIAL S INITIAL=$P(USER,U,2) ; field Initial (1) of file 200
- I INITIAL="" S INITIAL="unknown" ; if no user or no initials
- S ID=ID_$E(INITIAL,1,3) ; add User to ID
- ;
- ; output write ID:
- N TAB S TAB=$S(X<19:18,1:X-1) ; tab for terminal
- I $G(DIQUIET) S TAB=0 ; don't tab for GUI
- D EN^DDIOL(ID,"","?"_TAB) ; output the write ID
- ;
- QUIT  ; end of ID11005
+ QUIT ID ; return [Stream]Subject ; end of $$STRMSUBJ()
  ;
  ;
 EOR ; end of routine A1AEUTL
