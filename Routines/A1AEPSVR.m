@@ -1,4 +1,4 @@
-A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-06  4:55 PM
+A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-08  4:22 PM
  ;;2.4;PATCH MODULE;;
  ; This routine reads patches coming via email from VA Forum
  ; and files them into this forum
@@ -51,7 +51,7 @@ EN ; Main entry point
  N RESULT
  N CANTLOAD S CANTLOAD=0
  S RESULT(TXTINFO("DESIGNATION"),"TXT")="Mailed Patch"
- I INFOONLY S RESULT(TXTINFO("DESINGATION"),"KID")="Info Only Patch"
+ I INFOONLY S RESULT(TXTINFO("DESIGNATION"),"KID")="Info Only Patch"
  E  D
  . I $D(^TMP($J,"KID")) S RESULT(TXTINFO("DESIGNATION"),"KID")="KID patch loaded inline"
  . E  D
