@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-06  4:28 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-17  7:22 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -191,7 +191,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  D PREREQAD(.RTN)
  ;
  ; Load whole thing and split
- D ADD0(.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY,.RESULT)
+ D ADD0(.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY,.RESULT,$$DEFDIR^%ZISH("./")_ROOT("SB"),PATCH,KIDFIL)
  ;
  ;
  ; Deliver the message
@@ -207,7 +207,7 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
  ;
  QUIT
  ;
-ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT) ; Wrapper around all addition functions
+ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT,ROOTPATH,TXTFIL,KIDFIL) ; Wrapper around all addition functions
  ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
  ; Change designation into Patch Module format from KIDS format
  ; 
@@ -217,7 +217,7 @@ ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT) ; Wrapper around all addition function
  D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
  D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
  D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
- N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
  D ASSERT(DA)                            ; Assert that we obtained an IEN
  D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
  D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
@@ -229,7 +229,7 @@ ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT) ; Wrapper around all addition function
  . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
  . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
  . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
- . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
  . D ASSERT(DA)                            ; Assert that we obtained an IEN
  . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
  . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
