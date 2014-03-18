@@ -1,6 +1,23 @@
-A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module;2014-01-22  7:13 PM
+A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-03-07  7:38 PM
  ;;2.4;PATCH MODULE;
+ ;
+ ; Change History:
+ ;
+ ; 2014 01 22: Sam Habiel of the VISTA Expertise Network (VEN/SMH)
+ ; developed this routine throughout January 2014, with this date
+ ; being his most recent edit.
+ ;
+ ; 2014 02 25: Rick Marshall of the VISTA Expertise Network (VEN/TOAD)
+ ; edited MKSTREAM to use the new standardized name for patch stream
+ ; OSEHRA VISTA, set field Abbreviation (.05) to OV, to change
+ ; field 2 with field .02, comment with field names, and change from
+ ; index PRIM to APRIM. In PATCHVER, fix bug by replacing hardcoded 1
+ ; with DA.
+ ;
  ; NB: Order matters here. Each test depends on the one before it.
+ ; TODO:
+ ; 1. Write a Unit Test to check for the presence of the checksums
+ ;    after a patch is verified in the stream file routine multiple.
  D EN^XTMUNIT($T(+0),1,1) QUIT
  ;
 STARTUP ; Delete all test data
@@ -39,9 +56,11 @@ MKSTREAM ; @TEST Make OSEHRA Stream
  ;
  ; Create OSEHRA Patch Stream
  N FDA,IENS,IEN
- S IENS="+1,",IEN(1)=10001
- S FDA(11007.1,IENS,.01)="OSEHRA PATCH STREAM"
- S FDA(11007.1,IENS,2)="YES"
+ S IENS="+1,"
+ S IEN(1)=10001 ; field Patch Number Start (.001)
+ S FDA(11007.1,IENS,.01)="OSEHRA VISTA" ; Name
+ S FDA(11007.1,IENS,.02)="YES" ; Primary?
+ S FDA(11007.1,IENS,.05)="OV" ; Abbreviation
  N DIERR,ERR
  D UPDATE^DIE("E",$NA(FDA),$NA(IEN),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
@@ -51,14 +70,14 @@ MKSTREAM ; @TEST Make OSEHRA Stream
  D CHKEQ(%,10001)
  ;
  ; Get the old primary stream
- N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"PRIM",1,""))
+ N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"APRIM",1,""))
  I 'OLDPRIM S OLDPRIM=1
  ;
- ; Make VA patch stream primary then switch back. Test APRIM X-ref logic.
- N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
+ ; Make VA patch stream primary then switch back. Test APRIM1 xref logic.
+ N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR=".02///1" D ^DIE
  D CHKEQ($$PRIMSTRM^A1AEUTL(),1)
  ;
- N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
+ N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR=".02///1" D ^DIE
  D CHKEQ($$PRIMSTRM^A1AEUTL(),10001)
  QUIT
  ;
@@ -226,6 +245,8 @@ PATCHSET ; @TEST Set-Up patch a la 1+3^A1AEPH1
  S $P(^(0),"^",9)=DUZ
  S $P(^(0),"^",12)=DT
  S ^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
+ N FDA,DIERR S FDA(11005,DA_",",.2)=$$GETSTRM^A1AEK2M0(A1AEPD)
+ D FILE^DIE("",$NA(FDA)) I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  D CHKEQ($$GET1^DIQ(11005,DA,8),"UNDER DEVELOPMENT")
  QUIT
  ;
@@ -344,7 +365,7 @@ PATCHVER ; @TEST Verify a Patch
  S DUZ=VER ; Now I am the verifier
  N FDA
  S FDA(11005,DA_",",8)="v" D FILE^DIE("E",$NA(FDA))
- D CHKEQ($P(^A1AE(11005,1,0),U,8),"v")
+ D CHKEQ($P(^A1AE(11005,DA,0),U,8),"v")
  QUIT
  ;
 PATCH2 ; @TEST Create a second patch - complete this one
@@ -392,7 +413,7 @@ A1AEPH25 ; @TEST Test Report 5^A1AEPH2
  N ARR,CNT
  S CNT=1
  N X
- F  R X:0 Q:$$STATUS^%ZISH()  I $E(X,1,3)="ZZZ" S ARR(CNT)=X,CNT=CNT+1
+ F  R X:1 Q:$$STATUS^%ZISH()  I $E(X,1,3)="ZZZ" S ARR(CNT)=X,CNT=CNT+1
  U $P D CLOSE^%ZISH("FILE1")
  D ASSERT($D(ARR))
  N % S %("A1AEPH25.TXT")=""

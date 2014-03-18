@@ -1,114 +1,155 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-02-07  6:35 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-06  4:28 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
  ;
  ; Notes on the KIDS format and conversion procedure.
- ;
- ; Conversion procedure from a VA PM HFS-extracted KIDS (complete):
- ;^TMP(28177,1,0)="Released TIU*1*241 SEQ #237" <-- $TXT prepended
- ;^TMP(28177,2,0)="Extracted from mail message" <-- this becomes the txt
- ;^TMP(28177,3,0)="**KIDS**:TIU*1.0*241^"       <-- $END TXT replaced
- ;^TMP(28177,4,0)="" --> becomes $KID append whatever is in 6
- ;^TMP(28177,5,0)="**INSTALL NAME**"
- ;^TMP(28177,6,0)="TIU*1.0*241"
- ;---
- ;^TMP(28177,1189,0)="**END**" --> becomes $END KID whatever is in 6
- ;^TMP(28177,1190,0)="**END**" --> DELETED
- ;
- ; A few random notes on various KIDS issues
- ; If the original is a mail message, it will looks like this
- ; 
- ; >> Released GMRA*4*44 SEQ #41
- ; >> Extracted from mail message
- ; >> **KIDS**:GMRA*4.0*44^
- ; >> 
- ; >> **INSTALL NAME** etc..
- ; >> kids contents
- ; >> **END**
- ; >> **END**
- ;
- ; If the original isn't a PM HFS-extracted KIDS build, but a Straight from 
- ; KIDS KIDS-build, then the KIDS first line looks like this:
- ;
- ; >> KIDS Distribution saved on Apr 30, 2013@05:31:47
- ; >> OR*371
- ; >> **KIDS**:OR*3.0*371^
- ; >> <blank line>
- ; >> **INSTALL NAME**
- ;
- ; Multibuilds look like this:
- ; 
- ; >> KIDS Distribution saved on Sep 23, 2011@17:42:57
- ; >> IB/PRCA Remedy Ticket Fixes
- ; >> **KIDS**:IB*2.0*459^PRCA*4.5*280^
- ; >> <blank line>
- ; >> **INSTALL NAME**
- ; >> text of first KIDS build
- ; >> **INSTALL NAME**
- ; >> text of second KIDS build
- ; >> **END**
- ; >> **END**
- ;
- ; A KIDS sent from another system via KIDS/MM has the following contents.
- ;$TXT Created by TESTMASTER,USER at VEN.SMH101.COM  (KIDS) on Thursday, 01/07/14 at 15:55
- ; <contents>
- ;$END TXT
- ;$KID ZZZ*1.0*1
- ;**INSTALL NAME**
- ; <contents>
- ;$END KID ZZZ*1.0*1
+ ; NB: Notes moved to A1AEK2M0 to make space in this routine.
  ;
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
  ;
-DBAKID2M ; Restore patches from HFS files to MailMan ;9/28/02  12:53
+SD ; Restore patches from a single directory.
  ; Get path to HFS patches
  ; Order through all messages
- N OLDDUZ S OLDDUZ=DUZ ; Keep for ^DISV
- N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
+ ; N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
- S DIR(0)="F^2:60",DIR("A")="Full path of patches to load, up to but not including patch names" 
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-PP"))
+ S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-SB"))
  D ^DIR
  QUIT:Y="^"
- N ROOT S ROOT=Y  ; where we load files from...
- S ^DISV(OLDDUZ,"A1AEK2M-PP")=Y
+ N ROOT S ROOT("SB")=Y  ; where we load files from... Single Build Root
+ S ^DISV(DUZ,"A1AEK2M-SB")=Y
  ;
- S DIR(0)="F^2:60",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch" 
- S DIR("B")=$G(^DISV(OLDDUZ,"A1AEK2M-MP"))
+ S DIR(0)="F^2:255",DIR("A")="Full path of Multibuilds directory, in case I can't find a patch"
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-MB"))
  D ^DIR
  QUIT:Y="^"
- S ROOT("MP")=Y
- S ^DISV(OLDDUZ,"A1AEK2M-MP")=Y
+ S ROOT("MB")=Y ; Multi Build Root
+ S ^DISV(DUZ,"A1AEK2M-MB")=Y
+ D SILENT(.ROOT)
+ QUIT
  ;
-SILENT ; Don't talk. Pass ROOT in Symbol Table
- ; Boo -- now it talks.
- N FILE ; retrun array -- needs to be renamed to plural.
+RECURSE ; Restore patches from a directory tree
+ ; TODO: Document and clean.
+ N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
+ S DIR(0)="F^2:255",DIR("A")="Full path of patches to load, up to but not including patch names"
+ S DIR("B")=$G(^DISV(DUZ,"A1AEK2M-RP")) ; Recurse Path
+ D ^DIR
+ QUIT:Y="^"
+ N ROOT
+ S ROOT=Y
+ S ^DISV(DUZ,"A1AEK2M-RP")=ROOT
+ N LVL S LVL=0
+ N PATCHROOTS
+ S PATCHROOTS=ROOT
+ N MBROOT
+ S PATCHROOTS("MB")=$$RECURSE2(PATCHROOTS)
+ D RECURSE1(ROOT,.PATCHROOTS)
+ QUIT
+ ;
+RECURSE1(ROOT,PATCHROOTS) ; Recurser
+ ; TODO: Document and clean.
+ ; ZEXCEPT: LVL - Newed above
+ ; ZEXCEPT: L - no such variable. XINDEX is tripping up.
+ N % ; Throw away variable
+ S LVL=$G(LVL,0)
+ N ARRAY S ARRAY("*")=""
+ N FILES,TXTFILES
+ I $$DEFDIR^%ZISH(ROOT)="/"!('$$LIST^%ZISH(ROOT,"ARRAY","FILES")) QUIT  ; DEFDIR bug!
+ S ARRAY("*.txt")="",ARRAY("*.TXT")="",%=$$LIST^%ZISH(ROOT,"ARRAY","TXTFILES")
+ I $D(TXTFILES) S PATCHROOTS("SB")=ROOT D SILENT(.PATCHROOTS)
+ N F S F="" F  S F=$O(FILES(F)) Q:F=""  D
+ . I $E(F)="." QUIT  ; Hidden file
+ . W:$D(KBANDEBUG) ?LVL*5,F,!
+ . S LVL=LVL+1
+ . D RECURSE1(ROOT_F_"/")
+ . S LVL=LVL-1
+ QUIT
+ ;
+RECURSE2(ROOT) ; $$;Recurser to Find the Multibuild
+ ; TODO: Document and clean.
+ ; ZEXCEPT: MBROOT ; Newed at the caller
+ ; ZEXCEPT: LVL - Newed above
+ ; ZEXCEPT: L - no such variable. XINDEX is tripping up.
+ I $$UP^XLFSTR(ROOT)["MULTIBUILD" S MBROOT=ROOT
+ S LVL=$G(LVL,0)
+ N ARRAY S ARRAY("*")=""
+ N FILES
+ I $$DEFDIR^%ZISH(ROOT)="/"!('$$LIST^%ZISH(ROOT,"ARRAY","FILES")) QUIT ""  ; DEFDIR bug!
+ N F S F="" F  S F=$O(FILES(F)) Q:F=""  D  Q:$D(MBROOT)
+ . I $E(F)="." QUIT  ; Hidden file
+ . I $$DEFDIR^%ZISH(ROOT_F_"/")="/"!('$$LIST^%ZISH(ROOT_F_"/","ARRAY","FILES")) QUIT  ; DEFDIR bug!
+ . W:$D(KBANDEBUG) ?LVL*5,F,!
+ . S LVL=LVL+1
+ . N % S %=$$RECURSE2(ROOT_F_"/")
+ . S LVL=LVL-1
+ QUIT $G(MBROOT)
+ ;
+SILENT(ROOT) ; Don't talk.
+ ; All output is sent via EN^DDIOL. Set DIQUIET to redirect to a global.
+ N FILES ; retrun array
  ;
  ; Load text files first
  N ARRAY
  S ARRAY("*.TXT")=""
  S ARRAY("*.txt")=""
- N Y S Y=$$LIST^%ZISH(ROOT,"ARRAY","FILE") I 'Y W !,"Error getting directory list" QUIT
+ N Y S Y=$$LIST^%ZISH(ROOT("SB"),"ARRAY","FILES") I 'Y D EN^DDIOL("Error getting directory list") QUIT
  ;
  ; Loop through each text patches.
  N ERROR
  N PATCH S PATCH=""
- F  S PATCH=$O(FILE(PATCH)) Q:PATCH=""  D LOAD(ROOT,PATCH,.ERROR) Q:$D(ERROR)
+ N RESULT ; Result of Load
+ F  S PATCH=$O(FILES(PATCH)) Q:PATCH=""  D LOAD(.ROOT,PATCH,.ERROR,.RESULT) Q:$D(ERROR)
+ ;
+ ; Print out the patches we couldn't find.
+ N I S I=""
+ F  S I=$O(RESULT(I)) Q:I=""  I $D(RESULT(I,"CANTLOAD")) D 
+ . D EN^DDIOL("Patch "_I_" from "_RESULT(I,"TXT")_" doesn't have a KIDS file")
+ . D EN^DDIOL("Please load these KIDS files manually into the patch module.")
+ ;
+ ; Send bulletin regarding loaded patches
+ D MAIL(.RESULT)
+ ;
  QUIT
  ;
-LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
+MAIL(RESULT) ; Private Proc to Package; Mail the result of the load to 
+ ;  -> interested parties using the bulletin A1AE LOAD RELEASED PATCH
+ N WP,CNT S CNT=1
+ N I S I="" F  S I=$O(RESULT(I)) Q:I=""  D
+ . S WP(CNT)="Patch designated as "_I_" has been loaded into the Patch Module.",CNT=CNT+1
+ . S WP(CNT)="Text file: "_RESULT(I,"TXT"),CNT=CNT+1
+ . I '$D(RESULT(I,"CANTLOAD")) S WP(CNT)="KID file: "_RESULT(I,"KID"),CNT=CNT+1
+ . E  S WP(CNT)="KID file couldn't be loaded. Use the Edit Patch option to load the KIDS file in.",CNT=CNT+1
+ . S WP(CNT)="Patch Module Entries: ",CNT=CNT+1
+ . N J F J=0:0 S J=$O(RESULT(I,"MSG",J)) Q:'J  S WP(CNT)="Entry: "_J_" with designation "_$P(^A1AE(11005,J,0),U),CNT=CNT+1
+ . S WP(CNT)=" ",CNT=CNT+1
+ K I,CNT
+ N PARM S PARM(1)=$$GET1^DIQ(200,DUZ,.01)
+ D SENDBULL^XMXAPI(DUZ,"A1AE LOAD RELEASED PATCH",.PARM,$NA(WP))
+ QUIT
+ ;
+LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and mail.
+ ; ROOT = File system directory (Ref)
+ ; PATCH = File system .TXT patch name (including the .TXT) (Value)
+ ; ERROR = Ref variable to indicate error.
+ ; RESULT = Ref variable containing the results, including whether we could load the KIDS patch
  ;
  ; NB: I start from 2 just in case there is something I need to put in 1 (like $TXT)
  K ^TMP($J,"TXT")
- N Y S Y=$$FTG^%ZISH(ROOT,PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
- D CLEANHF($NA(^TMP($J,"TXT"))) ; add $TXT/$END TXT if necessary
+ D EN^DDIOL("Loading description "_PATCH)
+ N Y S Y=$$FTG^%ZISH(ROOT("SB"),PATCH,$NA(^TMP($J,"TXT",2,0)),3) I 'Y W !,"Error copying TXT to global" S ERROR=1 Q
+ D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT"))) ; add $TXT/$END TXT if necessary
  ;
  ; Analyze message and extract data from it.
  N RTN ; RPC style return
- N $ET,$ES S $ET="G ANATRAP^A1AEK2M" ; try/catch
+ ;
+ ;
+ ; N OET S OET=$ET
+ N $ET,$ES S $ET="D ANATRAP^A1AEK2M2(PATCH)" ; try/catch
  D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")))
+ ; S $ET=OET
+ ; K OET
  ;
  K ^TMP($J,"MSG") ; Message array eventually to be mailed.
  ;
@@ -122,227 +163,174 @@ LOAD(ROOT,PATCH,ERROR) ; Load TXT message, find KIDS, then load KIDS and mail.
  N LASTSUB S LASTSUB=$O(^TMP($J,"TXT"," "),-1)
  ;
  ; Info only patch?
- N INFOONLY S INFOONLY=0 ; Info Only patch?
- N I F I=0:0 S I=$O(RTN("CAT",I)) Q:'I  I RTN("CAT",I)="Informational" S INFOONLY=1
- K I
+ N INFOONLY S INFOONLY=$$INFOONLY(.RTN) ; Info Only patch?
+ I INFOONLY D EN^DDIOL(PATCH_" is an Info Only patch.")
  ;
  ; Load KIDS message starting into the last subscript + 1 from the text node
- ; Only if not informational!!!
- I 'INFOONLY D
- . N KIDFIL S KIDFIL=$$KIDFIL(ROOT,PATCH)
- . I KIDFIL="" D
- . . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
- . . N FILE
- . . N Y S Y=$$LIST^%ZISH(ROOT,$NA(ARRAY),$NA(FILE))
- . . I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
- . . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
- ;
- ; Here we load the KIDS file if we have a filename.
+ ; Only if not informational!!! -- THIS CHANGED NOW B/C VA HAS SOME PATCHES THAT ARE INFORMATIONAL AND HAVE KIDS BUILDS
  K ^TMP($J,"KID")
- I $D(KIDFIL),$L(KIDFIL) D  Q:$D(ERROR)
- . N Y S Y=$$FTG^%ZISH(ROOT,KIDFIL,$NA(^TMP($J,"KID",LASTSUB+1,0)),3) I 'Y W !,"Error copying KIDS to global" S ERROR=1 Q
- . M ^TMP($J,"MSG")=^TMP($J,"KID") ; Load the KIDS build
- . ;
- . K ^TMP($J,"MSG",LASTSUB+1),^(LASTSUB+2),^(LASTSUB+3) ; Remove description lines from KIDS build.
- . S ^TMP($J,"MSG",LASTSUB+4,0)="$KID "_^TMP($J,"MSG",LASTSUB+6,0) ; KIDS name after **INSTALL NAME**
- . N Y S Y=$O(^TMP($J,"MSG",""),-1) K ^TMP($J,"MSG",Y) ; remove 2nd **END**
- . S ^TMP($J,"MSG",Y-1,0)="$END KID "_^TMP($J,"MSG",LASTSUB+6,0) ; replace 1st **END** with $END KID KIDS Name
- ; 
- ; Mail Subject
- N XMSUBJ S XMSUBJ=RTN("DESIGNATION")_" SEQ# "_RTN("SEQ")
+ N KIDFIL S KIDFIL=$$KIDFIL^A1AEK2M0(.ROOT,PATCH,.RTN,$NA(^TMP($J,"KID"))) ; Load the KIDS file
  ;
- N PATSUBJ S PATSUBJ=RTN("SUBJECT") ; Not used right now. Will be used when we file directly into patch file.
+ ; Fill in results array
+ S RESULT(RTN("DESIGNATION"),"TXT")=PATCH
+ S RESULT(RTN("DESIGNATION"),"KID")=KIDFIL
+ I INFOONLY S RESULT(RTN("DESIGNATION"),"KID")="Info Only Patch"
+ N CANTLOAD S CANTLOAD=0
+ ; if we can't find it, and it isn't info, put it in this array.
+ I KIDFIL="",'INFOONLY S RESULT(RTN("DESIGNATION"),"CANTLOAD")=PATCH,CANTLOAD=1
+ ;
+ ; If we loaded the KIDS build, move it over.
+ I $D(^TMP($J,"KID")) D
+ . N I F I=1:1 Q:'$D(^TMP($J,"KID",I))  S ^TMP($J,"MSG",LASTSUB+I,0)=^TMP($J,"KID",I)
+ ; 
+ ; debug
+ ; S $ET="B"
+ ; debug
+ ;
+ ; Add dependencies in description (temporary or permanent... I don't know now).
+ D PREREQAD(.RTN)
+ ;
+ ; Load whole thing and split
+ D ADD0(.RTN,$NA(^TMP($J,"MSG")),CANTLOAD,INFOONLY,.RESULT)
+ ;
  ;
  ; Deliver the message
- N XMERR,XMZ
- D SENDMSG^XMXAPI(.5,XMSUBJ,$NA(^TMP($J,"MSG")),"XXX@Q-PATCH.OSEHRA.ORG",,.XMZ) ; after
- I $D(XMERR) W !,"MailMan error, see ^TMP(""XMERR"",$J)" S ERROR=1 Q
+ ; DON'T DO THIS ANYMORE -- WILL DELETE
+ ; N XMERR,XMZ
+ ; D SENDMSG^XMXAPI(.5,XMSUBJ,$NA(^TMP($J,"MSG")),"XXX@Q-PATCH.OSEHRA.ORG",,.XMZ) ; after
+ ; I $D(XMERR) W !,"MailMan error, see ^TMP(""XMERR"",$J)" S ERROR=1 Q
  ; Set MESSAGE TYPE to KIDS build
- S $P(^XMB(3.9,XMZ,0),"^",7)="K"
+ ; S $P(^XMB(3.9,XMZ,0),"^",7)="K"
  ;
  ; Kill temp globals
  K ^TMP($J,"KID"),^("TXT"),^("MSG")
  ;
  QUIT
  ;
-TXTFIL(ROOT,PATCH) ; Private; Find the text file that corresponds to a patch designation
- N NOEXT S NOEXT=$P(PATCH,".",1,$L(PATCH,".")-1) ; no extension name
- N TXTFIL0 ; Trial iteration variable
- N DONE
- N % F %="TXT","txt" D  Q:$G(DONE)
- . S TXTFIL0=NOEXT_"."_%
- . N POP
- . D OPEN^%ZISH("TXT0",ROOT,TXTFIL0,"R")
- . I POP S TXTFIL0="" QUIT
- . S DONE=1
- . D CLOSE^%ZISH("TXT0")
- QUIT $G(TXTFIL0)
- ;
-KIDFIL(ROOT,PATCH) ; Private; Find the KIDS file that corresponds to a patch designation
- ; Idea: Maybe read a few lines to id the file.
- N NOEXT S NOEXT=$P(PATCH,".",1,$L(PATCH,".")-1) ; no extension name
- N KIDFIL0 ; Trial iteration variable
- N DONE
- N % F %="KID","kid","KIDS","kids","KIDs","kidS" D  Q:$G(DONE)
- . S KIDFIL0=NOEXT_"."_%
- . N POP
- . D OPEN^%ZISH("KID0",ROOT,KIDFIL0,"R")
- . I POP S KIDFIL0="" QUIT
- . S DONE=1
- . D CLOSE^%ZISH("KID0")
- QUIT $G(KIDFIL0)
- ;
-SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
- ; FILES = Ref List of files from LIST^%ZISH
- ; EXTFILTER = Val .TXT or so
- ; DIRA = Val What to ask the user for
- ; Uses fileman calls to ease the pain of selecting stuff.
- ;
- N I S I=""
- ; Filter away using the extension
- I $L($G(EXTFILTER)) F  S I=$O(FILES(I)) Q:I=""  D
- . I $E($RE(I),1,$L(EXTFILTER))'=$RE(EXTFILTER) K FILES(I)
- ;
- ; If no files left, quit with an empty string
- Q:'$L($O(FILES(""))) ""
- ;
- ; Create a global for DIR/DIC
- K ^TMP($J,"FILES")
- S ^TMP($J,"FILES",0)="File List"
- N CNT S CNT=1
- F  S I=$O(FILES(I)) Q:I=""  S ^TMP($J,"FILES",CNT,0)=I,CNT=CNT+1
- ;
- ; Index
- N DIK,DA S DIK="^TMP($J,""FILES""," D IXALL^DIK
- ; Select
- N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT
- S DIR(0)="P^TMP($J,""FILES"",",DIR("A")=$G(DIRA,"Select a file from the list") D ^DIR
- ; Bye
- K ^TMP($J,"FILES")
- ;
- I $L(Y,U)=2 Q $P(Y,U,2)
- E  QUIT ""
- ;
-CLEANHF(MSGGLO) ; Private... Clean header and footer in message global
- ; WARNING - Naked all over inside the do block.
- N S S S=$O(@MSGGLO@("")) ; first numeric sub.
- I @MSGGLO@(S,0)'["$TXT Created by " D
- . ; First line is invalid. Try various patterns.
- . N I F I=1:1 N PATT S PATT=$T(CLNPATT+I),PATT=$P(PATT,";;",2) Q:($$TRIM^XLFSTR(PATT)=">>END<<")  D
- . . I $$TRIM^XLFSTR(^(0))=$$TRIM^XLFSTR(PATT) S ^(0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV  (KIDS)"
- . ; If still not there, put in first node before the message.
- . I ^(0)'["$TXT Created by " S @MSGGLO@(S-1,0)="$TXT Created by UNKNOWN,UNKNOWN at DOWNLOADS.VA.GOV  (KIDS)"
- ;
- N LASTSUB S LASTSUB=$O(@MSGGLO@(" "),-1)
- I @MSGGLO@(LASTSUB,0)'["$END TXT" S @MSGGLO@(LASTSUB+1,0)="$END TXT"
+ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT) ; Wrapper around all addition functions
+ ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
+ ; Change designation into Patch Module format from KIDS format
+ ; 
+ N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
+ S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
+ ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
+ D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
+ D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
+ D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
+ N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ D ASSERT(DA)                            ; Assert that we obtained an IEN
+ D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
+ D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
+ ; 
+ S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
+ ; Now, add the Primary forked version of the patch
+ N DA D
+ . N DERIVEDPATCH M DERIVEDPATCH=RTN
+ . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
+ . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
+ . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
+ . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY)  ; ZEXCEPT: A1AENB,A1AEPD
+ . D ASSERT(DA)                            ; Assert that we obtained an IEN
+ . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
+ . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
+ . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
  QUIT
  ;
-CLNPATT ;; Headers to substitute if present using a contains operator. 1st one is just a blank -- INTENTIONAL
- ;;
- ;;*********************
- ;;Original message:
- ;;This informational patch
- ;;>>END<<
+K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
+ N %
+ I PATCH[" " S %=$L(PATCH," "),PATCH=$P(PATCH," ",1,%-1)_"*"_$P(PATCH," ",%)_"*0"
+ I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
+ Q PATCH
  ;
-ANATRAP ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
- ; YOU MUST NEW $ET AND $ES AND SET $ET="GOTO ANATRAP^A1AEK2M2"
- I $EC[",U-NOT-MESSAGE," WRITE !,X_" IS NOT A PATCH MESSAGE",! S $ET="Q:$ES  S $EC=""""" QUIT
+PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
+ ; Input: Designation: Patch designation AAA*1*22; By value
+ ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
+ ;
+ ; When doing lookups for laygo, only look in the Package file's C index for designation.
+ N DIC S DIC("PTRIX",11007,.01,9.4)="C"
+ N A1AE S A1AE(0)="XLM" ; eXact match, Laygo, Multiple Indexes
+ N X S X=$P(DESIGNATION,"*") ; Input to ^DIC
+ D PKG^A1AEUTL
+ ; ZEXCEPT: Y leaks from PKG^A1AEUTL
+ I $P($G(Y),U,3) D EN^DDIOL("Added Package "_DESIGNATION_" to "_$P(^A1AE(11007,0),U))
+ ;
+ ; Check that the output variables from PKG^A1AEUTL are defined.
+ D ASSERT(A1AEPKIF) ; Must be positive
+ D ASSERT(A1AEPK=$P(DESIGNATION,"*")) ; PK must be the AAA
+ D ASSERT($L(A1AEPKNM)) ; Must be defined.
  QUIT
  ;
-TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
-CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 11005/11005.1 directly)
- N XMDUZ,XMK,XMZ
- S XMDUZ=.5
- N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
- S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
- S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,XMK,1,XMZ)) Q:'XMZ  D KL^XMA1B
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))="")
+PKGSETUP(A1AEPKIF,TXTINFO) ; Private; Setup package in Patch module
+ ; ZEXCEPT: A1AEPKIF - Created by PKGADD
+ N IENS S IENS=A1AEPKIF_","
+ N A1AEFDA,DIERR
+ S A1AEFDA(11007,IENS,2)="NO" ; USER SELECTION PERMITTED//^S X="NO"
+ S A1AEFDA(11007,IENS,4)="NO" ; FOR TEST SITE ONLY?//^S X="NO"
+ S A1AEFDA(11007,IENS,5)="YES" ; ASK PATCH DESCRIPTION COPY
+ D FILE^DIE("EKT",$NA(A1AEFDA)) ; External, lock, transact
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ N A1AEFDA
+ S A1AEFDA(11007.02,"?+1,"_IENS,.01)="`"_$$MKUSR(TXTINFO("VER"),"A1AE PHVER")  ; SUPPORT PERSONNEL
+ S A1AEFDA(11007.02,"?+1,"_IENS,2)="V"  ; VERIFY PERSONNEL
+ S A1AEFDA(11007.03,"?+2,"_IENS,.01)="`"_$$MKUSR(TXTINFO("DEV"),"A1AE DEVELOPER") ; DEVELOPMENT PERSONNEL
+ S A1AEFDA(11007.03,"?+3,"_IENS,.01)="`"_$$MKUSR(TXTINFO("COM"),"A1AE DEVELOPER") ; DITTO
+ D UPDATE^DIE("E",$NA(A1AEFDA))
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PB")))  ; Verifier Nodes
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PH")))  ; Developer Nodes
  QUIT
  ;
-MAILQP ; @TEST Read Patches and Send emails to Q-PATCH (temp ditto)
- ; ZEXCEPT: ROOT,SAVEDUZ - killed in EXIT.
- S (SAVEDUZ,DUZ)=.5
- S ROOT="/home/forum/testkids/"
- D SILENT
+MKUSR(NAME,KEY) ; Private; Make Users for the Package
+ Q:$O(^VA(200,"B",NAME,0)) $O(^(0)) ; Quit if the entry exists with entry
  ;
- ; Get Q-PATCH basket
- N % S %=$O(^XMB(3.7,.5,2,"B","Q-PATCH"))
- N XMK S XMK=$O(^XMB(3.7,.5,2,"B",%,0))
+ ; Get initials
+ D STDNAME^XLFNAME(.NAME,"CP")
+ N INI S INI=$E(NAME("GIVEN"))_$E(NAME("MIDDLE"))_$E(NAME("FAMILY"))
  ;
- ; Assert that it has messages
- D ASSERT($O(^XMB(3.7,.5,2,XMK,1,0))>0)
- N I S I=0 F  S I=$O(^XMB(3.7,.5,2,XMK,1,I)) Q:'I  D
- . N SUB S SUB=$P(^XMB(3.9,I,0),"^")
- . N PN S PN=$P(SUB,"*")
- . D ASSERT($L(PN)>1,"Subject incorrect")
- . D ASSERT($E(^XMB(3.9,I,2,1,0),1,4)="$TXT","Message "_I_" doesn't have TXT nodes")
+ ; File user with key
+ N A1AEFDA,A1AEIEN,A1AEERR,DIERR
+ S A1AEFDA(200,"?+1,",.01)=NAME ; Name
+ S A1AEFDA(200,"?+1,",1)=INI ; Initials
+ S A1AEFDA(200,"?+1,",28)="NONE" ; Mail Code
+ S:$L($G(KEY)) A1AEFDA(200.051,"?+3,?+1,",.01)="`"_$O(^DIC(19.1,"B",KEY,""))
+ ;
+ N DIC S DIC(0)="" ; An XREF in File 200 requires this.
+ D UPDATE^DIE("E",$NA(A1AEFDA),$NA(A1AEIEN),$NA(A1AEERR)) ; Typical UPDATE
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ ;
+ Q A1AEIEN(1) ;Provider IEN
+ ;
+VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
+ ; Input: - A1AEPKIF - Package IEN in 11007, value
+ ;        - DESIGNATION - Package designation (XXX*1*3)
+ ; Output: (In symbol table:) A1AEVR
+ ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
+ N X,A1AE S A1AE(0)="L" ; X is version number; input to ^DIC
+ S X=$P(DESIGNATION,"*",2)
+ D VER^A1AEUTL ; Internal API
+ D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
  QUIT
  ;
-TXTFILT ; @TEST Test that the logic for text file location works
- N ROOT S ROOT="/home/forum/testkids/"
- N PATCH S PATCH="TIU-1_SEQ-252_PAT-256.KIDS"
- N % S %=$$TXTFIL(ROOT,PATCH)
- D CHKEQ(%,"TIU-1_SEQ-252_PAT-256.TXT")
+INFOONLY(TXTINFO) ; Private to Package; Is this patch Info Only?
+ N INFOONLY S INFOONLY=0
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Informational" S INFOONLY=1
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Routine" S INFOONLY=0   ; B/c somebody might screw up by adding addtional stuff.
+ Q INFOONLY
+ ;
+PREREQAD(TXTINFO) ; Private to Package; Add pre-requisites to txt message
+ I $O(TXTINFO("PREREQ","")) D                              ; If we have prerequisites
+ . N LS S LS=$O(TXTINFO("DESC"," "),-1)                    ; Get last sub
+ . N NS S NS=LS+1                                      ; New Sub
+ . S TXTINFO("DESC",NS)=" ",NS=NS+1                        ; Empty line
+ . S TXTINFO("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
+ . N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S TXTINFO("DESC",NS)=" - "_TXTINFO("PREREQ",I),NS=NS+1
  QUIT
  ;
-SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
- N ROOT S ROOT="/home/forum/testkids/"
- N ARRAY S ARRAY("*")=""
- N FILE
- N % S %=$$LIST^%ZISH(ROOT,"ARRAY","FILE")
- I '% S $EC=",U-WRONG-DIRECTORY,"
- N % S %=$$SELFIL(.FILE)
- W !,%
- N % S %=$$SELFIL(.FILE,".TXT")
- W !,%
+ ;
+ASSERT(X,Y) ; Assertion engine
+ ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
+ ; I X="" BREAK
+ I $D(XTMUNIT) D CHKTF^XTMUNIT(X,$G(Y)) QUIT  ; if we are inside M-Unit, assert using that engine.
+ I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"  ; otherwise, throw error if assertion fails.
  QUIT
- ;
-ANALYZE1 ; @TEST Test Analyze on just the TIU patches
- N ROOT S ROOT="/home/forum/testkids/"
- N A S A("*.TXT")=""
- N FILE
- N % S %=$$LIST^%ZISH(ROOT,$NA(A),$NA(FILE))
- N J S J=""
- F  S J=$O(FILE(J)) Q:J=""  D
- . K ^TMP($J,"TXT")
- . N Y S Y=$$FTG^%ZISH(ROOT,J,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF($NA(^TMP($J,"TXT")))
- . N RTN
- . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
- . D ASSERT($L(RTN("SEQ")))
- . D ASSERT($L(RTN("SUBJECT")))
- QUIT
- ;
-ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
- ; REALLY REALLY NOT SAC COMPLIANT.
- I +$SY'=47 QUIT ; Test Works only on GT.M/Unix
- N OLDPWD S OLDPWD=$ZDIRECTORY
- N P S P="cmdpipe"
- O P:(shell="/bin/sh":command="mkdir osehra-repo")::"pipe"
- U P C P
- S $ZDIRECTORY=OLDPWD_"/"_"osehra-repo"
- O P:(shell="/bin/sh":command="git clone --depth=0 https://github.com/OSEHRA/VistA":READONLY:PARSE)::"pipe"
- U P
- N X F  R X:1 Q:$ZEOF  ; just loop around until we are done.
- C P
- O P:(shell="/bin/sh":command="find . -name '*.TXT'")::"pipe"
- U P
- N X F  U P R X Q:$ZEOF  U $P D
- . K ^TMP($J,"TXT")
- . N Y S Y=$$FTG^%ZISH($ZD,X,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
- . D CLEANHF($NA(^TMP($J,"TXT"))) ; Clean header and footer.
- . N RTN
- . N $ET,$ES ; We do a try catch with ANALYZE^A1AEK2M2
- . S $ET="G ANATRAP^A1AEK2M"
- . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
- . D ASSERT($L(RTN("SEQ")))
- . D ASSERT($L(RTN("SUBJECT")))
- C P
- S $ZDIRECTORY=OLDPWD
- O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
- U P C P
- QUIT ; /END ANALYZE2
- ;
- ; Convenience methods for M-Unit.
-ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
-CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT

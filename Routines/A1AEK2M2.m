@@ -1,10 +1,12 @@
-A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-02-07  5:35 PM
+A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-03-05  8:17 PM
  ;;2.4;PATCH MODULE;;
  ; Inspired by the VISTA XML Parser, a State Machine
  ;
 ANALYZE(RTN,MSGGREF,OPT) ; Public Proc ; Analyze a message in global MSGGREF. Return in RTN.
  ; RTN - Ref - Return variable.
- ;     - format TBD
+ ;    ("DESIGNATION") - Patch ID (x*2.0*1)
+ ;    ("$TXT") - $TXT line from original patch
+ ;    TODO: Fill in the rest later.
  ; MSGREG - Global passed by name containing message. Use Sub Ind to get data.
  ; OPT - Value - Options. Only supported one is "D" - debug. Prints out lines as they are read.
  ;
@@ -72,7 +74,7 @@ PREREQ ; Pre-requisite patches
  ;                     (v)PSJ*5*179   <<= must be installed BEFORE `PSJ*5*216'
  ; -- OR --
  ; Associated patches: (v)TIU*1*227       install with patch       `TIU*1*274'
- ;                     (v)TIU*1*261       install with patch       `TIU*1*274'
+ ;                     (c)TIU*1*261       install with patch       `TIU*1*274'
  ;
  I LINE="" D SEEK()  ; Get next line if it's empty
  I LINE'["Associated patches:" S STATE="SUBJECT" QUIT
@@ -80,7 +82,8 @@ PREREQ ; Pre-requisite patches
  ; Very trickisy line!!! Do, and loop and do
  D  F  D SEEK() Q:LINE=""  D
  . N I S I=$O(RTN("PREREQ",""),-1)+1
- . S RTN("PREREQ",I)=$P(LINE,"(v)",2) ; get patch number
+ . N D F D="(v)","(c)","(u)" Q:LINE[D  ; Delimiter. Verified, completed, under development. Cycle logic.
+ . S RTN("PREREQ",I)=$P(LINE,D,2) ; get patch number
  . I RTN("PREREQ",I)["<<=" S RTN("PREREQ",I)=$P(RTN("PREREQ",I),"<<=") ; remove the <<=
  . I RTN("PREREQ",I)["install with patch" S RTN("PREREQ",I)=$P(RTN("PREREQ",I),"install")
  . S RTN("PREREQ",I)=$$TRIM^XLFSTR(RTN("PREREQ",I)) ; remove spaces
@@ -174,3 +177,14 @@ NOP ; No-Op. Use this in debugging.
 ASSERT(X,Y) ; Assertion engine
  I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"
  QUIT
+ ;
+ANATRAP(PATCH) ; Analysis Trap -- use this to capture errors from ANALYZE^A1AEK2M2.
+ ; YOU MUST NEW $ET AND $ES AND SET $ET="DO ANATRAP^A1AEK2M2(PATCH)"
+ ; I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") S $ET="G UNWIND^ZU",$EC=",UQUIT," QUIT
+ I $EC[",U-NOT-MESSAGE," DO EN^DDIOL(PATCH_" IS NOT A PATCH MESSAGE") G UNWIND
+ QUIT
+ ;
+UNWIND ; Trap unwinder
+ S $ET="Q:($ES&$Q) -9  Q:$ES  S $EC="""""
+ S $EC=",UQUIT,"
+ QUIT  ; This is not hit
