@@ -1,6 +1,60 @@
-A1AEK2M1 ; VEN/SMH - Analyze KIDS file and extract information;2014-02-25  12:35 PM
+A1AEK2M1 ; VEN/SMH - Analyze KIDS file and extract information;2014-03-18  11:57 AM
  ;;2.4;PATCH MODULE;;
  ; Inspired by the VISTA XML Parser, a State Machine
+ ;
+ ; Conversion procedure from a VA PM HFS-extracted KIDS (complete):
+ ;^TMP(28177,1,0)="Released TIU*1*241 SEQ #237" <-- $TXT prepended
+ ;^TMP(28177,2,0)="Extracted from mail message" <-- this becomes the txt
+ ;^TMP(28177,3,0)="**KIDS**:TIU*1.0*241^"       <-- $END TXT replaced
+ ;^TMP(28177,4,0)="" --> becomes $KID append whatever is in 6
+ ;^TMP(28177,5,0)="**INSTALL NAME**"
+ ;^TMP(28177,6,0)="TIU*1.0*241"
+ ;---
+ ;^TMP(28177,1189,0)="**END**" --> becomes $END KID whatever is in 6
+ ;^TMP(28177,1190,0)="**END**" --> DELETED
+ ;
+ ; A few random notes on various KIDS issues
+ ; If the original is a mail message, it will looks like this
+ ; 
+ ; >> Released GMRA*4*44 SEQ #41
+ ; >> Extracted from mail message
+ ; >> **KIDS**:GMRA*4.0*44^
+ ; >> 
+ ; >> **INSTALL NAME** etc..
+ ; >> kids contents
+ ; >> **END**
+ ; >> **END**
+ ;
+ ; If the original isn't a PM HFS-extracted KIDS build, but a Straight from 
+ ; KIDS KIDS-build, then the KIDS first line looks like this:
+ ;
+ ; >> KIDS Distribution saved on Apr 30, 2013@05:31:47
+ ; >> OR*371
+ ; >> **KIDS**:OR*3.0*371^
+ ; >> <blank line>
+ ; >> **INSTALL NAME**
+ ;
+ ; Multibuilds look like this:
+ ; 
+ ; >> KIDS Distribution saved on Sep 23, 2011@17:42:57
+ ; >> IB/PRCA Remedy Ticket Fixes
+ ; >> **KIDS**:IB*2.0*459^PRCA*4.5*280^
+ ; >> <blank line>
+ ; >> **INSTALL NAME**
+ ; >> text of first KIDS build
+ ; >> **INSTALL NAME**
+ ; >> text of second KIDS build
+ ; >> **END**
+ ; >> **END**
+ ;
+ ; A KIDS sent from another system via KIDS/MM has the following contents.
+ ;$TXT Created by TESTMASTER,USER at VEN.SMH101.COM  (KIDS) on Thursday, 01/07/14 at 15:55
+ ; <contents>
+ ;$END TXT
+ ;$KID ZZZ*1.0*1
+ ;**INSTALL NAME**
+ ; <contents>
+ ;$END KID ZZZ*1.0*1
  ;
 ANALYZE(RTN,MSGGREF,OPT) ; Public Proc ; Analyze a KIDS file in global MSGGREF. Return in RTN.
  ; RTN - Global name - use with subscript indirection.
