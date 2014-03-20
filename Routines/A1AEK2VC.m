@@ -1,7 +1,8 @@
-A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-17  7:53 PM
+A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-20  4:51 PM
  ;;2.4;PATCH MODULE;;
  ;
-EN(P11005IEN) ; Public Entry Point.
+EN(P11005IEN) ; Public Entry Point. Rest are private.
+ ; Break out a KIDS build in 11005.1
  ; Input: 11005/11005.1 IEN
  I '$O(^A1AE(11005.1,P11005IEN,2,0)) QUIT  ; No KIDS build.
  ;
@@ -23,6 +24,7 @@ EN(P11005IEN) ; Public Entry Point.
  ; We need to group them back together.
  N PD S PD=$$GET1^DIQ(11005,P11005IEN,.01) ; Patch description
  N ROOT S ROOT=$$GET1^DIQ(11005,P11005IEN,6.1) ; Patch path root
+ I ROOT="" QUIT                              ; No root path
  K ^XTMP("K2VC")
  S ^XTMP("K2VC",0)=$$FMADD^XLFDT(DT,1)_DT_U_"KIDS to Version Control"
  N L1,L2
@@ -36,39 +38,194 @@ EN(P11005IEN) ; Public Entry Point.
  . S @("^XTMP(""K2VC"","""_PD_""","_L1TXT)=L2TXT      ; Set our data into our global
  . S SVLN=L2                                 ; move data pointer to last accessed one
  ;
+ ; 
+ ; Make directory for exporting KIDS compoents
+ S ROOT=ROOT_"KIDComponents/"
+ N % S %=$$MKDIR(ROOT)
+ I % D EN^DDIOL("Couldn't create KIDCommponents directory") QUIT
+ ; 
+ ; Say that we are exporting
+ N MSG S MSG(1)="Exporting Patch "_PD
+ S MSG(1,"F")="!!!!!"
+ S MSG(2)="Exporting at "_ROOT
+ S MSG(2,"F")="!"
+ D EN^DDIOL(.MSG)
  ;
  ; Stanza to process each component of loaded global
  N A1AEFAIL S A1AEFAIL=0
  N TYP S TYP=""
- F  S TYP=$O(^XTMP("K2VC",PD,TYP)) Q:TYP=""  Q:A1AEFAIL  D
- . I TYP="BLD" D BLD K ^XTMP("K2VC",PD,TYP) Q:A1AEFAIL       ; Process BUILD Section
- . I TYP="PKG" D PKG K ^XTMP("K2VC",PD,TYP) Q:A1AEFAIL       ; Process Package Section
+ F  S TYP=$O(^XTMP("K2VC",PD,TYP)) Q:TYP=""  Q:A1AEFAIL  D  ; Nake REF inside of here.
+ . I TYP="BLD" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"Build.zwr",4,"IEN") K ^XTMP("K2VC",PD,TYP) Q     ; Process BUILD Section
+ . I TYP="FIA" D FIA(.A1AEFAIL,$NA(^XTMP("K2VC",PD)),ROOT) Q                ; All file components (FIA k here
+ . I TYP="PKG" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"Package.zwr",4,"IEN") K ^XTMP("K2VC",PD,TYP) Q   ; Process Package Section
+ . I TYP="VER" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"KernelFMVersion.zwr") K ^XTMP("K2VC",PD,TYP) Q   ; Kernel FM Version.
+ . I TYP="PRE" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"EnvironmentCheck.zwr") K ^XTMP("K2VC",PD,TYP) Q  ; Env Check
+ . I TYP="INI" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"PreInit.zwr") K ^XTMP("K2VC",PD,TYP) Q           ; Pre-Init
+ . I TYP="INIT" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"PostInstall.zwr") K ^XTMP("K2VC",PD,TYP) Q      ; Post-Install
+ . I TYP="QUES" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"InstallQuestions.zwr") K ^XTMP("K2VC",PD,TYP) Q  ; Install Questions
+ . I TYP="RTN" D RTN(.A1AEFAIL,$NA(^(TYP)),ROOT) K ^XTMP("K2VC",PD,TYP) Q                            ; Routines
+ . I TYP="KRN" D KRN(.A1AEFAIL,$NA(^XTMP("K2VC",PD)),ROOT) Q                                         ; Kernel components
  I A1AEFAIL D EN^DDIOL("A failure has occured")
+ ; I $D(^XTMP("K2VC",PD,"DATA")) BREAK
  QUIT
  ;
-BLD ; Build components - See IN+11^XPDIJ1. IEN is disposable.
- D OPEN^%ZISH("BUILD",ROOT,"Build.zwr","W")
- I POP S A1AEFAIL=1 QUIT
+ ;
+GENOUT(FAIL,EXGLO,ROOT,FN,QLSUB,SUBNAME) ; Generic Exporter
+ ; .FAIL - Output to tell us if we failed
+ ; EXGLO - Global NAME (use $NA) to export
+ ; ROOT - File system root where to write the file
+ ; FN - File name
+ ; QLSUB - Substitute this nth subscript WITH...
+ ; SUBNAME - ...subname
+ ;
+ N POP
+ D OPEN^%ZISH("EXPORT",ROOT,FN,"W")
+ I POP S FAIL=1 QUIT
  U IO
- D ZWRITE($NA(^XTMP("K2VC",PD,TYP)),4,"IEN") ; Super ZWRITE.
- D CLOSE^%ZISH("BUILD")
- D EN^DDIOL("Wrote Build.zwr at "_ROOT)
+ D ZWRITE(EXGLO,$G(QLSUB),$G(SUBNAME))
+ D CLOSE^%ZISH("EXPORT")
+ D EN^DDIOL("Wrote "_FN)
  QUIT
  ;
-PKG ; Package components - See PKGADD^XPDIP. IEN is disposable.
- D OPEN^%ZISH("PACKAGE",ROOT,"Package.zwr","W")
- I POP S A1AEFAIL=1 QUIT
- U IO
- D ZWRITE($NA(^XTMP("K2VC",PD,TYP)),4,"IEN")
- D CLOSE^%ZISH("PACKAGE")
- D EN^DDIOL("Wrote Package.zwr at "_ROOT)
+RTN(FAIL,RTNGLO,ROOT) ; Routine Exporter
+ ; .FAIL - Output. Did we fail? Mostly b/c of filesystem issues.
+ ; RTNGLO - The KIDS global ending at "RTN". Use $NA to pass this.
+ ; ROOT - File system root where we are gonna make the Routines directory
+ ;
+ N RTNDIR S RTNDIR=ROOT_"Routines/"
+ N % S %=$$MKDIR(RTNDIR)
+ I % S FAIL=1 QUIT
+ ;
+ D EN^DDIOL("Exporting these routines to Routines/")
+ ;
+ N POP
+ N RTN S RTN=""
+ N RTNDDIOL S RTNDDIOL="" ; Output message
+ F  S RTN=$O(@RTNGLO@(RTN)) Q:RTN=""  D  Q:POP
+ . D OPEN^%ZISH("RTNHDR",RTNDIR,RTN_".header","W")
+ . I POP S FAIL=1 QUIT
+ . U IO
+ . W @RTNGLO@(RTN) ; Header node.
+ . D CLOSE^%ZISH("RTNHDR")
+ . ;
+ . ; Now write the routine code
+ . D OPEN^%ZISH("RTNCODE",RTNDIR,RTN_".m","W")
+ . I POP S FAIL=1 QUIT
+ . U IO
+ . N LN F LN=0:0 S LN=$O(@RTNGLO@(RTN,LN)) Q:'LN  W ^(LN,0),!
+ . D CLOSE^%ZISH("RTNCODE")
+ . ; done!
+ . S RTNDDIOL=RTNDDIOL_" "_RTN ; Add to output message
+ S $E(RTNDDIOL)="" ; Remove leading space
+ ;
+ D EN^DDIOL(RTNDDIOL)
  QUIT
  ;
-MKDIR(DIR) ; Mk dir
- ; TODO: Check command return value
- N CMD S CMD="mkdir -p "_DIR
- I +$SY=47 O "p":(shell="/bin/sh":command=CMD)::"pipe" U "p" C "p"
- I +$SY=0 N % S %=$ZF(-1,CMD)
+MKDIR(DIR) ; $$; mkdir DIR name. Unix output for success and failure.
+ N CMD S CMD="mkdir -p '"_DIR_"'" ; mk sure that we take in account spaces
+ N OUT ; Exit value of command.
+ I +$SY=47 D  ; GT.M
+ . O "p":(shell="/bin/sh":command=CMD)::"pipe" U "p" C "p"
+ . I $ZV["V6.1" S OUT=$ZCLOSE ; GT.M 6.1 only returns the status!!
+ . E  S OUT=0
+ I +$SY=0 S OUT=$ZF(-1,CMD) ; Cache
+ QUIT OUT
+ ;
+FIA(FAIL,KIDGLO,ROOT) ; Print FIA, UP, ^DD, ^DIC, SEC, IX, KEY, KEYPTR for each file
+ ; .FAIL - Output. Did we fail? Mostly b/c of filesystem issues.
+ ; KIDGLO - The KIDS global (not a sub). Use $NA to pass this.
+ ; ROOT - File system root where we are gonna export.
+ Q:'$D(@KIDGLO@("FIA"))  ; No files to export
+ ;
+ N POP
+ ;
+ N PATH S PATH=ROOT_"Files/"
+ S POP=$$MKDIR(PATH)
+ I POP D EN^DDIOL("Couldn't create directory") S FAIL=1 QUIT
+ ;
+ D EN^DDIOL("Exporting files DD and Data to Files/")
+ ;
+ N FILE F FILE=0:0 S FILE=$O(@KIDGLO@("FIA",FILE)) Q:'FILE  D  Q:$G(POP)   ; For each top file in "FIA"
+ . N FNUM S FNUM=FILE                                                      ; File Number
+ . N FNAM S FNAM=@KIDGLO@("FIA",FILE)                                      ; File Name (Value of the first FIA node)
+ . N HFSNAME S HFSNAME=FNUM_"+"_FNAM_".DD.zwr"                             ; File Name
+ . D OPEN^%ZISH("DD",PATH,HFSNAME,"W")                                     ; Open
+ . I POP S FAIL=1 QUIT                                                     ; Open failed
+ . U IO                                                                    ; Use device
+ . D ZWRITE($NA(@KIDGLO@("FIA",FILE)))                                     ; DIFROM FIA Array (data on what to send)
+ . I $D(@KIDGLO@("^DIC",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)            ; FOF Nodes.
+ . D ZWRITE($NA(@KIDGLO@("^DD",FILE))) K ^(FILE)                           ; Data Dictionary
+ . I $D(@KIDGLO@("SEC","^DIC",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)      ; ^DIC Security Nodes
+ . I $D(@KIDGLO@("SEC","^DD",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)       ; ^DD Security Nodes
+ . I $D(@KIDGLO@("UP",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)              ; Subfile upward nodes to find parent files
+ . I $D(@KIDGLO@("IX",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)              ; New Style Indexes
+ . I $D(@KIDGLO@("KEY",FILE)) D                                            ; Keys?
+ . . D ZWRITE($NA(@KIDGLO@("KEY",FILE))) K ^(FILE)                         ; Keys...
+ . . D ZWRITE($NA(@KIDGLO@("KEYPTR",FILE))) K ^(FILE)                      ; and pointer resolution to NS indexes
+ . D CLOSE^%ZISH("DD")                                                     ; Close. Resets IO.
+ . D EN^DDIOL("Exported "_HFSNAME)
+ ;
+ ;
+ D DATA(.FAIL,KIDGLO,PATH)                                                 ; Now Data...
+ K @KIDGLO@("FIA")                                                         ; Kill this off now.
+ QUIT
+ ;
+DATA(FAIL,KIDGLO,ROOT) ; Print DATA, FRV1, FRVL, FRV1K subscripts
+ ; .FAIL - Output. Did we fail? Mostly b/c of filesystem issues.
+ ; KIDGLO - The KIDS global (not a sub). Use $NA to pass this.
+ ; ROOT - File system root where we are gonna export.
+ Q:'$D(@KIDGLO@("DATA"))
+ ;
+ N POP
+ N FILE F FILE=0:0 S FILE=$O(@KIDGLO@("FIA",FILE)) Q:'FILE  D  Q:$G(POP)   ; For each top file in "FIA"
+ . Q:'$D(@KIDGLO@("DATA",FILE))                                            ; No Data. Skip.
+ . N FNUM S FNUM=FILE                                                      ; File Number
+ . N FNAM S FNAM=@KIDGLO@("FIA",FILE)                                      ; File Name (Value of the first FIA node)
+ . N HFSNAME S HFSNAME=FNUM_"+"_FNAM_".Data.zwr"                           ; File Name
+ . D OPEN^%ZISH("DATA",ROOT,HFSNAME,"W")                                   ; Open
+ . I POP S FAIL=1 QUIT                                                     ; Open failed
+ . U IO                                                                    ; Use device
+ . D ZWRITE($NA(@KIDGLO@("DATA",FILE))) K ^(FILE)                          ; Export Data
+ . I $D(@KIDGLO@("FRV1",FILE)) D                                           ; Pointer Resolution?
+ . . D ZWRITE($NA(@KIDGLO@("FRV1",FILE))) K ^(FILE)                        ; Operator node. See DIFROMSR.
+ . . D ZWRITE($NA(@KIDGLO@("FRVL",FILE))) K ^(FILE)                        ; Don't know what that is. See DIFROMSR.
+ . . D ZWRITE($NA(@KIDGLO@("FRV1K",FILE))) K ^(FILE)                       ; ditto
+ . D CLOSE^%ZISH("DATA")                                                   ; Close. Resets IO.
+ . D EN^DDIOL("Exported "_HFSNAME)
+ K @KIDGLO@("DATA")
+ QUIT
+ ;
+ ;
+KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
+ ; .FAIL - Output. Did we fail? Mostly b/c of filesystem issues.
+ ; KIDGLO - The KIDS global (not a sub). Use $NA to pass this.
+ ; ROOT - File system root where we are gonna export.
+ N POP
+ N ORD F ORD=0:0 S ORD=$O(@KIDGLO@("ORD",ORD)) Q:'ORD  D  Q:$G(POP)   ; For each item in ORD
+ . N FNUM S FNUM=$O(@KIDGLO@("ORD",ORD,0))                                 ; File Number
+ . N FNAM S FNAM=^(FNUM,0) ; **NAKED to above line**                       ; File Name
+ . N PATH S PATH=ROOT_FNAM_"/"                                             ; Path to export to
+ . S POP=$$MKDIR(PATH)                                                     ; Mk dir for the specific component
+ . I POP D EN^DDIOL("Couldn't create directory") S FAIL=1 QUIT             ;
+ . D OPEN^%ZISH("ORD",PATH,"ORD.zwr","W")                                  ; Order Nodes
+ . I POP S FAIL=1 QUIT                                                     ; Open failed
+ . U IO                                                                    ;
+ . D ZWRITE($NA(@KIDGLO@("ORD",ORD,FNUM)))                                 ; Zwrite the ORD node
+ . D CLOSE^%ZISH("ORD")                                                    ; Done with ORD
+ . D EN^DDIOL("Wrote ORD.zwr for "_FNAM)                                   ; Say so                            
+ . ;
+ . N IENQL S IENQL=$QL($NA(@KIDGLO@("KRN",FNUM,0)))                        ; Where is the IEN sub?
+ . N CNT S CNT=0                                                           ; Sub counter for export
+ . N IEN F IEN=0:0 S IEN=$O(@KIDGLO@("KRN",FNUM,IEN)) Q:'IEN  D  Q:$G(POP)  ; For each Kernel component IEN
+ . . N ENTRYNAME S ENTRYNAME=$P(@KIDGLO@("KRN",FNUM,IEN,0),U)              ; .01 for the component
+ . . D OPEN^%ZISH("ENT",PATH,ENTRYNAME_".zwr","W")                         ; Open file
+ . . I POP S FAIL=1 QUIT
+ . . U IO
+ . . D ZWRITE($NA(@KIDGLO@("KRN",FNUM,IEN)),IENQL,"IEN+"_CNT)              ; Zwrite, replacing the IEN with IEN+CNT
+ . . S CNT=CNT+1                                                           ; ++
+ . . D CLOSE^%ZISH("ENT")                                                  ; Done with this entry
+ . . D EN^DDIOL("Exported "_ENTRYNAME_".zwr"_" in "_FNAM)                  ; Export
+ K @KIDGLO@("ORD"),@KIDGLO@("KRN")                                         ; Don't need these anymore.
  QUIT
  ;
 ZWRITE(NAME,QS,QSREP)	; Replacement for ZWRITE ; Public Proc
@@ -82,14 +239,14 @@ ZWRITE(NAME,QS,QSREP)	; Replacement for ZWRITE ; Public Proc
  I $L(QSREP) S INCEXPN="S $G("_QSREP_")="_QSREP_"+1"
  N L S L=$L(NAME) ; Name length
  I $E(NAME,L-2,L)=",*)" S NAME=$E(NAME,1,L-3)_")" ; If last sub is *, remove it and close the ref
- N ORIGLAST S ORIGLAST=$QS(NAME,$QL(NAME))       ; Get last subscript upon which we can't loop further
+ N ORIGNAME S ORIGNAME=NAME          ; Get last subscript upon which we can't loop further
  N ORIGQL S ORIGQL=$QL(NAME)         ; Number of subscripts in the original name
  I $D(@NAME)#2 W $S(QS:$$SUBNAME(NAME,QS,QSREP),1:NAME),"=",$$FORMAT(@NAME),!        ; Write base if it exists
  ; $QUERY through the name. 
  ; Stop when we are out.
  ; Stop when the last subscript of the original name isn't the same as 
  ; the last subscript of the Name. 
- F  S NAME=$Q(@NAME) Q:NAME=""  Q:$QS(NAME,ORIGQL)'=ORIGLAST  D
+ F  S NAME=$Q(@NAME) Q:NAME=""  Q:$NA(@ORIGNAME,ORIGQL)'=$NA(@NAME,ORIGQL)  D
  . W $S(QS:$$SUBNAME(NAME,QS,QSREP),1:NAME),"=",$$FORMAT(@NAME),!
  QUIT
  ;
@@ -144,6 +301,11 @@ T1 ; @TEST subscript substitutions
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT(2332,0)),1,"IEN"),"^DIPT(IEN,0)")
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT("A",123,0)),2,"IEN"),"^DIPT(""A"",IEN,0)")
  QUIT
-TEST1 ; @TEST
- D EN(86192)
+T2 ; @TEST Make a directory
+ N % S %=$$MKDIR("/tmp/test/sam")
+ D CHKEQ^XTMUNIT(%,0,"Status of mkdir should be zero")
+ QUIT
+ ;
+T3 ; @TEST Export components for one KIDS build
+ N I F I=0:0 S I=$O(^A1AE(11005,I)) Q:'I  D EN(I)
  QUIT
