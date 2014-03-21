@@ -1,8 +1,8 @@
-A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-20  4:51 PM
+A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-20  8:31 PM
  ;;2.4;PATCH MODULE;;
  ;
 EN(P11005IEN) ; Public Entry Point. Rest are private.
- ; Break out a KIDS build in 11005.1
+ ; Break out a KIDS build in 11005.1 into Version Controlled Components
  ; Input: 11005/11005.1 IEN
  I '$O(^A1AE(11005.1,P11005IEN,2,0)) QUIT  ; No KIDS build.
  ;
@@ -42,7 +42,7 @@ EN(P11005IEN) ; Public Entry Point. Rest are private.
  ; Make directory for exporting KIDS compoents
  S ROOT=ROOT_"KIDComponents/"
  N % S %=$$MKDIR(ROOT)
- I % D EN^DDIOL("Couldn't create KIDCommponents directory") QUIT
+ I % D EN^DDIOL($$RED("Couldn't create KIDCommponents directory")) QUIT
  ; 
  ; Say that we are exporting
  N MSG S MSG(1)="Exporting Patch "_PD
@@ -53,20 +53,91 @@ EN(P11005IEN) ; Public Entry Point. Rest are private.
  ;
  ; Stanza to process each component of loaded global
  N A1AEFAIL S A1AEFAIL=0
- N TYP S TYP=""
- F  S TYP=$O(^XTMP("K2VC",PD,TYP)) Q:TYP=""  Q:A1AEFAIL  D  ; Nake REF inside of here.
- . I TYP="BLD" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"Build.zwr",4,"IEN") K ^XTMP("K2VC",PD,TYP) Q     ; Process BUILD Section
- . I TYP="FIA" D FIA(.A1AEFAIL,$NA(^XTMP("K2VC",PD)),ROOT) Q                ; All file components (FIA k here
- . I TYP="PKG" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"Package.zwr",4,"IEN") K ^XTMP("K2VC",PD,TYP) Q   ; Process Package Section
- . I TYP="VER" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"KernelFMVersion.zwr") K ^XTMP("K2VC",PD,TYP) Q   ; Kernel FM Version.
- . I TYP="PRE" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"EnvironmentCheck.zwr") K ^XTMP("K2VC",PD,TYP) Q  ; Env Check
- . I TYP="INI" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"PreInit.zwr") K ^XTMP("K2VC",PD,TYP) Q           ; Pre-Init
- . I TYP="INIT" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"PostInstall.zwr") K ^XTMP("K2VC",PD,TYP) Q      ; Post-Install
- . I TYP="QUES" D GENOUT(.A1AEFAIL,$NA(^(TYP)),ROOT,"InstallQuestions.zwr") K ^XTMP("K2VC",PD,TYP) Q  ; Install Questions
- . I TYP="RTN" D RTN(.A1AEFAIL,$NA(^(TYP)),ROOT) K ^XTMP("K2VC",PD,TYP) Q                            ; Routines
- . I TYP="KRN" D KRN(.A1AEFAIL,$NA(^XTMP("K2VC",PD)),ROOT) Q                                         ; Kernel components
- I A1AEFAIL D EN^DDIOL("A failure has occured")
+ N SN S SN=$NA(^XTMP("K2VC",PD)) ; Short name... I am tired of typing.
+ D EXPORT(.A1AEFAIL,SN,ROOT)
  ; I $D(^XTMP("K2VC",PD,"DATA")) BREAK
+ I A1AEFAIL D EN^DDIOL($$RED("A failure has occured"))
+ QUIT
+ ;
+EXPORT(A1AEFAIL,SN,ROOT) ; Export KIDS patch to the File system
+ ; .A1AEFAIL = Catch failures
+ ; SN = Short name for Global
+ ; ROOT = File system Root
+ ;
+ ; BLD - Build
+ D GENOUT(.A1AEFAIL,$NA(@SN@("BLD")),ROOT,"Build.zwr",4,"IEN") ; Process BUILD Section
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export BLD")) QUIT
+ K @SN@("BLD")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; FIA, ^DD, ^DIC, SEC, DATA, FR* nodes
+ D FIA(.A1AEFAIL,SN,ROOT)                  ; All file components (DD + data)... Killing done internally.
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export FIA, ^DD, ^DIC, SEC, DATA, FR*")) QUIT
+ D ASSERT('A1AEFAIL)
+ ;
+ ; PKG - Package
+ D GENOUT(.A1AEFAIL,$NA(@SN@("PKG")),ROOT,"Package.zwr",4,"IEN")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export PKG")) QUIT
+ K @SN@("PKG")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; VER - Kernel and Fileman Versions
+ D GENOUT(.A1AEFAIL,$NA(@SN@("VER")),ROOT,"KernelFMVersion.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export VER")) QUIT
+ K @SN@("VER")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; PRE - Env Check
+ D GENOUT(.A1AEFAIL,$NA(@SN@("PRE")),ROOT,"EnvironmentCheck.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export PRE")) QUIT
+ K @SN@("PRE")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; INI - Pre-Init
+ D GENOUT(.A1AEFAIL,$NA(@SN@("INI")),ROOT,"PreInit.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export INI")) QUIT
+ K @SN@("INI")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; INIT - Post-Install
+ D GENOUT(.A1AEFAIL,$NA(@SN@("INIT")),ROOT,"PostInstall.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export INIT")) QUIT
+ K @SN@("INIT")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; MBREQ - Required Build
+ D GENOUT(.A1AEFAIL,$NA(@SN@("MBREQ")),ROOT,"RequiredBuild.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export MBREQ")) QUIT
+ K @SN@("MBREQ")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; QUES - Install Questions
+ D GENOUT(.A1AEFAIL,$NA(@SN@("QUES")),ROOT,"InstallQuestions.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export QUES")) QUIT
+ K @SN@("QUES")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; RTN - Routines
+ D RTN(.A1AEFAIL,$NA(@SN@("RTN")),ROOT)
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export RTN")) QUIT
+ D ASSERT('A1AEFAIL)
+ ; Kill is done in RTN
+ ;
+ ; KRN and ORD - Kernel Components
+ D KRN(.A1AEFAIL,SN,ROOT)
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export KRN")) QUIT
+ D ASSERT('A1AEFAIL)
+ ; Kill is done in KRN
+ ;
+ ; TEMP - Transport Global
+ D GENOUT(.A1AEFAIL,$NA(@SN@("TEMP")),ROOT,"TransportGlobal.zwr")
+ I A1AEFAIL D EN^DDIOL($$RED("Couldn't export TEMP")) QUIT
+ K @SN@("TEMP")
+ D ASSERT('A1AEFAIL)
+ ;
+ ; Make sure that the XTMP global is now empty. If there is anything there, we have a problem.
+ D ASSERT('$D(@SN))
+ ;
  QUIT
  ;
  ;
@@ -77,6 +148,8 @@ GENOUT(FAIL,EXGLO,ROOT,FN,QLSUB,SUBNAME) ; Generic Exporter
  ; FN - File name
  ; QLSUB - Substitute this nth subscript WITH...
  ; SUBNAME - ...subname
+ ;
+ I '$D(@EXGLO) QUIT  ; No data to export
  ;
  N POP
  D OPEN^%ZISH("EXPORT",ROOT,FN,"W")
@@ -119,6 +192,7 @@ RTN(FAIL,RTNGLO,ROOT) ; Routine Exporter
  S $E(RTNDDIOL)="" ; Remove leading space
  ;
  D EN^DDIOL(RTNDDIOL)
+ K @RTNGLO
  QUIT
  ;
 MKDIR(DIR) ; $$; mkdir DIR name. Unix output for success and failure.
@@ -141,27 +215,30 @@ FIA(FAIL,KIDGLO,ROOT) ; Print FIA, UP, ^DD, ^DIC, SEC, IX, KEY, KEYPTR for each 
  ;
  N PATH S PATH=ROOT_"Files/"
  S POP=$$MKDIR(PATH)
- I POP D EN^DDIOL("Couldn't create directory") S FAIL=1 QUIT
+ I POP D EN^DDIOL($$RED("Couldn't create directory")) S FAIL=1 QUIT
  ;
  D EN^DDIOL("Exporting files DD and Data to Files/")
  ;
  N FILE F FILE=0:0 S FILE=$O(@KIDGLO@("FIA",FILE)) Q:'FILE  D  Q:$G(POP)   ; For each top file in "FIA"
  . N FNUM S FNUM=FILE                                                      ; File Number
  . N FNAM S FNAM=@KIDGLO@("FIA",FILE)                                      ; File Name (Value of the first FIA node)
+ . S FNAM=$TR(FNAM,"\/!@#$%^&*()","------------")                          ; Replace punc with dashes
  . N HFSNAME S HFSNAME=FNUM_"+"_FNAM_".DD.zwr"                             ; File Name
  . D OPEN^%ZISH("DD",PATH,HFSNAME,"W")                                     ; Open
  . I POP S FAIL=1 QUIT                                                     ; Open failed
  . U IO                                                                    ; Use device
  . D ZWRITE($NA(@KIDGLO@("FIA",FILE)))                                     ; DIFROM FIA Array (data on what to send)
- . I $D(@KIDGLO@("^DIC",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)            ; FOF Nodes.
- . D ZWRITE($NA(@KIDGLO@("^DD",FILE))) K ^(FILE)                           ; Data Dictionary
- . I $D(@KIDGLO@("SEC","^DIC",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)      ; ^DIC Security Nodes
- . I $D(@KIDGLO@("SEC","^DD",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)       ; ^DD Security Nodes
- . I $D(@KIDGLO@("UP",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)              ; Subfile upward nodes to find parent files
- . I $D(@KIDGLO@("IX",FILE)) D ZWRITE($NA(^(FILE))) K ^(FILE)              ; New Style Indexes
+ . I $D(@KIDGLO@("^DIC",FILE)) D ZWRITE($NA(^(FILE))) K @KIDGLO@("^DIC",FILE)              ; FOF Nodes.
+ . D ZWRITE($NA(@KIDGLO@("^DD",FILE))) K @KIDGLO@("^DD",FILE)                              ; Data Dictionary
+ . I $D(@KIDGLO@("SEC","^DIC",FILE)) D ZWRITE($NA(^(FILE))) K @KIDGLO@("SEC","^DIC",FILE)  ; ^DIC Security Nodes
+ . I $D(@KIDGLO@("SEC","^DD",FILE)) D ZWRITE($NA(^(FILE))) K @KIDGLO@("SEC","^DD",FILE)    ; ^DD Security Nodes
+ . I $D(@KIDGLO@("UP",FILE)) D ZWRITE($NA(^(FILE))) K @KIDGLO@("UP",FILE)              ; Subfile upward nodes to find parent files
+ . I $D(@KIDGLO@("IX",FILE)) D ZWRITE($NA(^(FILE))) K @KIDGLO@("IX",FILE)              ; New Style Indexes
  . I $D(@KIDGLO@("KEY",FILE)) D                                            ; Keys?
- . . D ZWRITE($NA(@KIDGLO@("KEY",FILE))) K ^(FILE)                         ; Keys...
- . . D ZWRITE($NA(@KIDGLO@("KEYPTR",FILE))) K ^(FILE)                      ; and pointer resolution to NS indexes
+ . . D ZWRITE($NA(@KIDGLO@("KEY",FILE))) K @KIDGLO@("KEY",FILE)            ; Keys...
+ . . D ZWRITE($NA(@KIDGLO@("KEYPTR",FILE))) K @KIDGLO@("KEYPTR",FILE)      ; and pointer resolution to NS indexes
+ . N SUBFILE F SUBFILE=0:0 S SUBFILE=$O(@KIDGLO@("FIA",FILE,SUBFILE)) Q:'SUBFILE  D
+ . . I $D(@KIDGLO@("PGL",SUBFILE)) D ZWRITE($NA(@KIDGLO@("PGL",SUBFILE))) K @KIDGLO@("PGL",SUBFILE) ; Source system pointer resolution (not used at dest.)
  . D CLOSE^%ZISH("DD")                                                     ; Close. Resets IO.
  . D EN^DDIOL("Exported "_HFSNAME)
  ;
@@ -181,15 +258,16 @@ DATA(FAIL,KIDGLO,ROOT) ; Print DATA, FRV1, FRVL, FRV1K subscripts
  . Q:'$D(@KIDGLO@("DATA",FILE))                                            ; No Data. Skip.
  . N FNUM S FNUM=FILE                                                      ; File Number
  . N FNAM S FNAM=@KIDGLO@("FIA",FILE)                                      ; File Name (Value of the first FIA node)
+ . S FNAM=$TR(FNAM,"\/!@#$%^&*()","------------")                          ; Replace punc with dashes
  . N HFSNAME S HFSNAME=FNUM_"+"_FNAM_".Data.zwr"                           ; File Name
  . D OPEN^%ZISH("DATA",ROOT,HFSNAME,"W")                                   ; Open
  . I POP S FAIL=1 QUIT                                                     ; Open failed
  . U IO                                                                    ; Use device
- . D ZWRITE($NA(@KIDGLO@("DATA",FILE))) K ^(FILE)                          ; Export Data
+ . D ZWRITE($NA(@KIDGLO@("DATA",FILE))) K @KIDGLO@("DATA",FILE)            ; Export Data
  . I $D(@KIDGLO@("FRV1",FILE)) D                                           ; Pointer Resolution?
- . . D ZWRITE($NA(@KIDGLO@("FRV1",FILE))) K ^(FILE)                        ; Operator node. See DIFROMSR.
- . . D ZWRITE($NA(@KIDGLO@("FRVL",FILE))) K ^(FILE)                        ; Don't know what that is. See DIFROMSR.
- . . D ZWRITE($NA(@KIDGLO@("FRV1K",FILE))) K ^(FILE)                       ; ditto
+ . . D ZWRITE($NA(@KIDGLO@("FRV1",FILE))) K @KIDGLO@("FRV1",FILE)          ; Operator node. See DIFROMSR.
+ . . D ZWRITE($NA(@KIDGLO@("FRVL",FILE))) K @KIDGLO@("FRVL",FILE)          ; Don't know what that is. See DIFROMSR.
+ . . D ZWRITE($NA(@KIDGLO@("FRV1K",FILE))) K @KIDGLO@("FRV1K",FILE)        ; ditto
  . D CLOSE^%ZISH("DATA")                                                   ; Close. Resets IO.
  . D EN^DDIOL("Exported "_HFSNAME)
  K @KIDGLO@("DATA")
@@ -206,7 +284,7 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  . N FNAM S FNAM=^(FNUM,0) ; **NAKED to above line**                       ; File Name
  . N PATH S PATH=ROOT_FNAM_"/"                                             ; Path to export to
  . S POP=$$MKDIR(PATH)                                                     ; Mk dir for the specific component
- . I POP D EN^DDIOL("Couldn't create directory") S FAIL=1 QUIT             ;
+ . I POP D EN^DDIOL($$RED("Couldn't create directory")) S FAIL=1 QUIT             ;
  . D OPEN^%ZISH("ORD",PATH,"ORD.zwr","W")                                  ; Order Nodes
  . I POP S FAIL=1 QUIT                                                     ; Open failed
  . U IO                                                                    ;
@@ -218,6 +296,7 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  . N CNT S CNT=0                                                           ; Sub counter for export
  . N IEN F IEN=0:0 S IEN=$O(@KIDGLO@("KRN",FNUM,IEN)) Q:'IEN  D  Q:$G(POP)  ; For each Kernel component IEN
  . . N ENTRYNAME S ENTRYNAME=$P(@KIDGLO@("KRN",FNUM,IEN,0),U)              ; .01 for the component
+ . . S ENTRYNAME=$TR(ENTRYNAME,"\/!@#$%^&*()","------------")              ; Replace punc with dashes
  . . D OPEN^%ZISH("ENT",PATH,ENTRYNAME_".zwr","W")                         ; Open file
  . . I POP S FAIL=1 QUIT
  . . U IO
@@ -296,7 +375,10 @@ RCC(NA)	;Replace control chars in NA with $C( ). Returns encoded string; Public 
  . Q
  Q OUT
  ;
-TEST D EN^XTMUNIT($T(+0),1) QUIT
+RED(X) ; Convenience method for Sam to see things on the screen.
+ Q $C(27)_"[41;1m"_X_$C(27)_"[0m"
+ ;
+TEST D EN^XTMUNIT($T(+0),1,1) QUIT
 T1 ; @TEST subscript substitutions
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT(2332,0)),1,"IEN"),"^DIPT(IEN,0)")
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT("A",123,0)),2,"IEN"),"^DIPT(""A"",IEN,0)")
@@ -309,3 +391,13 @@ T2 ; @TEST Make a directory
 T3 ; @TEST Export components for one KIDS build
  N I F I=0:0 S I=$O(^A1AE(11005,I)) Q:'I  D EN(I)
  QUIT
+ ;
+ASSERT(X,Y) ; Internal assertion function
+ N MUNIT S MUNIT=$$INMUNIT()
+ I MUNIT D CHKTF^XTMUNIT(X,$G(Y))
+ QUIT
+ ;
+INMUNIT() ; Am I being invoked from M-Unit?
+ N MUNIT S MUNIT=0
+ N I F I=1:1:$ST I $ST(I,"PLACE")["XTMUNIT" S MUNIT=1
+ Q MUNIT
