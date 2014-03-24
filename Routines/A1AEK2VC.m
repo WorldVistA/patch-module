@@ -1,11 +1,22 @@
-A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-20  8:31 PM
+A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-23  8:04 PM
  ;;2.4;PATCH MODULE;;
+ ;
+IX(X,DA) ; Private Entry Point for file 11005 index
+ ; Set off from Field Status (#8)
+ ; The only two valid statuses are:
+ ; 2r -> In review
+ ; 2v -> Secondary Release
+ I U_"2r"_U_"2v"_U[(U_X_U) D EN(DA)
+ QUIT
  ;
 EN(P11005IEN) ; Public Entry Point. Rest are private.
  ; Break out a KIDS build in 11005.1 into Version Controlled Components
  ; Input: 11005/11005.1 IEN
  I '$O(^A1AE(11005.1,P11005IEN,2,0)) QUIT  ; No KIDS build.
  ;
+ ; DEBUG
+ N DIQUIET  ; Trick Fileman into talking again... When we are trigerred by the DBS, we are silent by default
+ ; DEBUG
  ;
  ; Stanza: Find $KID; quit if we can't find it. Otherwise, rem where it is.
  N I,T F I=0:0 S I=$O(^A1AE(11005.1,P11005IEN,2,I)) Q:'I  S T=^(I,0) Q:($E(T,1,4)="$KID")
@@ -279,7 +290,7 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  ; KIDGLO - The KIDS global (not a sub). Use $NA to pass this.
  ; ROOT - File system root where we are gonna export.
  N POP
- N ORD F ORD=0:0 S ORD=$O(@KIDGLO@("ORD",ORD)) Q:'ORD  D  Q:$G(POP)   ; For each item in ORD
+ N ORD S ORD="" F  S ORD=$O(@KIDGLO@("ORD",ORD)) Q:ORD=""  D  Q:$G(POP)    ; For each item in ORD
  . N FNUM S FNUM=$O(@KIDGLO@("ORD",ORD,0))                                 ; File Number
  . N FNAM S FNAM=^(FNUM,0) ; **NAKED to above line**                       ; File Name
  . N PATH S PATH=ROOT_FNAM_"/"                                             ; Path to export to
@@ -291,6 +302,7 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  . D ZWRITE($NA(@KIDGLO@("ORD",ORD,FNUM)))                                 ; Zwrite the ORD node
  . D CLOSE^%ZISH("ORD")                                                    ; Done with ORD
  . D EN^DDIOL("Wrote ORD.zwr for "_FNAM)                                   ; Say so                            
+ . K @KIDGLO@("ORD",ORD,FNUM)                                              ; KILL this entry
  . ;
  . N IENQL S IENQL=$QL($NA(@KIDGLO@("KRN",FNUM,0)))                        ; Where is the IEN sub?
  . N CNT S CNT=0                                                           ; Sub counter for export
@@ -300,12 +312,82 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  . . D OPEN^%ZISH("ENT",PATH,ENTRYNAME_".zwr","W")                         ; Open file
  . . I POP S FAIL=1 QUIT
  . . U IO
- . . D ZWRITE($NA(@KIDGLO@("KRN",FNUM,IEN)),IENQL,"IEN+"_CNT)              ; Zwrite, replacing the IEN with IEN+CNT
- . . S CNT=CNT+1                                                           ; ++
- . . D CLOSE^%ZISH("ENT")                                                  ; Done with this entry
- . . D EN^DDIOL("Exported "_ENTRYNAME_".zwr"_" in "_FNAM)                  ; Export
- K @KIDGLO@("ORD"),@KIDGLO@("KRN")                                         ; Don't need these anymore.
+ . . D ZWRITE($NA(@KIDGLO@("KRN",FNUM,IEN)),IENQL,"IEN+"_CNT) ; Zwrite, replacing the IEN with IEN+CNT
+ . . I FNUM=.403 D FORM(KIDGLO,IEN,IENQL)                     ; Special processing for Forms
+ . . I FNUM=8989.51 D PARM(KIDGLO,IEN,IENQL)                  ; Special processing for Parameters
+ . . I FNUM=8989.52 D PARM2(KIDGLO,IEN,IENQL)                 ; Special processing for Parameter templates
+ . . S CNT=CNT+1                                              ; ++
+ . . D CLOSE^%ZISH("ENT")                                     ; Done with this entry
+ . . D EN^DDIOL("Exported "_ENTRYNAME_".zwr"_" in "_FNAM)     ; Export
+ . . K @KIDGLO@("KRN",FNUM,IEN)                               ; KILL this entry
  QUIT
+ ;
+FORM(KIDGLO,IEN,IENQL) ; Export Blocks
+ N CNT S CNT=0
+ N I F I=0:0 S I=$O(@KIDGLO@("KRN",.403,IEN,40,I)) Q:'I  D                 ; Loop thourgh pages
+ . N J F J=0:0 S J=$O(@KIDGLO@("KRN",.403,IEN,40,I,40,J)) Q:'J  D          ; Loop through blocks
+ . . N Z S Z=^(J,0)                                                        ; zero node of block
+ . . N BLNM1 S BLNM1=$P(Z,U)                                               ; its name
+ . . N BLOCKIEN S BLOCKIEN=$$FNDBLK(KIDGLO,BLNM1)                          ; Block IEN
+ . . I BLOCKIEN D                                                           ; if found, print it out and then
+ . . . D ZWRITE($NA(@KIDGLO@("KRN",.404,BLOCKIEN)),IENQL,"IEN+"_CNT)
+ . . . S CNT=CNT+1
+ . . . K @KIDGLO@("KRN",.404,BLOCKIEN)                                     ; delete block
+ . ;
+ . ;
+ . ; Export Header block if there is one...
+ . N P0 S P0=@KIDGLO@("KRN",.403,IEN,40,I,0)                               ; Page zero node
+ . N HB S HB=$P(P0,U,2)                                                    ; Header block
+ . I $L(HB) D                                                              ; If we have it
+ . . N BLOCKIEN S BLOCKIEN=$$FNDBLK(KIDGLO,HB)                             ; Find its IEN in the Transport Global
+ . . I BLOCKIEN D                                                          ; Print it out if we fount it.
+ . . . D ZWRITE($NA(@KIDGLO@("KRN",.404,BLOCKIEN)),IENQL,"IEN+"_CNT)       ;
+ . . . S CNT=CNT+1
+ . . . K @KIDGLO@("KRN",.404,BLOCKIEN)                                     ; delete block
+ QUIT
+ ;
+FNDBLK(KIDGLO,BLNM) ; $$; Find a block in the transport global; Return block IEN
+ N SBN S SBN=""                                                   ; Searched block name
+ N K F K=0:0 S K=$O(@KIDGLO@("KRN",.404,K)) Q:'K  D  Q:(SBN=BLNM)  ; Now loop through transported blocks
+ . N Z S Z=^(K,0),SBN=$P(Z,U)                                     ; ...
+ . Q:(SBN=BLNM)                                                   ; until we find the block with our name
+ QUIT K
+ ;
+PARM(KIDGLO,IEN,IENQL) ; Export Parameter Definitions and Package level parameters exported by KIDS
+ N PARMNM S PARMNM=$P(@KIDGLO@("KRN",8989.51,IEN,0),U)      ; Get the param name
+ N PKGPARM D FNDPRM(.PKGPARM,KIDGLO,PARMNM)                 ; Find matching 8989.5 parameters
+ N CNT S CNT=0
+ N J F J=0:0 S J=$O(PKGPARM(J)) Q:'J  D                     ; for each one found
+ . D ZWRITE($NA(@KIDGLO@("KRN",8989.5,J)),IENQL,"IEN+"_CNT) ; print it out
+ . S CNT=CNT+1
+ . K @KIDGLO@("KRN",8989.5,J)                               ; and then remove it.
+ QUIT
+ ;
+FNDPRM(RTN,KIDGLO,PARMNM) ; Find exported parameters in 8989.5 in the transport global matching PARMNM
+ ; Turns out there is more than 1... so we have to catch them all...
+ N I F I=0:0 S I=$O(@KIDGLO@("KRN",8989.5,I)) Q:'I  D
+ . N Z S Z=^(I,0) ; **NAKED TO ABOVE**
+ . N THISNAME S THISNAME=$P(Z,U,2)
+ . I THISNAME=PARMNM S RTN(I)=""
+ QUIT
+ ;
+PARM2(KIDGLO,IEN,IENQL) ; Export Parameters in 8989.51 if sent as part of Parameter templates.
+ N CNT S CNT=0
+ N I F I=0:0 S I=$O(@KIDGLO@("KRN",8989.52,IEN,10,I)) Q:'I  D  ; for each parameter in the set
+ . N PARMNM S PARMNM=$P(^(I,0),U,2)                            ; Get Parameter name
+ . N P8989P51 S P8989P51=$$FNDPRM2(KIDGLO,PARMNM)              ; See if it is in 8989.51
+ . I P8989P51 D                                                ; if so, print and delete from our global
+ . . D ZWRITE($NA(@KIDGLO@("KRN",8989.51,P8989P51)),IENQL,"IEN+"_CNT)
+ . . K @KIDGLO@("KRN",8989.51,P8989P51)
+ . . S CNT=CNT+1
+ QUIT
+ ;
+FNDPRM2(KIDGLO,PARMNM) ; $$ ; Find IEN of parameter in 8989.51 matching PARMNM
+ N OUT S OUT=0
+ N I F I=0:0 S I=$O(@KIDGLO@("KRN",8989.51,I)) Q:'I  D  Q:OUT
+ . N NM S NM=$P(^(I,0),U)
+ . I NM=PARMNM S OUT=I
+ QUIT OUT
  ;
 ZWRITE(NAME,QS,QSREP)	; Replacement for ZWRITE ; Public Proc
  ; Pass NAME by name as a closed reference. lvn and gvn are both supported.
@@ -383,9 +465,12 @@ T1 ; @TEST subscript substitutions
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT(2332,0)),1,"IEN"),"^DIPT(IEN,0)")
  D CHKEQ^XTMUNIT($$SUBNAME($NA(^DIPT("A",123,0)),2,"IEN"),"^DIPT(""A"",IEN,0)")
  QUIT
+ ; 
 T2 ; @TEST Make a directory
  N % S %=$$MKDIR("/tmp/test/sam")
  D CHKEQ^XTMUNIT(%,0,"Status of mkdir should be zero")
+ N % S %=$$MKDIR("/lksjdfkjsdf/")
+ D CHKEQ^XTMUNIT(%,1,"Status of failed mkdir should be one")
  QUIT
  ;
 T3 ; @TEST Export components for one KIDS build
@@ -395,6 +480,7 @@ T3 ; @TEST Export components for one KIDS build
 ASSERT(X,Y) ; Internal assertion function
  N MUNIT S MUNIT=$$INMUNIT()
  I MUNIT D CHKTF^XTMUNIT(X,$G(Y))
+ E  I 'X S $EC=",U-ASSERTION-FAILED,"
  QUIT
  ;
 INMUNIT() ; Am I being invoked from M-Unit?
