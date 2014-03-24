@@ -1,4 +1,4 @@
-A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-17  4:54 PM
+A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-17  4:54 PM ; 3/24/14 11:35am
  ;;2.4;DHCP PATCH MODULE;;
  ;
 KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresponds to a patch designation
@@ -360,7 +360,7 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KI
  ;
  ; Now, put the patches into a review status and remove the currently importing flag.
  N FDA,DIERR
- S FDA(11005,IENS,8)="2r" ; STATUS
+ S FDA(11005,IENS,8)="i2" ; STATUS
  S FDA(11005,IENS,.21)="@" ; CURRENTLY IMPORTING delete
  D FILE^DIE("",$NA(FDA))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"

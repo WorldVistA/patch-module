@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ; 3/6/14 8:08pm
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ; 3/24/14 11:37am
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -238,12 +238,12 @@ ID11005 ; WRITE Identifier on DHCP Patches file (11005)
  N DDSTATUS S DDSTATUS=^DD(11005,8,0) ; definition of field 8, header
  N DDSET S DDSET=$P(DDSTATUS,U,3) ; definition of set of codes
  N STATCODE S STATCODE=$P($P(DDSET,STATUS_":",2),";") ; external val
- I $E(STATUS)=2 D  ; special abbreviations for secondary statuses
- . I STATUS="2r" S STATCODE="2IR" Q  ; in review
- . I STATUS="2u" S STATCODE="2UN" Q  ; secondary development
- . I STATUS="2c" S STATCODE="2CO" Q  ; secondary completion
- . I STATUS="2v" S STATCODE="2VE" Q  ; secondary release
- . I STATUS="2n" S STATCODE="2NO" Q  ; not for secondary release
+ I $E(STATUS)=2 D  ; special abbreviations for sec statuses
+ . I STATUS="i2" S STATCODE="2IR" Q  ; in review
+ . I STATUS="d2" S STATCODE="2UN" Q  ; sec development
+ . I STATUS="s2" S STATCODE="2CO" Q  ; sec completion
+ . I STATUS="r2" S STATCODE="2VE" Q  ; sec release
+ . I STATUS="n2" S STATCODE="2NO" Q  ; not for sec release
  S ID=ID_$E(STATCODE,1,3)_DELIM ; add Status to ID
  ;
  ; User:
