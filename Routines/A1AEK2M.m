@@ -1,4 +1,4 @@
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-17  7:22 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-23  7:41 PM
  ;;2.4;PATCH MODULE;
  ;
  ; Based on code written by Dr. Cameron Schlehuber.
@@ -8,6 +8,12 @@ A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-17  7:22
  ;
  ; TODO: File package entry into our system if it can't be found
  ;       - Hint: Finds KIDS EP that does the PKG subs
+ ; TODO: I created fields latterly that hold the file names and file
+ ;       paths to use. They are only used in the KIDs Version Control
+ ;       breakout. They can be used to track all the mail information
+ ;       rather than keep them in variables.
+ ; TODO: The recursion code is very very first draft... needs to be
+ ;       refined.
  ;
 SD ; Restore patches from a single directory.
  ; Get path to HFS patches
