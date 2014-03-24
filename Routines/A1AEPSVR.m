@@ -1,10 +1,12 @@
-A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-08  4:22 PM
+A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-23  7:22 PM
  ;;2.4;PATCH MODULE;;
  ; This routine reads patches coming via email from VA Forum
  ; and files them into this forum
  ;
- ; NOTE: POSTMASTER MUST HAVE A1AE IMPORT KEY FOR THIS TO WORK.
- ; NOW I GIVE THE POSTMASTER THE KEY AUTOMATICALLY.
+ ; TODO: I created fields latterly that hold the file names and file
+ ;       paths to use. They are only used in the KIDs Version Control
+ ;       breakout. They can be used to track all the mail information
+ ;       rather than keep them in variables.
  ;
 EN ; Main entry point
  ; Mailman Server Variables
@@ -48,6 +50,8 @@ EN ; Main entry point
  ;
  ; Populate the result variable for the mail message
  ; TODO: Result variable populatation needs to be abstracted.
+ ; TODO: Latterly, we can load this from the file. See above.
+ ;       but we need to file it here first.
  N RESULT
  N CANTLOAD S CANTLOAD=0
  S RESULT(TXTINFO("DESIGNATION"),"TXT")="Mailed Patch"
