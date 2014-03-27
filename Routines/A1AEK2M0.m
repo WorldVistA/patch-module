@@ -1,4 +1,4 @@
-A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-17  4:54 PM ; 3/24/14 11:35am
+A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-24  9:08 PM; 3/24/14 11:35am
  ;;2.4;DHCP PATCH MODULE;;
  ;
 KIDFIL(ROOT,PATCH,TXTINFO,KIDGLO) ; $$; Private; Find the KIDS file that corresponds to a patch designation
@@ -138,49 +138,6 @@ GETSTRM(DESIGNATION) ; Private to package; $$; Get the Stream for a designation 
  . I PN'<MIN&(PN'>MAX) S STRM=I  ; Really this is IF MIN<=PN<=MAX...
  Q STRM
  ;
-SELFILQ ; Public; Interactive entry point... ; TODO
- ; This code is a NO-OP right now.
- ; I probably would use it in the future, but not now.
- ; ZEXCEPT: ROOT,PATCH
- N KIDFIL
- N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
- N FILE
- N Y S Y=$$LIST^%ZISH(ROOT("SB"),$NA(ARRAY),$NA(FILE))
- I 'Y  ; TODO!!! -- probably ask the user to try again since directory has no KIDS files.
- S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
- QUIT KIDFIL
- ;
-SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
- ; FILES = Ref List of files from LIST^%ZISH
- ; EXTFILTER = Val .TXT or so
- ; DIRA = Val What to ask the user for
- ; Uses fileman calls to ease the pain of selecting stuff.
- ;
- N I S I=""
- ; Filter away using the extension
- I $L($G(EXTFILTER)) F  S I=$O(FILES(I)) Q:I=""  D
- . I $E($RE(I),1,$L(EXTFILTER))'=$RE(EXTFILTER) K FILES(I)
- ;
- ; If no files left, quit with an empty string
- Q:'$L($O(FILES(""))) ""
- ;
- ; Create a global for DIR/DIC
- K ^TMP($J,"FILES")
- S ^TMP($J,"FILES",0)="File List"
- N CNT S CNT=1
- F  S I=$O(FILES(I)) Q:I=""  S ^TMP($J,"FILES",CNT,0)=I,CNT=CNT+1
- ;
- ; Index
- N DIK,DA S DIK="^TMP($J,""FILES""," D IXALL^DIK
- ; Select
- N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT
- S DIR(0)="P^TMP($J,""FILES"",",DIR("A")=$G(DIRA,"Select a file from the list") D ^DIR
- ; Bye
- K ^TMP($J,"FILES")
- ;
- I $L(Y,U)=2 Q $P(Y,U,2)
- E  QUIT ""
- ;
 CLEANHF(MSGGLO) ; Private... Clean header and footer in message global
  ; WARNING - Naked all over inside the do block.
  N S S S=$O(@MSGGLO@("")) ; first numeric sub.
@@ -203,7 +160,7 @@ CLNPATT ;; Headers to substitute if present using a contains operator. 1st one i
  ;;>>END<<
  ;
 ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KIDFIL) ; Private $$ ; Add patch to 11005
- ; Input: TBD
+ ; Input: TODO.
  ; Non-importing version is at NUM^A1AEUTL
  N DESIGNATION S DESIGNATION=TXTINFO("DESIGNATION")
  ;
@@ -236,14 +193,15 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KI
  ; Lock the record
  LOCK +^A1AE(11005,DA):0 E  S $EC=",U-FAILED-TO-LOCK," ; should never happen
  ;
- ; Put stream, and that we are currently loading.
+ ; Put stream, and that we are currently loading, and some extra fields
  N STREAM S STREAM=$$GETSTRM^A1AEK2M0(DESIGNATION) ; PATCH STREAM
  N FDA
- S FDA(11005,DA_",",.2)=STREAM  ; Current Stream
- S FDA(11005,DA_",",.21)=1      ; Currently Importing
- S FDA(11005,DA_",",6.1)=ROOTPATH ; Import Path
- S FDA(11005,DA_",",5.3)=TXTFIL ; Text File Name
- S FDA(11005,DA_",",5.4)=KIDFIL ; KID File Name
+ S FDA(11005,DA_",",.2)=STREAM      ; Current Stream
+ S FDA(11005,DA_",",.21)=1          ; Currently Importing
+ S FDA(11005,DA_",",6.1)=ROOTPATH   ; Import Path
+ S FDA(11005,DA_",",5.3)=TXTFIL     ; Text File Name
+ S FDA(11005,DA_",",5.4)=KIDFIL     ; KID File Name
+ S FDA(11005,DA_",",5.6)=KIDMISSING ; Are we missing the KID file?
  N DIERR
  D FILE^DIE("",$NA(FDA),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
@@ -321,19 +279,7 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KI
  S (X,DINUM)=DA,DIC="^A1AE(11005.1,",DIC("DR")="20///"_"No routines included" K DD,DO D FILE^DICN K DE,DQ,DR,DIC("DR")
  ;
  ; Now load either the KIDS file or the HFS data from the remote system that was sent to us
- I 'INFOONLY D                            ; Must be a patch with KIDS contents
- . I KIDMISSING D HFS2^A1AEM1(DA)         ; No KIDS file found ; NB: Deletes 2 node (field 20) on 11005.1
- . E  D                                   ; We have a KIDS file
- . . S $P(^A1AE(11005.1,DA,0),"^",11)="K" ; FND+19  ; Type of message is KIDS not DIFROM
- . . K ^A1AE(11005.1,DA,2)                ; TRASH+7 ; remove old KIDS build
- . . MERGE ^A1AE(11005.1,DA,2)=@PATCHMSG  ; FND+23  ; Load the new one in.
- . . N X,Y S X=TXTINFO("DEV","DATE") D ^%DT         ; Get developer send date
- . . S $P(^A1AE(11005.1,DA,2,0),"^",5)=Y  ; FND+29  ; ditto
- . . S $P(^A1AE(11005.1,DA,2,0),"^",2)="" ; FND+30  ; Message IEN; We didn't load this from Mailman
- . . S $P(^A1AE(11005.1,DA,2,0),"^",3)="" ; FND+31  ; Message date; ditto
- . . D RTNBLD^A1AEM1(DA)                  ; FND+32  ; Load the routine information into 11005 from KIDS message
- . . ; if we load KIDS get rid of HFS "shadow" copy of the KIDS
- . . I $D(^A1AE(11005.5,DA,0)) N DIK S DIK="^A1AE(11005.5," D ^DIK ; FND+34
+ I 'INFOONLY D LDKID(PATCHMSG,DA,KIDMISSING) ; Private to package; Load KIDS into 11005.1/11005.5
  ;
  ; Assertions
  N HASRTN S HASRTN=0 ; Has Routines?
@@ -381,6 +327,21 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KI
  ;
  LOCK -^A1AE(11005,DA)
  QUIT DA
+ ;
+LDKID(PATCHMSG,DA,KIDMISSING) ; Private to package; Load KIDS into 11005.1/11005.5
+ I KIDMISSING D HFS2^A1AEM1(DA) QUIT  ; No KIDS file found ; NB: Deletes 2 node (field 20) on 11005.1
+ ; We have a KIDS file
+ S $P(^A1AE(11005.1,DA,0),"^",11)="K" ; FND+19  ; Type of message is KIDS not DIFROM
+ K ^A1AE(11005.1,DA,2)                ; TRASH+7 ; remove old KIDS build
+ MERGE ^A1AE(11005.1,DA,2)=@PATCHMSG  ; FND+23  ; Load the new one in.
+ N DEVDATE S DEVDATE=$P(^A1AE(11005,DA,0),U,12) ; DATE PATCH FIRST ENTERED (#12)
+ S $P(^A1AE(11005.1,DA,2,0),"^",5)=DEVDATE  ; FND+29  ; ditto
+ S $P(^A1AE(11005.1,DA,2,0),"^",2)="" ; FND+30  ; Message IEN; We didn't load this from Mailman
+ S $P(^A1AE(11005.1,DA,2,0),"^",3)="" ; FND+31  ; Message date; ditto
+ D RTNBLD^A1AEM1(DA)                  ; FND+32  ; Load the routine information into 11005 from KIDS message
+ ; if we load KIDS get rid of HFS "shadow" copy of the KIDS
+ I $D(^A1AE(11005.5,DA,0)) N DIK S DIK="^A1AE(11005.5," D ^DIK ; FND+34
+ QUIT
  ;
 ASSERT(X,Y) ; Assertion engine
  ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
