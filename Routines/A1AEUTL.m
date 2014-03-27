@@ -1,4 +1,4 @@
-A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ; 3/24/14 11:37am
+A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-03-26  4:29 PM
  ;;2.4;Patch Module;;Oct 17, 2007;Build 8
  ;
  ; Change History:
@@ -123,7 +123,7 @@ SETNUM1 ;returns x for patch,a1aenb
  ;
  ; /END NUM
  ;
-PRT ;Record Printed by
+PRT ;Record Printed by : Note: Called from inside the A1AE STANDARD PRINT Print Template
  L +^A1AE(11005,D0,2):60
  S:'$D(^A1AE(11005,D0,2,0)) ^(0)="^11005.02P^^" S:'$D(^A1AE(11005,D0,2,DUZ,0)) $P(^(0),"^",1,2)=DUZ_"^"_DT,$P(^(0),"^",4)=$P(^A1AE(11005,D0,2,0),"^",4)+1
  S $P(^A1AE(11005,D0,2,DUZ,0),"^",3)=DT,$P(^A1AE(11005,D0,2,0),"^",3)=DUZ,^A1AE(11005,"AU",DUZ,+$P(^A1AE(11005,D0,0),"^",2),(9999999-DT))=""
