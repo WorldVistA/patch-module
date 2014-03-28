@@ -1,4 +1,4 @@
-A1AEPH2 ;  REW/WCIOFO,RMO,MJK/ALBANY ;2014-03-26  3:08 PM
+A1AEPH2 ;  REW/WCIOFO,RMO,MJK/ALBANY ;2014-03-28  2:54 PM
  ;;2.3;Patch Module;;Oct 17, 2007;Build 8
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
  ;
@@ -24,6 +24,8 @@ A W !! S DIC="^DOPT(""A1AEPH2"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
  ;replace .01 sort with 3 in template
  N A1AEPK,A1AEPKIF,A1AEPKNM,A1AEVR,A1AEREV,X,Y,DIR,ZTSK,%ZIS,A1AEDEV
  D PKG^A1AEUTL G Q:'$D(A1AEPK) D VER^A1AEUTL G Q:'$D(A1AEVR)
+ N DIC,X,Y S DIC(0)="AEMQ",DIC=11007.1,DIC("A")="Select Stream (enter to see all streams): " D ^DIC
+ I Y>0 N A1AESTRM S A1AESTRM=+Y
  S DIR(0)="Y",DIR("B")="No",DIR("A")="Sort by reverse SEQ # "
  D ^DIR Q:$D(DIRUT)
  S A1AEREV=Y
@@ -37,6 +39,8 @@ A W !! S DIC="^DOPT(""A1AEPH2"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
  . S ZTDESC="A1AE Patch Summary"
  . S ZTRTN="DQ5^A1AEPH2"
  . F I="A1AEPK","A1AEPKIF","A1AEPKNM","A1AEVR","A1AEREV","A1AEDEV" S ZTSAVE(I)=""
+ . I $D(A1AESTAR) S ZTSAVE("A1AESTAR")=""
+ . I $D(A1AESTRM) S ZTSAVE("A1AESTRM")=""
  . S ZTIO=""
  . D ^%ZTLOAD
  . K IO("Q")
@@ -47,7 +51,13 @@ DQ5 ;
  N L,DIC,FLDS,BY,TO,FR,TREV,FREV,TMP,A1AEDJDH
  S L=0,DIC="^A1AE(11005,"
  S FLDS="[A1AE VERIFIED PATCH SUMMARY]"
+ ;
  I '$D(DIS(0)) S DIC("S")="I $P(^(0),U,2)=""Y""!($P(^(0),U,4)=""y""&($D(^A1AE(11007,""AU"",DUZ,+Y))))"
+ I $D(A1AESTRM) D  ; If we have a stream, put in DIS(0) or 1 if 0 is occupied.
+ . N SCN S SCN="I $P(^(0),U,20)=A1AESTRM"
+ . I $D(DIS(0)) S DIS(1)=SCN
+ . E  S DIS(0)=SCN
+ ;
  ;fix for fileman BY restriction -- can't use format BY with BY(0)
  S BY=$S(A1AEREV:"@INTERNAL(#3),-6",1:"@INTERNAL(#3),6")
  S FR="0,@",TO="99999,99999"
@@ -73,7 +83,11 @@ DIP5 ;
  G PATDIS^A1AEPH6
  ;
 7 ;All Verified Patches for a Package
- S DIS(0)="I $P(^(0),U,8)=""v""",A1AEHD="Released DHCP Patches",DIC("S")="I $P(^(0),U,2)=""Y""!($P(^(0),U,4)=""y""&($D(^A1AE(11007,""AU"",DUZ,+Y))))" G DIP^A1AEPH3
+ N A1AESTRM
+ N DIC,X,Y S DIC(0)="AEMQ",DIC=11007.1,DIC("A")="Select a Stream: " D ^DIC
+ I Y'>0 QUIT
+ S A1AESTRM=+Y
+ S DIS(0)="I $P(^(0),U,8)=""v"",$P(^(0),U,20)=A1AESTRM",A1AEHD="Released DHCP Patches",DIC("S")="I $P(^(0),U,2)=""Y""!($P(^(0),U,4)=""y""&($D(^A1AE(11007,""AU"",DUZ,+Y))))" G DIP^A1AEPH3
  ;
 8 ;Extended Display of a Patch
  G EXTDIS^A1AEPH6
@@ -193,7 +207,29 @@ STATUS2E(ABBR) ; $$; Status display to the outside world
  I $D(A(ABBR)) Q A(ABBR)
  Q ""
  ;
-CRCHK ; Interactive Page Read
+LASTDATE(DA) ; $$; What is the last action status date (Internal)?
+ ; Caller: A1AE VERIFIED PATCH SUMMARY
+ ; Set up Array for fields that actually contain the status date
+ N A D DTARR(.A)
+ ;
+ ; Get status, and then date for that status.
+ N ST S ST=$P(^A1AE(11005,DA,0),U,8)
+ I ST="" Q ""
+ I $D(A(ST)) Q $$GET1^DIQ(11005,DA,A(ST),"I")
+ Q ""
+ ;
+DTARR(A) ; [Private to this routine] - Date fields array 
+ S A("v")=11
+ S A("c")=10
+ S A("u")=12
+ S A("i2")=8.09
+ S A("d2")=8.11
+ S A("s2")=8.13
+ S A("r2")=8.15
+ S A("n2")=8.17
+ QUIT
+ ;
+CRCHK ; Interactive Page Read only if you are on a terminal :: IOST -- "C"
  I A1AEPGE,$E(IOST,1)="C" W !!,*7,"Press RETURN to continue or '^' to stop " R A1AEOUT:DTIME I A1AEOUT["^" S DN=0 K ^UTILITY($J,"W")
  Q
  ;
@@ -204,3 +240,103 @@ UD ;UNDEVELOPMENT EP
  S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=""u""" G 5 ;Under development only
 CNR ;COMPLETED/NOT RELEASED EP
  S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=""c""" G 5 ;Completed/Not Released only
+ ;
+SEC ; Secondary Statuses Summary Report; VEN/SMH
+ ; Used by A1AE PRTPHS SEC
+ N A1AESTAR ; Status Array
+ N DONE
+ F  D  Q:$G(DONE)
+ . N X,Y,DA,DIR,DTOUT,DUOUT,DIRUT,DIROUT
+ . W !,"Selected Statuses: "
+ . I $D(A1AESTAR) S Y="" F  S Y=$O(A1AESTAR(Y)) Q:Y=""  W !,?5,Y,?10,$$EXTERNAL^DILFD(11005,8,,Y)
+ . E  W "NONE",!
+ . W !
+ . S DIR("0")="SOA^i2:IN REVIEW;d2:SEC DEVELOPMENT;s2:SEC COMPLETION;r2:SEC RELEASE;n2:NOT FOR SEC RELEASE"
+ . S DIR("A")="Select Statuses: "
+ . D ^DIR
+ . I '$G(DIRUT) S A1AESTAR(Y)=""
+ . E  S DONE=1
+ I '$D(A1AESTAR) QUIT
+ S DIS(0)="I $D(A1AESTAR($P(^A1AE(11005,D0,0),U,8)))"
+ G 5 ; Try try try
+ ;
+SECDT ; Patches in a single Secondary Status by Date
+ N X,Y,DA,DIR,DTOUT,DUOUT,DIRUT,DIROUT
+ S DIR("0")="SO^i2:IN REVIEW;d2:SEC DEVELOPMENT;s2:SEC COMPLETION;r2:SEC RELEASE;n2:NOT FOR SEC RELEASE"
+ S DIR("A")="Select Status"
+ D ^DIR
+ I $G(DIRUT) QUIT
+ N A1AESTAT S A1AESTAT=Y
+ ;
+ ; Get date field using DTARR for selected status
+ N A D DTARR(.A)
+ N DTFLD S DTFLD=A(Y)
+ K A
+ ;
+ ; Beg Date
+ N %DT,X,Y S %DT="AE",%DT("A")="Beginning Date: " D ^%DT
+ I Y<0 QUIT
+ N A1AEBEG S A1AEBEG=Y
+ S A1AEBEG=A1AEBEG-.000001
+ N %DT,X,Y S %DT="AE",%DT("A")="Ending Date: " D ^%DT
+ I Y<0 QUIT
+ N A1AEEND S A1AEEND=Y
+ S A1AEEND=A1AEEND+.000001
+ ;
+ ; Construct DIS(0)
+ N GLND S GLND=$P(^DD(11005,DTFLD,0),U,4)
+ N A1AEND,A1AEP S A1AEND=$P(GLND,";"),A1AEP=$P(GLND,";",2)
+ ;
+ ; Select Stream
+ N A1AESTRM
+ N DIC,X,Y S DIC(0)="AEMQ",DIC=11007.1 D ^DIC
+ I Y<0 QUIT
+ S A1AESTRM=+Y
+ ;
+ N IOP
+ ; Select Device
+ N %ZIS S %ZIS="QN" D ^%ZIS
+ I $D(IO("Q")) D
+ . N ZTRTN,ZTSAVE,ZTDESC,ZTSK,ZTDTH,ZTIO,I
+ . S IOP=ION
+ . S ZTDESC="Patches in a single Secondary Status by Date"
+ . S ZTRTN="DQSECDT^A1AEPH2"
+ . F I="A1AEND","A1AEP","A1AEBEG","A1AEEND","A1AESTRM","A1AESTAT","IOP" S ZTSAVE(I)=""
+ . D ^%ZTLOAD
+ . K IO("Q")
+ . I $D(ZTSK) W !,"Request queued.  Task number: ",ZTSK
+ E  D
+ . S IOP=ION
+ . D DQSECDT
+ . D ^%ZISC
+ QUIT
+ ;
+DQSECDT ; Print Away
+ N L,DIC,FLDS,DHD
+ S L=0,DIC="^A1AE(11005,",FLDS="[A1AE VERIFIED PATCH SUMMARY]"
+ N BY,FR,TO
+ S BY="@INTERNAL(#.01)",FR="",TO=""
+ N DIS S DIS(0)="N D S D=$P($G(^A1AE(11005,D0,A1AEND)),U,A1AEP) I D>A1AEBEG&(D<A1AEEND)"
+ S DIS(1)="I $P(^A1AE(11005,D0,0),U,20)=A1AESTRM,$P(^(0),U,20)=A1AESTRM,$P(^(0),U,8)=A1AESTAT"
+ S DHD="Patches in a single Secondary Status by Date"
+ D EN1^DIP
+ QUIT
+ ;
+SECDET ; Secondary Status Detailed Report
+ N X,Y,DA,DIR,DTOUT,DUOUT,DIRUT,DIROUT
+ S DIR("0")="SO^i2:IN REVIEW;d2:SEC DEVELOPMENT;s2:SEC COMPLETION;r2:SEC RELEASE;n2:NOT FOR SEC RELEASE"
+ S DIR("A")="Select Status"
+ D ^DIR
+ I $G(DIRUT) QUIT
+ N A1AESTAT S A1AESTAT=Y
+ ;
+ ; Select Stream
+ N A1AESTRM
+ N DIC,X,Y S DIC(0)="AEMQ",DIC=11007.1 D ^DIC
+ I Y<0 QUIT
+ S A1AESTRM=+Y
+ ;
+ S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=A1AESTAT,$P(^(0),U,20)=A1AESTRM"
+ S DIC("S")="I $P(^(0),U,2)=""Y""!($P(^(0),U,4)=""y""&($D(^A1AE(11007,""AU"",DUZ,+Y))))"
+ S A1AEHD="Patches in a Secondary Status Detailed Report",A1AES=""
+ G DIP^A1AEPH3
