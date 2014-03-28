@@ -1,5 +1,5 @@
-A1AEPK	; ISF/RWF - Package Module ;11/28/06  14:41
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEPK	; ISF/RWF - Package Module ;2014-03-28  4:56 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	G:$D(^DOPT("A1AEPK",5)) A S ^DOPT("A1AEPK",0)="Entry/Edit Package Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPK",I,0)=$P(X,";;",2,99)
 	S DIK="^DOPT(""A1AEPK""," D IXALL^DIK
 A	W !! S DIC="^DOPT(""A1AEPK"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
@@ -27,7 +27,9 @@ A	W !! S DIC="^DOPT(""A1AEPK"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
 	S A1AEPD2=$P($G(^A1AE(11005,DA,4)),U,1)
 PMT2	W !!,"Are you sure you want to delete package "_A1AEPD2_"? N// " R X:DTIME G Q:'$T!(X="^")!("Nn"[$E(X,1)) G DEL2:"Yy"[$E(X,1) W:X'["?" *7 W !!,"Enter Y to delete the selected patch, or N to exit." G PMT2
 DEL2	S DIK="^A1AE(11005," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'DHCP Patch File' completed"
-	L ^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH") I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4) L
+	L +^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH"):0 E  W $C(7),"Couldn't obtain lock at "_$ST($ST,"PLACE"),! QUIT
+        I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4)
+        L -^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")
 	;delete message entry
 	S DIK="^A1AE(11005.1," D ^DIK
 	G Q

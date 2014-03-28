@@ -1,11 +1,11 @@
-A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-03-03  3:21 PM
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEPHS	; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-03-28  5:23 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;
 	;logic from dd,  U triggers test MESSAGE if underdevlopment
 	;I A1AEOLD="c","Uu"'[$E(X_0,1) Q  ;allow c=>u in template
-        Q:'$D(X)
-        S A1AEOLD=$P(^A1AE(11005,DA,0),U,8),A1AEPKIF=$P(^(0),U,2)
-        N DIERR ; VEN/SMH - Don't allow DIERR to leak back to DBS Fileman calls
+	Q:'$D(X)
+	S A1AEOLD=$P(^A1AE(11005,DA,0),U,8),A1AEPKIF=$P(^(0),U,2)
+	N DIERR ; VEN/SMH - Don't allow DIERR to leak back to DBS Fileman calls
 	K TESTMES
 	I "Uu"[$E(X_0,1),A1AEOLD="u" S X="u",TESTMES=1
 	I A1AEOLD=$E(X,1),X'="u" Q  ;only allow u=>u if u/U entered
@@ -57,11 +57,11 @@ C	I A1AENEW="u" G NEW
 	I $P($G(^A1AE(11005.1,DA,0)),"^",6),$P($G(^(0)),"^",7),A1AENEW="v" D NOMESS^A1AEMAL1 K A1AEVR Q
 	;
 	D ASKCHG I X'=A1AEX K A1AEVR Q
-	L +^A1AE(11007,A1AEPKIF,"V",A1AEVR) I '$D(A1AEPKV) D SEQ^A1AEUTL
+	I '$D(A1AEPKV) D SEQ^A1AEUTL
 	;See if we can get a Mail Message
 	K XMZ
 	D GET^A1AEMAL I '$D(XMZ) D DELSEQ^A1AEUTL K X
-	L -^A1AE(11007,A1AEPKIF,"V",A1AEVR) I '$D(X) K A1AEVR Q
+	I '$D(X) K A1AEVR Q
 	;Build Mail Message
 	D MES^A1AEMAL
 	;After building message, update version #
@@ -95,7 +95,7 @@ V	;
 ER	W !?3,"Once the status has been set to 'E'ntered in error or 'R'etired it can not be changed!" K X Q
 	;
 ASKCHG	I $D(DIFM) S A1AEX=X QUIT  ; If we are inside the DBS, don't ask... VEN/SMH...
-        S A1AEX=X,A1AERD("A")="Are you sure you want to change status to "_A1AEOPT_"? ",A1AERD(0)="S",A1AERD(1)="Yes^change status and send a message to users",A1AERD(2)="No^leave the status the same",A1AERD("B")=2
+	       S A1AEX=X,A1AERD("A")="Are you sure you want to change status to "_A1AEOPT_"? ",A1AERD(0)="S",A1AERD(1)="Yes^change status and send a message to users",A1AERD(2)="No^leave the status the same",A1AERD("B")=2
 	D SET^A1AERD K A1AERD S X=$S("Y"[$E(X,1):A1AEX,1:$C($A(A1AEOLD)+32)) W !?3,"...status ",$S(A1AEX=X:"",1:"'not' "),"changed to ",A1AEOPT
 	Q
 	;

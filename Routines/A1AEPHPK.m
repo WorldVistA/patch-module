@@ -1,6 +1,9 @@
-A1AEPK	; ISF/RWF ;6/29/07  11:03
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
-	;;Version 2.3;PROBLEM/PATCH REPORTING;**2**;11/23/92;Build 2
+A1AEPHPK	; ISF/RWF ;2014-03-28  4:47 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
+        ;
+        ; VEN/SMH:
+        ; B4 my edits, edited at 11/23/92
+        ; This is a probably unused copy of A1AEPK.
 	G:$D(^DOPT("A1AEPK",5)) A S ^DOPT("A1AEPK",0)="Entry/Edit Package Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPK",I,0)=$P(X,";;",2,99)
 	S DIK="^DOPT(""A1AEPK""," D IXALL^DIK
 A	W !! S DIC="^DOPT(""A1AEPK"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
@@ -27,7 +30,9 @@ A	W !! S DIC="^DOPT(""A1AEPK"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
 	S A1AEPD2=$P($G(^A1AE(11005,DA,4)),U,1)
 PMT2	W !!,"Are you sure you want to delete package "_A1AEPD2_"? N// " R X:DTIME G Q:'$T!(X="^")!("Nn"[$E(X,1)) G DEL2:"Yy"[$E(X,1) W:X'["?" *7 W !!,"Enter Y to delete the selected patch, or N to exit." G PMT2
 DEL2	S DIK="^A1AE(11005," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'DHCP Patch File' completed"
-	L ^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH") I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4) L
+	L +^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH"):0 E  W $C(7),"Couldn't obtain lock at "_$ST($ST,"PLACE"),! QUIT
+        I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4)
+        L -^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")
 	;delete message entry
 	S DIK="^A1AE(11005.1," D ^DIK
 	G Q
@@ -87,7 +92,7 @@ DEL2	S DIK="^A1AE(11005," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'DHCP Pa
 	W ! S DIR(0)="E" D ^DIR K DIR I 'Y D Q G 4
 	;
 	S D0=A1AEIFN,A1AEVPR="",A1AEHD="DHCP Completed/NotReleased Patch Display"
-	W ! S %ZIS="",A1AEPGE=0 D ^%ZIS G Q:POP K IOP,%ZIS U IO S ^UTILITY($J,1)="D HD^A1AEPH2",DIWF=B4X" K ^UTILITY($J,"W"),DXS D HD^A1AEPH2,^A1AEP ;SO DI*22*152
+	W ! S %ZIS="",A1AEPGE=0 D ^%ZIS G Q:POP K IOP,%ZIS U IO S ^UTILITY($J,1)="D HD^A1AEPH2",DIWF=B4X K ^UTILITY($J,"W"),DXS D HD^A1AEPH2,^A1AEP ;SO DI*22*152
 	K DN,DXS,DIWF ;;; I A1AEOUT'["^" B  G Q
 	K A1AEHD,A1AELNE,A1AEOUT,A1AEPGE,A1AEVPR D CLOSE^A1AEUTL1
 	S X2=A1AEST,X1=DT D C^%DTC S Y=X D DD^%DT S A1AEST=Y
@@ -115,7 +120,7 @@ Q	K ^UTILITY($J,"A1AECOP"),A1AEOLPD,A1AE0,A1AEPKIF,A1AEPKNM,A1AEPD,A1AEPD2,A1AEP
 VER	;Get a NEW Version #.
 	N VR,CV
 	S CV=$O(^A1AE(11007,A1AEPKIF,"V",""),-1)
-	R !,"New Version Number: ",VR Q:'VR
+	R !,"New Version Number: ",VR:$G(DTIME,300) Q:'VR
 	I VR'>CV W !,"The New Package Version must be greater than the current version of ",CV G VER
 	S A1AEVR=VR
 	Q
