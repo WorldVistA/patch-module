@@ -1,5 +1,5 @@
-A1AECOPD	;ISC-Albany/pke-copy message into patch description ;11/29/06  17:12
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AECOPD	;ISC-Albany/pke-copy message into patch description ;2014-03-28  5:31 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;
 EN	N X,Y
 	I $P(^A1AE(11007,$O(^DIC(9.4,"C",$P(A1AEPD,"*"),0)),0),U,5)'="y" Q
@@ -32,7 +32,7 @@ ASKLIN	S IOP="HOME" D ^%ZIS K IOP S A1AERD("A")="from" W ! D LINE Q:X="^"!(X="")
 	;
 LINE	W !?2,"Copy ",A1AERD("A")," line: " W:$D(A1AERD("B")) A1AERD("B")_"// " R X:DTIME S:'$T X="^" Q:X="^"!(X="")  I X["?" W !?3,"Enter line to copy ",A1AERD("A")_$S(A1AERD("A")'["th":"",1:" or 'ALL'") G LINE
 	I 'X,"ALLall"'[$E(X_0,1,3)!(A1AERD("A")["fr") W !?3,*7,"Enter numeric line number" G LINE
-	S (AFIND,FIND)=0 F AZ=.9999999:0 S AZ=$O(^XMB(3.9,AXMZ,2,AZ)) Q:'AZ  S AFIND=AZ I $D(^(AZ,0)),AZ=X!($E(^(0),1,8)="$END TXT") S FIND=AZ,A1AELINE=AZ-1 S:$E(^(0),1,8)="$END TXT" A1AELINE=AZ-2 S AFIND=0 Q
+LINESIL	S (AFIND,FIND)=0 F AZ=.9999999:0 S AZ=$O(^XMB(3.9,AXMZ,2,AZ)) Q:'AZ  S AFIND=AZ I $D(^(AZ,0)),AZ=X!($E(^(0),1,8)="$END TXT") S FIND=AZ,A1AELINE=AZ-1 S:$E(^(0),1,8)="$END TXT" A1AELINE=AZ-2 S AFIND=0 Q
 	I "ALLall"[$E(X_0,1,3),'FIND,AFIND S A1AELINE=AFIND-1
 	E  I 'FIND,X,AFIND,AFIND<X S A1AELINE=AFIND-1
 	E  I 'FIND W !?3,*7,"Line ",X," not found in " K FIND G LINE
