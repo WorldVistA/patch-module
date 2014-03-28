@@ -1,4 +1,4 @@
-A1AEK2M3 ; VEN/SMH - Interactive KIDS loading utilities;2014-03-24  10:29 PM
+A1AEK2M3 ; VEN/SMH - Interactive KIDS loading utilities;2014-03-28  4:08 PM
  ;;2.4;PATCH MODULE;;
  ; Called from A1AEM1. No other permitted callers.
  ;
@@ -16,7 +16,7 @@ SELFILQ(DA) ; Protected; Interactive entry point; Load a Patch from the File Sys
  . S DIR("A")="Import KIDS build from this directory"
  . D ^DIR
  . I $D(DTOUT)!$D(DUOUT)!(U[Y)!(Y[U) S Y=U QUIT
- . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")="",ARRAY("*.k")="",ARRAY("*.GKID*")=""
+ . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")="",ARRAY("*.k")=""
  . N FILE
  . S LISTINGOK=$$LIST^%ZISH(Y,$NA(ARRAY),$NA(FILE))
  . I 'LISTINGOK DO  QUIT
