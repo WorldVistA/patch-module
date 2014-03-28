@@ -15,14 +15,15 @@ SELFILQ(DA) ; Protected; Interactive entry point; Load a Patch from the File Sys
  . S DIR(0)="F^1:255"
  . S DIR("A")="Import KIDS build from this directory"
  . D ^DIR
- . QUIT:Y=U
- . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")=""
+ . I $D(DTOUT)!$D(DUOUT)!(U[Y)!(Y[U) S Y=U QUIT
+ . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")="",ARRAY("*.k")="",ARRAY("*.GKID*")=""
  . N FILE
  . S LISTINGOK=$$LIST^%ZISH(Y,$NA(ARRAY),$NA(FILE))
  . I 'LISTINGOK DO  QUIT
  . . W "Couldn't find any KID files here. Try again or '^'."
  . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
  . ;
+ . I U[KIDFIL S Y=U QUIT
  . ;
  . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
  . N % S %=$$FTG^%ZISH(Y,KIDFIL,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
@@ -79,6 +80,7 @@ SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
  ; Select
  N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT
  S DIR(0)="P^TMP($J,""FILES"",",DIR("A")=$G(DIRA,"Select a file from the list") D ^DIR
+ I $D(DTOUT)!$D(DUOUT)!(U[Y)!(Y[U) S Y=U QUIT ""
  ; Bye
  K ^TMP($J,"FILES")
  ;
