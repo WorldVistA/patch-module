@@ -1,5 +1,5 @@
 A1AEMAL1	;ISC-Albany/JLU - creates the Patch mail message ;2014-03-08  3:35 PM
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	I $G(A1AERCR8) D
 	. S $P(^XMB(3.9,XMZ,0),"^",7)=$S($P(^A1AE(11005.1,DA,0),U,11)="K":"K",1:"X")
 	E  D
@@ -69,13 +69,13 @@ RO	;Add KIDS message
 	. ;Find the build number for later
 	. S ZA=Z F  S ZA=$O(^A1AE(11005.1,DA,2,ZA)) Q:'ZA  I $E(^(ZA,0),1,5)="""BLD""" Q
 	. ;Move Message Text into Message Stop at $END KID
-        . ;VEN/SMH - Old checksum gets put here.
+	       . ;VEN/SMH - Old checksum gets put here.
 	. F  S Z=$O(^A1AE(11005.1,DA,2,Z)) Q:'Z  S ZB=^(Z,0) DO  Q:$E(ZB,1,8)="$END KID"
 	. . I $E(ZB,1,5)="""RTN""",RN'=$P(ZB,$C(34),4) S RN=$P(ZB,$C(34),4),BCS=$$BCS^A1AEUTL2(DA,RN)
 	. . D ADD(ZB) ;node
 	. . S Z=$O(^A1AE(11005.1,DA,2,Z)) Q:'Z  S ZC=^(Z,0)
 	. . I $L(BCS),'$L($P(ZC,U,4)) S $P(ZC,U,4)=BCS ; VEN/SMH - Don't update the old checksum if we have one
-        . . S BCS="" ; empty for the next time in the loop.
+	       . . S BCS="" ; empty for the next time in the loop.
 	. . D ADD(ZC) ;value
 	. . I Z#66=0,'$D(ZTQUEUED) W "." R ZZ:0
 	. Q

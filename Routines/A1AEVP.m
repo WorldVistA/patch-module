@@ -1,5 +1,5 @@
 A1AEVP	; RMO,MJK/ALBANY ; Screen Display and Print of New Verified Patches ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 DSPNEW	D CHKNEW G Q:'Y
 	W !!,"..please wait checking number of new patches for your selected package(s).." S IOP="HOME" D ^%ZIS K IOP,^TMP("A1AE",$J,"SCN"),A1AEPKIF D GETPKG G Q:'$D(^TMP("A1AE",$J,"SCN")) S A1AEHD="Number of New DHCP Patches" D HD S A1AEPKNM=""

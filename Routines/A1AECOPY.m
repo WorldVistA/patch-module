@@ -1,5 +1,5 @@
 A1AECOPY	;RMO/ALBANY ; Copy Routine Code into Routine Description;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 	S A1AEROU=X I $D(^("OS",^DD("OS"),18)) X ^(18)
 	I '$T W !!?3,"The routine ",X," does not reside in the routine directory." G Q

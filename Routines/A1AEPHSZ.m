@@ -1,5 +1,5 @@
 A1AEPHS	; RMO,MJK/ALBANY ; 20 MAR 86  1:30 PM ; 3/12/85 4pm
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	; Version 1.00
 	S A1AENEW=$E(X,1),A1AEOLD=$C($A(A1AEOLD)-32),A1AEOPT=$S(A1AENEW="e":"'Entered in Error'",A1AENEW="c":"'Completed/not verified'",1:"") I A1AEOLD="C"!(A1AEOLD="E")!(A1AEOLD="U")!(A1AEOLD="V") D @A1AEOLD G Q
 	;

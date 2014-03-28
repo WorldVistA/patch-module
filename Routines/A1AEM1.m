@@ -1,17 +1,17 @@
 A1AEM1	;ISC-Albany/pke - copy message ;2014-03-24  10:23 PM
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 MES	;copy mesage into file #11005.1
 	N X,Y,A1AERD,AN,GLOBAL,GLOBAL0,RTXT,RSTART,RVER,LINE2
 	S A1AERD("A")="Do you want to copy "_$S($D(QMSUB):"'"_QMSUB_"'",1:"a packman message")_" into the Message Text? "
 	S A1AERD(1)="Yes^copy a message "_$S($D(QMSUB):"'"_QMSUB_"'",1:" containing "_$P(A1AEPD,"*",1,2))
 	S A1AERD(2)="No^Do not copy a message"
-        S A1AERD(3)="Load^Load a KIDS build from the File system or the Web"
+	       S A1AERD(3)="Load^Load a KIDS build from the File system or the Web"
 	S A1AERD(0)="S"
 	S A1AERD("B")=2 D SET^A1AERD K A1AERD
 	S A1AEKIDS=0 ;Used to jump in the DIE template
 	I X["Y" D ASKS ;Get KIDS message
 	I X'["Y" D HFS ;Get HFS message
-        I X["L" D SELFILQ^A1AEK2M3(DA)
+	       I X["L" D SELFILQ^A1AEK2M3(DA)
 QMES	K A1AERD,AN,AXMY,GLOBAL,GLOBAL0,RTXT,RSTART,RVER,REND,RVER,MARK,AXMZ,RNAM,QMSUB,QUE
 	Q
 	;

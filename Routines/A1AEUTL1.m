@@ -1,5 +1,5 @@
 A1AEUTL1	; RMO,MJK/ALBANY ;2014-03-27  1:54 PM
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;
 PCHK	;call if $d(^(d0,"q","b")), return az(), k az,print
 	S AZ=0 F  S AZ=$O(^A1AE(11005,D0,"Q",AZ)) Q:'AZ  I $D(^(AZ,0)) S AZ0=^(0),AZ(+AZ0)=$S($D(^A1AE(11005,+AZ0,0)):"("_$P(^(0),"^",8)_")"_$P(^(0),"^"),1:"patch not available") DO

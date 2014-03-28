@@ -1,5 +1,5 @@
 A1AEKEY6	; RMO,MJK/ALBANY ; Allocate Patch Function Keys ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 	;----------------------------------------------------------------
 	; This module has two separate entry points:

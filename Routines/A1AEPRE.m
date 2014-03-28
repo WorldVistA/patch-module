@@ -1,5 +1,5 @@
 A1AEPRE	;RMO/ALBANY ; Pre-Initialization Procedure ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.1 ;February 23, 1990
 	S:'$D(^A1AE("VERSION")) ^A1AE("VERSION")=1.1 Q:^A1AE("VERSION")>1.1  S IOP="HOME" D ^%ZIS K IOP S %DT="",X="T" D ^%DT S DT=Y
 	W !!,"...forcing 'Completed/not Verified' Patches to 'Verified' by POSTMASTER"

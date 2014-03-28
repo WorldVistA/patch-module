@@ -1,5 +1,5 @@
-A1AEZTST	;check messages
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEZTST ; A1AE/PKE - check messages;
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;pke
 ENC	S (Z,Z1)="Completed/Unverified",Z3="",TOT=0 D SIZE Q
 ENV	S (Z,Z1)="Verified ",Z3="SEQ #",TOT=0 D SIZE Q

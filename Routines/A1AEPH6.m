@@ -1,5 +1,5 @@
 A1AEPH6	; RMO/ALBANY ;6/29/07  11:01
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 COMDIS	;Display a Completed/NotReleased Patch
 	S DIC("A")="Select PATCH: ",DIC("S")="I $P(^(0),U,8)=""c"",$S($D(^A1AE(11007,+$P(^(0),U,2),""PH"",DUZ,0)):1,'$D(^A1AE(11007,+$P(^A1AE(11005,+Y,0),U,2),""PB"",DUZ,0)):0,$P(^(0),U,2)=""V"":1,1:0)",DIC="^A1AE(11005,",DIC(0)="AEMQ"
 	W ! D ^DIC K DIC("A"),DIC("S") G Q:Y<0 S (A1AEIFN,D0)=+Y,A1AEPD=$P(Y,U,2),A1AEVPR="",A1AEHD="DHCP Completed/NotReleased Patch Display"
