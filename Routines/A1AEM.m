@@ -1,5 +1,5 @@
-A1AEM	;ISC-Albany/pke-called entries for mailing patches ;01/10/2007
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEM	;ISC-Albany/pke-called entries for mailing patches ;2014-03-28  5:04 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 DD	;
 	I $D(X),X="db",$P(^A1AE(11005,D0,0),"^",3)'=999 W !?3,"The 'DATABASE' category is only for DBA patches." K X Q
 	I $D(X),"Ee"[$E(X_1),"em"'[$E($P(^A1AE(11005,D0,0),"^",7)_1) W !?3,"The 'ENHANCEMENT' category must have PRIORITY of EMERGENCY or MANDATORY." K X Q
@@ -29,8 +29,7 @@ TRASH	;Remove old message from queue
 	K AXMDUZ,XMKD,XMK,XMZ,XMDI
 	Q
 KLQ	;
-	S X="XMA1B" X ^%ZOSF("TEST") I $T D KLQ^XMA1B Q
-	D KLQ^XMA1 Q
+	D KLQ^XMA1B Q
 	;
 TRASHALL(AXMZ)	;Remove other entries in QUE with same start
 	N XMKD,XMK,XMZ,XMDUZ,DA,X1,XMSUB
