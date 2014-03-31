@@ -2,28 +2,74 @@
 ## Purpose
 This is a writeup of how the OSEHRA Forum machines were built.
 
-## Baseline Linux System
+## Overview
+The base installation of UNIX (in this case CentOS 6) is supplemented with the installation of a
+few standard services: the GT.M database by Fidelity Information Systems, the OSEHRA
+VISTA software, and a few support scripts from Fourth Watch BCS.
+
+## Pre-requisites
+You must be a moderately experienced Linux system adminitrator able to do the following:
+
+    * Install Linux
+    * Install Linux packages
+    * Create and Manager Users
+    * Set-up DNS
+    * Set-up an SMTP server
+
+## Baseline Linux System (Step #1)...
 Peter Li created the two machines, forum-a.osehra.org and forum-b.osehra.org.
-based on Rackspace CentOS 6.
+based on Rackspace CentOS 6. This is done through the Rackspace console.
 
-After this, the following packages were installed from the CentOS repositories:
+## DNS Set-up (Step #2)...
 
-	ctags							rcs
-	dos2unix						redhat-lsb-core
-	figlet							screen
-	git								system-config-firewall-tui
-	hg								system-config-network-tui
-	locatedb						system-config-network-tui
-	locatem						    system-config-services
-	lsb_release					    system-config-users
-	mailx							unzip
-	mlocate						    vim
-	nc								wireshark
-	ntp								xinetd
-	ntpdate
+The IP address of each of forum-a and forum-b are assigned and do not change. Only one of
+forum-a or forum-b is the primary, and the well-known address of forum.osehra.org always
+points to the active primary. It is not expected that any external users are at all aware of there
+being more than one forum machine. Only system administrators and some forum programmers
+know that there is more than a single machine. Switching between these is done via a load balancer.
 
-## Users / Groups
-### System Users (100 range)
+This is done externally on Rackspace.
+
+    FORUM.OSEHRA.ORG (A) pointing to the either forum-a or forum-b ip address.
+    Q-PATCH.OSEHRA.ORG (MX) pointing to FORUM.OSEHRA.ORG
+    FORUM.OSHERA.ORG (SPF) (NOT COMPLETED YET)
+    REVERSE DNS RECORD TO FORUM.OSHERA.ORG
+
+## Extra packages (Step #3)
+
+Install the following packages on each of the systems.
+
+    yum install ctags dos2unix figlet git hg locatedb locatem\
+    lsb_release lsyncd mailx mlocate nc ntp ntpdate\
+    rcs redhat-lsb-core screen system-config-firewall-tui\
+    system-config-network-tui system-config-network-tui\
+    system-config-services system-config-users tree unzip\
+    vim wireshark xinetd
+
+## User and Group Set-up (Step #4)
+See below for reference tables on how everything is set-up.
+
+Execute the following as root.
+
+    # groupadd gtm -g 101
+    # groupadd osehra -g 102
+    # groupadd bup -g 103
+    # groupadd fwbcs -g 104
+    # groupadd forum -g 400
+    # groupadd citizen -g 400
+    # useradd gtm -u 101 -g 101 -c "GT.M"
+    # useradd osehra -u 102 -g 102 -c "OSEHRA Local Git Repository" -G bup
+    # useradd bup -u 103 -g 103 -c "Backup Manager"
+    # useradd fwbcs -u 104 -g 104 -c "Fourth Watch BCS"
+    # useradd forum -u 400 -g 400 -c "Forum Database Instance Home" -G bup,gtm
+    # useradd citizen -u 401 -g 401 -c "Forum Citizen" -G forum
+
+After this, create the system administrators and users. 
+They have been redacted from this document for security reasons.
+
+### Reference Tables
+
+#### System Users (100 range)
 username | uid | gid | Real Name
 --- | --- | --- | ---
 gtm | 101 | 101 | GT.M
@@ -31,24 +77,24 @@ osehra | 102 | 102 | OSEHRA Local Git Repository
 bup | 103 | 103 | Backup Manager
 fwbcs | 104 | 104 | Fourth Watch BCS
 
-### Forum and Forum User (400 range)
+#### Forum and Forum User (400 range)
 username | uid | gid | Real Name
 --- | --- | --- | ---
 forum | 400 | 400 | Forum Database Instance Home
 citizen | 401 | 401 | Forum Citizen
 
-### Forum System Administrators (500 range)
+#### Forum System Administrators (500 range)
 username | uid | gid | Real Name
 --- | --- | --- | ---
-petercyli | 502 | 502 | Peter Li
-ldl | 503 | 503 | LD Landis
+-- (redacted) | 502 | 502 | (redacted)
+-- (redacted) | 503 | 503 | (redacted)
 
-### Forum Administrative Programmers (600 range)
+#### Forum Administrative Programmers (600 range)
 username | uid | gid | Real Name
 --- | --- | --- | ---
-toad | 600 | 600 | Rick Marshall
-sam | 601 | 601 | Sam Habiel
-cedwards | 602 | 602 | Christopher Edwards
+-- (redacted) | 600 | 600 | (redacted)
+-- (redacted) | 601 | 601 | (redacted)
+-- (redacted) | 602 | 602 | (redacted)
 
 ### Group Membership Assignments
 The following group assignments were made to the various users:
