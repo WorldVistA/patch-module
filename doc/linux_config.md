@@ -420,3 +420,58 @@ As root, install postfix.
 Then follow the instructions provided by this link <https://github.com/shabiel/patch-module/blob/master/doc/vista_config.md#postfix-configuration>.
 
 After that is done and tested, create a xinetd service for Mailman on port 25. Follow instructions here: <https://github.com/shabiel/patch-module/blob/master/doc/vista_config.md#create-xinetd-service-and-shell-script>.
+
+## SSH Configuration (Step #10)
+In `/etc/ssh/sshd_config`, modify or add the following directives.
+
+    # Allow other users as needed, but sparingly!!
+    AllowUsers forum citizen 
+
+    PermitRootLogin no
+
+    GSSAPIAuthentication no
+    GSSAPICleanupCredentials yes
+
+    UsePAM yes
+
+    X11Forwarding yes
+
+    ClientAliveInterval 30
+
+    ClientAliveCountMax 30
+
+Then put a nice banner in `/etc/issue.net`
+
+    CentOS release 6.5 (Final)
+                       _____                                     
+                      |  ___|__  _ __ _   _ _ __ ___         __ _ 
+    Welcome to the    | |_ / _ \| '__| | | | '_ ` _ \ _____ / _` |
+    forum.osehra.org  |  _| (_) | |  | |_| | | | | | |_____| (_| |              
+                      |_|  \___/|_|   \__,_|_| |_| |_|      \__,_|
+                                                                  
+    To get to the forum instance:
+      $ sudo su - forum
+      $ mumps -dir
+
+Then enable ssh through the firewall.
+    
+    cat /etc/sysconfig/system-config-firewall
+    --enabled
+    --service=ssh
+
+## Sudo configuration (Step #11)
+We allow sudo priviliges for users citizen and forum.
+
+    cat /etc/sudoers.d/citizen 
+    # User citizen
+    ## Allows users of various VistA instances to access the instance
+    %citizen          ALL=    NOPASSWD: /bin/su - citizen
+
+    ## citizen captive user
+    citizen   ALL=    NOPASSWD: /bin/chown
+    citizen   ALL=    NOPASSWD: /bin/chmod
+    citizen   ALL=    NOPASSWD: /bin/su - forum -c /home/forum/lib/fws/inst.bin/captive_user
+    citizen   ALL=    NOPASSWD: /bin/su - forum -c /home/forum/lib/fws/inst.bin/interactive_shell
+
+    cat /etc/sudoers.d/forum 
+    %forum              ALL=    NOPASSWD: /bin/su - forum
