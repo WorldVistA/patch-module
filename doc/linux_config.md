@@ -10,11 +10,11 @@ VISTA software, and a few support scripts from Fourth Watch BCS.
 ## Pre-requisites
 You must be a moderately experienced Linux system adminitrator able to do the following:
 
-    * Install Linux
-    * Install Linux packages
-    * Create and Manager Users
-    * Set-up DNS
-    * Set-up an SMTP server
+* Install Linux
+* Install Linux packages
+* Create and Manager Users
+* Set-up DNS
+* Set-up an SMTP server
 
 ## Baseline Linux System (Step #1)...
 Peter Li created the two machines, forum-a.osehra.org and forum-b.osehra.org.
@@ -47,6 +47,28 @@ Install the following packages on each of the systems.
     vim wireshark xinetd
 
 ## User and Group Set-up (Step #4)
+There are two collections of users (and groups) that have special mention:
+
+* Infrastructure user
+* Application user
+  
+Infrastructure users are those that hold a special place because of the
+infrastructure. These users are similar in their role to the root user, in that
+their presence serves a specific purpose. (Usage of the root user is eschewed
+for all uses but for the uses that are necessary for management of the system).
+
+These are:
+gtm | To own the database software
+osehra | To own the OSEHRA VISTA repository clone
+bup | To own the backup areas
+fwbcs | To own the infrastructure support
+
+Application users are those that hold a special place for the VISTA application. There are two:
+forum | To own the VISTA instance
+citizen | For all users of the OSEHRA forum
+
+Any users needing access to Forum VISTA and Linux need to be added to the forum group.
+
 See below for reference tables on how everything is set-up.
 
 Execute the following as root.
@@ -63,6 +85,7 @@ Execute the following as root.
     # useradd fwbcs -u 104 -g 104 -c "Fourth Watch BCS"
     # useradd forum -u 400 -g 400 -c "Forum Database Instance Home" -G bup,gtm
     # useradd citizen -u 401 -g 401 -c "Forum Citizen" -G forum
+    # useradd sampleLinuxUser -u 600 -g 600 -c "A sample user" -G forum
 
 After this, create the system administrators and users. 
 They have been redacted from this document for security reasons.
@@ -96,22 +119,61 @@ username | uid | gid | Real Name
 -- (redacted) | 601 | 601 | (redacted)
 -- (redacted) | 602 | 602 | (redacted)
 
-### Group Membership Assignments
+#### Group Membership Assignments
 The following group assignments were made to the various users:
 
 | Group | Users that are members of the group |
 | --- | --- |
 | bup | forum |
 | gtm | forum |
-| forum | petercyli, ldl, toad, sam, cedwards, citizen |
-| admin | petercyli, ldl, sam |
+| forum | (redacted), citizen |
+| admin | (redacted) |
 
-## VISTA Repository
-The 'osehra' user holds a local copy of the OSEHRA VISTA, from which the Forum instance is populated. The process used is documented separately. For the current version of this, see: forum-a.osehra.org:~osehra/README.clone.
+## VISTA Repository (Step #5)
+
+The 'osehra' user holds a local copy of the OSEHRA VISTA, from which the Forum instance is populated. The repositories holding OSEHRA VISTA are cloned as follows:
+
+    $ git clone https://github.com/OSEHRA/VistA
+    $ git clone https://github.com/OSEHRA/VistA-M
+
 OSEHRA VISTA routines and data are segmented by package. The forum-a:~osehra/Makefile takes the current clone (in which VISTA is scattered by the various packages) and creates two directories in the home directory of ~osehra:
 
-	r/		All of the routines
-	zwr/ 	All of the data files 
+	r/	All of the routines
+	zwr/ 	All of the data files
+
+The Makefile contents are as follows:
+File: ~osehra/Makefile
+------------------8<-----------------------------------
+##
+# Make file list for *.m and *.zwr files
+#
+
+    all:
+	    r zwr
+	    rm r/files.m zwr/files.zwr
+
+    r: files.m
+	    mkdir r/
+	    while read r ; do cp -p "$$r" r/ ; done < files.m
+
+    zwr: files.zwr
+	    mkdir zwr/
+	    while read zwr ; do cp -p "$$zwr" zwr/ ; done < files.zwr
+
+    files.m: Makefile
+	    -rm -rf r/
+	    find . -name "*.m" -print | sed "s:^.:`pwd`:" > files.m
+
+    files.zwr: Makefile
+	    -rm -rf zwr/
+	    find . -name "*.zwr" -print | sed "s:^.:`pwd`:" > files.zwr
+
+Invoke the Makefile as follows (still as the osehra user).
+
+    $ make all
+
+Once gathered from the package directories, the routines and data are now ready to load into a
+VISTA instance.
 
 ## Installation of VISTA
 The 'forum' user is the owner of the Forum database instance. Version and linkage information is set in `~forum/lib` and at the time of creation, was set to:
