@@ -22,6 +22,8 @@ You must be a moderately experienced Linux system adminitrator able to do the fo
 Peter Li created the two machines, forum-a.osehra.org and forum-b.osehra.org.
 based on Rackspace CentOS 6. This is done through the Rackspace console.
 
+In addition to this, create two extra disks of 500G and 20G and attach them to the machine. We refer to these disks later.
+
 ## DNS Set-up (Step #2)...
 
 The IP address of each of forum-a and forum-b are assigned and do not change. Only one of
@@ -182,8 +184,16 @@ As root, install by untarring and then running ./configure. As this is interacti
 
     Script done on Tue 31 Dec 2013 12:08:21 PM PST
 
+## FWS Scripts installation (Step #6)
+As root, in a temp directory, clone <https://github.com/ldlandis/lsb-fws>
 
-## VISTA Repository (Step #6)
+    git clone https://github.com/ldlandis/lsb-fws
+
+Copy the files to /opt/lsb-fws
+
+    cp -rv lsb-fws /opt/
+
+## VISTA Repository (Step #7)
 
 The 'osehra' user holds a local copy of the OSEHRA VISTA, from which the Forum instance is populated. The repositories holding OSEHRA VISTA are cloned as follows.
 
@@ -225,7 +235,8 @@ Invoke the Makefile as follows (still as the osehra user).
 Once gathered from the package directories, the routines and data are now ready to load into a
 VISTA instance.
 
-## Installation of VISTA (Step #7)
+
+## Installation of VISTA (Step #8)
 The 'forum' user is the owner of the Forum database instance. Version and linkage information is set in `~forum/lib` and at the time of creation, was set to:
 
 Change to the forum user:
@@ -241,6 +252,20 @@ Make symbolic links to lsb-fws and fis-gtm:
 	ln -s /opt/lsb-fws/201301/ ~/lib/fws
         ln -s /opt/fis-gtm/6.1-000/ ~/lib/gtm
         ln -s ~/lib/fws/inst.bin/set_env ~/bin/set_env
+
+Go back to being root. Add the additional disks and link them to the globals (g) and journals (j) directory in fstab.
+Add these two lines to /etc/fstab. You may need to adjust them for the mount names.
+
+        /dev/xvdb1 /home/forum/g ext3 defaults 0 0
+        /dev/xvde1 /home/forum/j ext3 defaults 0 0
+
+Remount everything
+
+        mount -a
+
+Go back to being the forum user:
+
+        sudo su - forum   
 
 Create the environment file as follows:
 
