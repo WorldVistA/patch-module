@@ -256,6 +256,17 @@ Make symbolic links to lsb-fws and fis-gtm:
     ln -s /opt/fis-gtm/6.1-000/ ~/lib/gtm
     ln -s ~/lib/fws/inst.bin/set_env ~/bin/set_env
 
+Make init.d symbolic links:
+
+    cd /etc/init.d/
+    ln -s forum voe
+    ln -s voe /opt/lsb-fws/201301/inst.bin/voe
+
+Make xinet.d symbolic link:
+    
+    cd /etc/xinetd.d
+    ln -s mailman-forum-smtp-25 ~forum/etc/mailman-forum-smtp-25
+
 Go back to being root. Add the additional disks and link them to the globals (g) and journals (j) directory in fstab.
 Add these two lines to /etc/fstab. You may need to adjust them for the mount names.
 
