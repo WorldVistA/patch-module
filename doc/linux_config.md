@@ -15,6 +15,8 @@ You must be a moderately experienced Linux system adminitrator able to do the fo
 * Create and Manager Users
 * Set-up DNS
 * Set-up an SMTP server
+* Administer GT.M 
+* Configure lsyncd, xinetd, nfs, pvm/lvm, and ssh
 
 ## Baseline Linux System (Step #1)...
 Peter Li created the two machines, forum-a.osehra.org and forum-b.osehra.org.
