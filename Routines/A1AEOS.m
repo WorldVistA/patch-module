@@ -1,4 +1,4 @@
-A1AEOS	; VEN/SMH - Patch Module Operating System Interface;2014-03-28  6:39 PM
+A1AEOS	; VEN/SMH - Patch Module Operating System Interface;2014-03-31  1:27 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014
 	;
 	; This routine is not SAC compliant
@@ -38,7 +38,7 @@ CD(ND) ; [PUBLIC] $$ - Change directory
  I +$SY=0 N % S %=$ZU(168,ND) Q $$PWD()
  S $EC=",U-M-VM-NOT-SUPPORTED,"
  ;
-RDPIPE(RTN,CMD) ; [PUBLIC] $$ - Execute a read only (uninteractive) command as a pipe
+RDPIPE(RTN,CMD) ; [PUBLIC] $$ - Execute a read only (non-interactive) command as a pipe
  I +$SY=47 D  QUIT:$ZV["V6.1" $ZCLOSE QUIT 0
  . N P S P="pipe"
  . O P:(shell="/bin/sh":command=CMD:PARSE:READONLY)::"pipe"
