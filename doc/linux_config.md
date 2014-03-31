@@ -142,11 +142,6 @@ OSEHRA VISTA routines and data are segmented by package. The forum-a:~osehra/Mak
 	zwr/ 	All of the data files
 
 The Makefile contents are as follows:
-File: ~osehra/Makefile
-------------------8<-----------------------------------
-##
-# Make file list for *.m and *.zwr files
-#
 
     all:
 	    r zwr
