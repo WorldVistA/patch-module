@@ -62,7 +62,8 @@ their presence serves a specific purpose. (Usage of the root user is eschewed
 for all uses but for the uses that are necessary for management of the system).
 
 These are:
-
+Username | Purpose
+--- | ---
 gtm | To own the database software
 osehra | To own the OSEHRA VISTA repository clone
 bup | To own the backup areas
@@ -70,6 +71,8 @@ fwbcs | To own the infrastructure support
 
 Application users are those that hold a special place for the VISTA application. There are two:
 
+Username | Purpose
+--- | ---
 forum | To own the VISTA instance
 citizen | For all users of the OSEHRA forum
 
@@ -237,163 +240,172 @@ VISTA instance.
 
 
 ## Installation of VISTA (Step #8)
-The 'forum' user is the owner of the Forum database instance. Version and linkage information is set in `~forum/lib` and at the time of creation, was set to:
+The 'forum' user is the owner of the Forum database instance.
 
 Change to the forum user:
 
-        su - forum
+    su - forum
 
 Make a bunch of directories:
 
-        mkdir o p r s v j g G p/6.1-000 r/6.1-000 etc lib bin
+    mkdir o p r s v j g G p/6.1-000 r/6.1-000 etc lib bin
 
 Make symbolic links to lsb-fws and fis-gtm:
 
-	ln -s /opt/lsb-fws/201301/ ~/lib/fws
-        ln -s /opt/fis-gtm/6.1-000/ ~/lib/gtm
-        ln -s ~/lib/fws/inst.bin/set_env ~/bin/set_env
+    ln -s /opt/lsb-fws/201301/ ~/lib/fws
+    ln -s /opt/fis-gtm/6.1-000/ ~/lib/gtm
+    ln -s ~/lib/fws/inst.bin/set_env ~/bin/set_env
 
 Go back to being root. Add the additional disks and link them to the globals (g) and journals (j) directory in fstab.
 Add these two lines to /etc/fstab. You may need to adjust them for the mount names.
 
-        /dev/xvdb1 /home/forum/g ext3 defaults 0 0
-        /dev/xvde1 /home/forum/j ext3 defaults 0 0
+    /dev/xvdb1 /home/forum/g ext3 defaults 0 0
+    /dev/xvde1 /home/forum/j ext3 defaults 0 0
 
 Remount everything
 
-        mount -a
+    mount -a
 
 Go back to being the forum user:
 
-        sudo su - forum   
+    sudo su - forum   
 
 Create the environment file as follows:
 
-        $ cat etc/env.conf
-        #!/usr/bin/env bash
-        # $Source: /var/nas/repository/lsb-fws/src/inst.etc/RCS/env.conf-primary,v $
-        # $Revision: 20130122.1 $
+    $ cat etc/env.conf
+    #!/usr/bin/env bash
+    # $Source: /var/nas/repository/lsb-fws/src/inst.etc/RCS/env.conf-primary,v $
+    # $Revision: 20130122.1 $
 
-        export ENV="forum"
-        export BUP="forum-a"
-        export GTM_REPLICATION="on"	#[on|off]
-        #export GTM_REPLICATION="off"	#[on|off]
-        export REPL_PORT="50188"	# /etc/services gtmrepl 50188/tcp # GT.M Repl
-        export REPL_HOST="forum-b.osehra.org"
-        export REPL_HOST="localhost"	#use ssh tunnel
-        export REPL_HOST_SSH_HOST="forum-b.osehra.org"
-        export REPL_HOST_SSH_PORT="22"
-        export REPL_BUFSIZE="4096"	# journal buffer size in 512-byte blocks
-        export REPL_AUTOSWITCH=8388600	# ~800MB
+    export ENV="forum"
+    export BUP="forum-a"
+    export GTM_REPLICATION="on"	#[on|off]
+    #export GTM_REPLICATION="off"	#[on|off]
+    export REPL_PORT="50188"	# /etc/services gtmrepl 50188/tcp # GT.M Repl
+    export REPL_HOST="forum-b.osehra.org"
+    export REPL_HOST="localhost"	#use ssh tunnel
+    export REPL_HOST_SSH_HOST="forum-b.osehra.org"
+    export REPL_HOST_SSH_PORT="22"
+    export REPL_BUFSIZE="4096"	# journal buffer size in 512-byte blocks
+    export REPL_AUTOSWITCH=8388600	# ~800MB
 
-        ##
-        # GT.M symbols
-        export gtm_buffer_size="${REPL_BUFSIZE}"
-        export gtm_repl_instname="forumaforum"
-        export gtm_repl_instsecondary="forumbforum"
+    ##
+    # GT.M symbols
+    export gtm_buffer_size="${REPL_BUFSIZE}"
+    export gtm_repl_instname="forumaforum"
+    export gtm_repl_instsecondary="forumbforum"
 
-        ###
-        # Nothing should be needing changes below here
-        # ---------------------------------------------
+    ###
+    # Nothing should be needing changes below here
+    # ---------------------------------------------
 
-        export DBINST="/home/${ENV}"
-        export PATH="${DBINST}/lib/fws/inst.bin:${DBINST}/lib/gtm:${PATH}"
+    export DBINST="/home/${ENV}"
+    export PATH="${DBINST}/lib/fws/inst.bin:${DBINST}/lib/gtm:${PATH}"
 
-        ##
-        # Local symbols
-        export REPL_DAT="${DBINST}/g"		# Database files
-        export REPL_JNL="${DBINST}/j"		# Database journals
-        export REPL_CNF="${REPL_DAT}/db.conf"	# Replication Configuration
-        export REPL_SIDE="`cat ${REPL_DAT}/db.side`"
+    ##
+    # Local symbols
+    export REPL_DAT="${DBINST}/g"		# Database files
+    export REPL_JNL="${DBINST}/j"		# Database journals
+    export REPL_CNF="${REPL_DAT}/db.conf"	# Replication Configuration
+    export REPL_SIDE="`cat ${REPL_DAT}/db.side`"
 
-        ##
-        # GT.M symbols (do not change the symbol names)
-        export gtm_dist="${DBINST}/lib/gtm"
-        export gtm_sysid="${ENV}"
-        export gtm_log="${DBINST}/log"
-        export gtmgbldir="${REPL_DAT}/db.gld"
-        if [ ${GTM_REPLICATION} = "on" ] ; then
-        export gtm_repl_instance="${REPL_DAT}/db.repl"
-        fi
+    ##
+    # GT.M symbols (do not change the symbol names)
+    export gtm_dist="${DBINST}/lib/gtm"
+    export gtm_sysid="${ENV}"
+    export gtm_log="${DBINST}/log"
+    export gtmgbldir="${REPL_DAT}/db.gld"
+    if [ ${GTM_REPLICATION} = "on" ] ; then
+    export gtm_repl_instance="${REPL_DAT}/db.repl"
+    fi
 
-        ##
-        # Get GT.M version in use
-        export GTMVER=`ls -l lib/gtm | awk '{print $NF}'`
-        export GTMVER=`basename ${GTMVER}`
+    ##
+    # Get GT.M version in use
+    export GTMVER=`ls -l lib/gtm | awk '{print $NF}'`
+    export GTMVER=`basename ${GTMVER}`
 
-        #export m2web="${DBINST}/w"
-        export ewd="${DBINST}/w/${GTMVER}(${DBINST}/w)"
-        ##
-        # Build up GT.M Routine Path (using GTMVER where needed)
-        #export gtmroutines="${DBINST}/p/${GTMVER}(${DBINST}/p)"
-        export gtmroutines="${gtmroutines} ${DBINST}/r/${GTMVER}(${DBINST}/r)"
-        #export gtmroutines="${gtmroutines} ${DBINST}/o(${DBINST}/r)"
-        #export gtmroutines="${gtmroutines} ${m2web}"
-        #export gtmroutines="${gtmroutines} ${DBINST}/lib/vpe/${GTMVER}"
-        #export gtmroutines="${gtmroutines} ${DBINST}/lib/ewd/routines/${GTMVER}"
-        #export gtmroutines="${gtmroutines} ${DBINST}/lib/mgwsi/${GTMVER}"
-        #export gtmroutines="${gtmroutines} ${DBINST}/lib/serenji/${GTMVER}"
-        #export gtmroutines="${gtmroutines} ${gtm_dist}"
-        export gtmroutines="${gtmroutines} lib/gtm/libgtmutil.so"
+    #export m2web="${DBINST}/w"
+    export ewd="${DBINST}/w/${GTMVER}(${DBINST}/w)"
+    ##
+    # Build up GT.M Routine Path (using GTMVER where needed)
+    #export gtmroutines="${DBINST}/p/${GTMVER}(${DBINST}/p)"
+    export gtmroutines="${gtmroutines} ${DBINST}/r/${GTMVER}(${DBINST}/r)"
+    #export gtmroutines="${gtmroutines} ${DBINST}/o(${DBINST}/r)"
+    #export gtmroutines="${gtmroutines} ${m2web}"
+    #export gtmroutines="${gtmroutines} ${DBINST}/lib/vpe/${GTMVER}"
+    #export gtmroutines="${gtmroutines} ${DBINST}/lib/ewd/routines/${GTMVER}"
+    #export gtmroutines="${gtmroutines} ${DBINST}/lib/mgwsi/${GTMVER}"
+    #export gtmroutines="${gtmroutines} ${DBINST}/lib/serenji/${GTMVER}"
+    #export gtmroutines="${gtmroutines} ${gtm_dist}"
+    export gtmroutines="${gtmroutines} lib/gtm/libgtmutil.so"
 
-        export gtm_zinterrupt='I $$JOBEXAM^ZU($ZPOSITION)'
+    export gtm_zinterrupt='I $$JOBEXAM^ZU($ZPOSITION)'
 
-        # Added by VEN/SMH
-        export gtm_prompt="DEV,FORUM>"
-        export EDITOR=`which vim`
+    # Added by VEN/SMH
+    export gtm_prompt="DEV,FORUM>"
+    export EDITOR=`which vim`
 
-        # MD5 Library external-call table
-        #export GTMXC_md5="${m2web}/xc/gtm_md5.xc"
+    # MD5 Library external-call table
+    #export GTMXC_md5="${m2web}/xc/gtm_md5.xc"
 
-        # $RCSfile: env.conf-primary,v $
+    # $RCSfile: env.conf-primary,v $
 
 Make sure to invoke set_env every time you log in:
         
-        echo 'source bin/set_env' >> ~/.bash_profile
+    echo 'source bin/set_env' >> ~/.bash_profile
 
 Source it yourself:
 
-        source ~/bin/set_env
+    source ~/bin/set_env
 
 Create the Global directory as follows:
 
-	File: ~/g/db.gde
+    File: ~/g/db.gde
 
-	change -segment DEFAULT -file="$DBINST/g/default.dat" -allocation=400000
-		-block_size=4096 -lock_space=1000 -extension_count=0
-	add    -segment TEMPGBL -file="$DBINST/g/tempgbl.dat" -allocation=10000
-		-block_size=4096 -lock_space=1000 -extension_count=0
-	change -region  DEFAULT -record_size=4080 -key_size=355
-	add    -region  TEMPGBL -record_size=4080 -key_size=355 -dyn=TEMPGBL
-	add    -name    HLTMP   -region=TEMPGBL
-	add    -name    TMP     -region=TEMPGBL
-	add    -name    UTILITY -region=TEMPGBL
-	add    -name    XTMP    -region=TEMPGBL
-	add    -name    XUTL    -region=TEMPGBL
-	show -all
+    change -segment DEFAULT -file="$DBINST/g/default.dat" -allocation=400000
+            -block_size=4096 -lock_space=1000 -extension_count=0
+    add    -segment TEMPGBL -file="$DBINST/g/tempgbl.dat" -allocation=10000
+            -block_size=4096 -lock_space=1000 -extension_count=0
+    change -region  DEFAULT -record_size=4080 -key_size=355
+    add    -region  TEMPGBL -record_size=4080 -key_size=355 -dyn=TEMPGBL
+    add    -name    HLTMP   -region=TEMPGBL
+    add    -name    TMP     -region=TEMPGBL
+    add    -name    UTILITY -region=TEMPGBL
+    add    -name    XTMP    -region=TEMPGBL
+    add    -name    XUTL    -region=TEMPGBL
+    show -all
 
 Load the Global Directory into GT.M:
         
-        mumps -r GDE < g/db.gde > g/db.gde.out 2>&1
+    mumps -r GDE < g/db.gde > g/db.gde.out 2>&1
 
 Create the Databases:
 
-        mupip create
+    mupip create
 
 Routines were loaded and compiled from the OSEHRA repository (located in ~oshera) using the following script:
 
-	File: bin/cprtns.sh
+    File: bin/cprtns.sh
 
-	(cd ~osehra/; tar cf - r) | (tar xf -)
-	(cd r/${GTMVER};
-	 date > compile.log
-	 for r in ../*.m ; do mumps ${r} >> compile.log 2>&1 ; done
-	 date >> compile.log
-	)
+    (cd ~osehra/; tar cf - r) | (tar xf -)
+    (cd r/${GTMVER};
+     date > compile.log
+     for r in ../*.m ; do mumps ${r} >> compile.log 2>&1 ; done
+     date >> compile.log
+    )
 
 Data was loaded into the database from the OSEHRA repository (located in ~osehra) using the following script:
 
-	File: bin/loaddb.sh
+    File: bin/loaddb.sh
 
-	for z in ~osehra/zwr/*.zwr ; do cp -v "${z}" x ; mupip load x ; done
-	rm x
+    for z in ~osehra/zwr/*.zwr ; do cp -v "${z}" x ; mupip load x ; done
+    rm x
+
+## External OS configuration for Mailman (Step #9)
+As root, install postfix.
+        
+    # yum install postfix
+
+Then follow the instructions provided by this link <https://github.com/shabiel/patch-module/blob/master/doc/vista_config.md#postfix-configuration>.
+
+After that is done and tested, create a xinetd service for Mailman on port 25. Follow instructions here: <https://github.com/shabiel/patch-module/blob/master/doc/vista_config.md#create-xinetd-service-and-shell-script>.
