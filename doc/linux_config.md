@@ -60,12 +60,14 @@ their presence serves a specific purpose. (Usage of the root user is eschewed
 for all uses but for the uses that are necessary for management of the system).
 
 These are:
+
 gtm | To own the database software
 osehra | To own the OSEHRA VISTA repository clone
 bup | To own the backup areas
 fwbcs | To own the infrastructure support
 
 Application users are those that hold a special place for the VISTA application. There are two:
+
 forum | To own the VISTA instance
 citizen | For all users of the OSEHRA forum
 
@@ -131,10 +133,61 @@ The following group assignments were made to the various users:
 | forum | (redacted), citizen |
 | admin | (redacted) |
 
-## VISTA Repository (Step #5)
+## GT.M Installation (Step #5)
+Download the latest version of GT.M from <http://sourceforge.net/projects/fis-gtm/>.
 
-The 'osehra' user holds a local copy of the OSEHRA VISTA, from which the Forum instance is populated. The repositories holding OSEHRA VISTA are cloned as follows:
+As root, install by untarring and then running ./configure. As this is interactive, here's a transcript:
 
+    Script started on Tue 31 Dec 2013 12:07:36 PM PST
+    [root@forum fis-gtm]# mkdir x
+    [root@forum fis-gtm]# cd x
+    [root@forum x]# tar xfz ../Archive/gtm_V61000_linux_x8664_pro.tar.gz 
+    [root@forum x]# ./configure 
+                         GT.M Configuration Script
+    Copyright 2009, 2013 Fidelity Information Services, Inc. Use of this
+    software is restricted by the provisions of your license agreement.
+
+    What user account should own the files? (bin) 
+    What group should own the files? (bin) gtm
+    Should execution of GT.M be restricted to this group? (y or n) y
+    In what directory should GT.M be installed? /opt/fis-gtm/6.1-000/
+
+    Directory /opt/fis-gtm/6.1-000/ does not exist. Do you wish to create it as part of
+    this installation? (y or n) y
+
+    Installing GT.M....
+
+    Should UTF-8 support be installed? (y or n) n
+
+    All of the GT.M MUMPS routines are distributed with uppercase names.
+    You can create lowercase copies of these routines if you wish, but
+    to avoid problems with compatibility in the future, consider keeping
+    only the uppercase versions of the files.
+
+    Do you want uppercase and lowercase versions of the MUMPS routines? (y or n)n
+
+    Compiling all of the MUMPS routines. This may take a moment.
+
+
+    Object files of M routines placed in shared library /opt/fis-gtm/6.1-000//libgtmutil.so
+    Keep original .o object files (y or n)? n
+
+
+    Removing world permissions from gtmsecshr wrapper since group restricted to "gtm"
+
+    Installation completed. Would you like all the temporary files
+    removed from this directory? (y or n) y
+    [root@forum x]# exit
+    exit
+
+    Script done on Tue 31 Dec 2013 12:08:21 PM PST
+
+
+## VISTA Repository (Step #6)
+
+The 'osehra' user holds a local copy of the OSEHRA VISTA, from which the Forum instance is populated. The repositories holding OSEHRA VISTA are cloned as follows.
+
+    $ su - osehra
     $ git clone https://github.com/OSEHRA/VistA
     $ git clone https://github.com/OSEHRA/VistA-M
 
