@@ -583,3 +583,35 @@ Routines are replicated using lsync. In the ~forum/etc directory, there is an ls
             compress = true
         }
     }
+
+## Back-up (Step 14)
+Load this crontab into cron on the forum user.
+
+    PATH=/home/forum/bin:/home/forum/lib/fws/inst.bin/:/usr/bin:/bin:/home/forum/lib/gtm
+
+    00     *  *  * * gtm_journal_switch.sh >> log/gtm_journal_switch.log 2>&1
+    05     *  *  * * gtm_journal_backup.sh >> log/gtm_journal_backup.log 2>&1
+    00     18 *  * * gtm_journal_purge.sh
+    01     00 *  * * gtm_backup.sh > log/gtm_backup.log 2>&1
+    #0-55/5 *  *  * * run.sh P gtm_repl_stat.sh
+    #1-56/5 *  *  * * run.sh P gtm_repl_stat_alert.sh
+    0-55/5 *  *  * * run.sh B gtm_freecnt_alert.sh
+    00     06 *  * * run.sh B gtm_freecnt.sh
+    00     00 *  * * ls -la j >> log/ls-l-j.log 2>&1
+
+## Enabling Journaling and Replication for GT.M (Step 15)
+From /opt/lsb-fws/201301/inst.bin/, run the following to start journaling:
+
+    sh gtm_journal_enable.sh
+
+To disable:
+
+    sh gtm_journal_disable.sh
+
+To enable replication:
+
+   sh gtm_replication_start.sh
+   
+To disable replication:
+
+   sh gtm_replication_stop.sh
