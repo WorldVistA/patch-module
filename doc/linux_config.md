@@ -608,7 +608,7 @@ To disable replication:
 
     sh gtm_replication_stop.sh
 
-## Configuring the tied user (citizen) (Step #15)
+## Configuring the tied user (citizen) (Step 16)
 We previously configured sudo and ssh for the tied user. Now configure .bash_profile.
 
     cat ~citizen/.bash_profile
