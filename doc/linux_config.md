@@ -602,11 +602,11 @@ To disable:
 
 To enable replication:
 
-   sh gtm_replication_start.sh
+    sh gtm_replication_start.sh
    
 To disable replication:
 
-   sh gtm_replication_stop.sh
+    sh gtm_replication_stop.sh
 
 ## Configuring the tied user (citizen) (Step #15)
 We previously configured sudo and ssh for the tied user. Now configure .bash_profile.
