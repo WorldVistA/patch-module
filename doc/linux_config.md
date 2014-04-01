@@ -260,18 +260,18 @@ Make symbolic links to lsb-fws and fis-gtm:
     ln -s /opt/fis-gtm/6.1-000/ ~/lib/gtm
     ln -s ~/lib/fws/inst.bin/set_env ~/bin/set_env
 
-Make init.d symbolic links:
-
+As root, Make init.d symbolic links:
+    
     cd /etc/init.d/
     ln -s forum voe
     ln -s voe /opt/lsb-fws/201301/inst.bin/voe
 
-Make xinet.d symbolic link:
+As root, Make xinet.d symbolic link:
     
     cd /etc/xinetd.d
     ln -s mailman-forum-smtp-25 ~forum/etc/mailman-forum-smtp-25
 
-Go back to being root. Add the additional disks and link them to the globals (g) and journals (j) directory in fstab.
+As root, Add the additional disks and link them to the globals (g) and journals (j) directory in fstab.
 Add these two lines to /etc/fstab. You may need to adjust them for the mount names.
 
     /dev/xvdb1 /home/forum/g ext3 defaults 0 0
@@ -345,13 +345,6 @@ Create the environment file as follows:
     # Build up GT.M Routine Path (using GTMVER where needed)
     #export gtmroutines="${DBINST}/p/${GTMVER}(${DBINST}/p)"
     export gtmroutines="${gtmroutines} ${DBINST}/r/${GTMVER}(${DBINST}/r)"
-    #export gtmroutines="${gtmroutines} ${DBINST}/o(${DBINST}/r)"
-    #export gtmroutines="${gtmroutines} ${m2web}"
-    #export gtmroutines="${gtmroutines} ${DBINST}/lib/vpe/${GTMVER}"
-    #export gtmroutines="${gtmroutines} ${DBINST}/lib/ewd/routines/${GTMVER}"
-    #export gtmroutines="${gtmroutines} ${DBINST}/lib/mgwsi/${GTMVER}"
-    #export gtmroutines="${gtmroutines} ${DBINST}/lib/serenji/${GTMVER}"
-    #export gtmroutines="${gtmroutines} ${gtm_dist}"
     export gtmroutines="${gtmroutines} lib/gtm/libgtmutil.so"
 
     export gtm_zinterrupt='I $$JOBEXAM^ZU($ZPOSITION)'
@@ -360,11 +353,6 @@ Create the environment file as follows:
     export gtm_prompt="DEV,FORUM>"
     export EDITOR=`which vim`
 
-    # MD5 Library external-call table
-    #export GTMXC_md5="${m2web}/xc/gtm_md5.xc"
-
-    # $RCSfile: env.conf-primary,v $
-
 Make sure to invoke set_env every time you log in:
         
     echo 'source bin/set_env' >> ~/.bash_profile
@@ -372,6 +360,10 @@ Make sure to invoke set_env every time you log in:
 Source it yourself:
 
     source ~/bin/set_env
+
+Copy the etc files ~/lib/fws/inst.etc/* to your etc
+
+    cp -v ~/lib/fws/inst.etc/* ~/etc/
 
 Create the Global directory as follows:
 
@@ -615,3 +607,37 @@ To enable replication:
 To disable replication:
 
    sh gtm_replication_stop.sh
+
+## Configuring the tied user (citizen) (Step #15)
+We previously configured sudo and ssh for the tied user. Now configure .bash_profile.
+
+    cat ~citizen/.bash_profile
+    # .bash_profile
+
+    trap "" INT
+    stty susp undef
+    stty rows 24 columns 80
+
+    # Get the aliases and functions
+    if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+    fi
+
+    # User specific environment and startup programs
+    if false ; then
+    #if true ; then
+      echo "Sorry, in maintenance mode"
+      read -s x  # the password is 'xyzzy'
+      if [ "`echo ${x} | md5sum`" != "89d447eb9afaeb94e463615e8ded6479  -" ] ; then
+        exit
+    fi
+
+    PATH=$PATH:$HOME/bin
+    export PATH
+
+    # Allow users to use screen
+    sudo chown forum `tty`
+    sudo chmod 666 `tty`
+
+    sudo su - forum -c /home/forum/lib/fws/inst.bin/captive_user
+    exit
