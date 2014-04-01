@@ -5,7 +5,8 @@ This is a writeup of how the OSEHRA Forum machines were built.
 ## Overview
 The base installation of UNIX (in this case CentOS 6) is supplemented with the installation of a
 few standard services: the GT.M database by Fidelity Information Systems, the OSEHRA
-VISTA software, and a few support scripts from Fourth Watch BCS.
+VISTA software, and a few support scripts from Fourth Watch BCS. The steps below must be done on
+both systems, Forum-A and Forum-B (see below).
 
 ## Pre-requisites
 You must be a moderately experienced Linux system adminitrator able to do the following:
@@ -522,3 +523,63 @@ the “fuse” group id
 Remount fstab by running:
 
     mount –a
+
+## GT.M Replication Set-up (Step #13)
+GT.M Replication has to be set-up to replicate globals and replicate routines.
+
+Globals are replicated using GT.M replication; Routines are replicated using
+lsync.
+
+For GT.M Replication, it's done as follows:
+
+In etc/env.conf, these lines accomplish the replication on forum-a TO forum-b:
+    
+    export BUP="forum-a"
+    export REPL_HOST="forum-b.osehra.org"
+    export REPL_HOST_SSH_HOST="forum-b.osehra.org"
+    export gtm_repl_instname="forumaforum"
+    export gtm_repl_instsecondary="forumbforum"
+
+On forum-b, the corresponding lines in etc/env.conf are:
+
+    export BUP="forum-b"
+    export REPL_HOST="forum-a.osehra.org"
+    export REPL_HOST_SSH_HOST="forum-a.osehra.org"
+    export gtm_repl_instname="forumbforum"
+    export gtm_repl_instsecondary="forumaforum"
+
+Routines are replicated using lsync. In the ~forum/etc directory, there is an lsync file, one for forum-a and one for forum-b. The only differences between them is in the host directive, where forum-a refers to forum-b, and the converse.
+
+    $ cat forum-a-lsyncd.conf 
+    settings {
+        logfile        = "/home/forum/log/lsyncd.log",
+        pidfile        = "/home/forum/log/lsyncd.pid",
+        statusFile     = "/home/forum/log/lsyncd.status.log",
+        statusInterval = 20
+    }
+
+    sync {
+        default.rsyncssh,
+        source    = "/home/forum/p",
+        host      = "forum-b",
+        targetdir = "/home/forum/p",
+        exclude   = "*.o",
+        rsync     = {
+            archive  = true,
+            verbose  = true,
+            compress = true
+        }
+    }
+
+    sync {
+        default.rsyncssh,
+        source    = "/home/forum/r",
+        host      = "forum-b",
+        targetdir = "/home/forum/r",
+        exclude   = "*.o",
+        rsync     = {
+            archive  = true,
+            verbose  = true,
+            compress = true
+        }
+    }
