@@ -88,12 +88,13 @@ Execute the following as root.
     # groupadd fwbcs -g 104
     # groupadd forum -g 400
     # groupadd citizen -g 400
+    # groupadd fuse -g 603
     # useradd gtm -u 101 -g 101 -c "GT.M"
     # useradd osehra -u 102 -g 102 -c "OSEHRA Local Git Repository" -G bup
     # useradd bup -u 103 -g 103 -c "Backup Manager"
     # useradd fwbcs -u 104 -g 104 -c "Fourth Watch BCS"
-    # useradd forum -u 400 -g 400 -c "Forum Database Instance Home" -G bup,gtm
-    # useradd citizen -u 401 -g 401 -c "Forum Citizen" -G forum
+    # useradd forum -u 400 -g 400 -c "Forum Database Instance Home" -G bup,gtm,fuse
+    # useradd citizen -u 401 -g 401 -c "Forum Citizen" -G forum,fuse
     # useradd sampleLinuxUser -u 600 -g 600 -c "A sample user" -G forum
 
 After this, create the system administrators and users. 
@@ -137,6 +138,7 @@ The following group assignments were made to the various users:
 | gtm | forum |
 | forum | (redacted), citizen |
 | admin | (redacted) |
+| fuse | forum, citizen |
 
 ## GT.M Installation (Step #5)
 Download the latest version of GT.M from <http://sourceforge.net/projects/fis-gtm/>.
@@ -475,3 +477,47 @@ We allow sudo priviliges for users citizen and forum.
 
     cat /etc/sudoers.d/forum 
     %forum              ALL=    NOPASSWD: /bin/su - forum
+
+## Cloud Backup (Step #12)
+We use Cloudfuse to mount Rackspace Cloud files for backups as they are cheaper.
+
+As root,
+
+    wget https://github.com/redbo/cloudfuse/archive/master.zip
+    yum install gcc.x86_64
+    yum install libcurl-devel.x86_64
+    yum install libxml2-devel.x86_64
+    yum install fuse-devel.x86_64
+    unzip master
+    cd master
+    ./configure
+    make
+    sudo make install
+
+Create Cloudfuse configuration file under /root. Note that this is
+a hidden file - .cloudfuse, also the username is the account name to
+the Rackspace account and the api_key comes from the key that belongs
+to the account.
+
+    # cat /root/.cloudfuse
+    username=xxxxxxxxxxxxxxxxx
+    api_key=77777777777777
+    authurl=https://auth.api.rackspacecloud.com/v1.0
+    region=ORD
+    cache_timeout=600
+
+Create a directory as the mount point for the Rackspace Cloudfile
+container, set group owner to “fuse” so other users can have access
+    
+    cd /
+    mkdir cloudbkup
+    chown root:fuse cloudbkup
+
+Edit /etc/fstab by adding the following entry, note that the gid is
+the “fuse” group id
+
+    cloudfuse /cloudbkup fuse defaults,gid=603,umask=002,allow_other
+
+Remount fstab by running:
+
+    mount –a
