@@ -62,6 +62,7 @@ their presence serves a specific purpose. (Usage of the root user is eschewed
 for all uses but for the uses that are necessary for management of the system).
 
 These are:
+
 Username | Purpose
 --- | ---
 gtm | To own the database software
