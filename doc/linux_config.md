@@ -576,7 +576,7 @@ Routines are replicated using lsync. In the ~forum/etc directory, there is an ls
         }
     }
 
-## Back-up (Step 14)
+## Back-up (Step #14)
 Load this crontab into cron on the forum user.
 
     PATH=/home/forum/bin:/home/forum/lib/fws/inst.bin/:/usr/bin:/bin:/home/forum/lib/gtm
@@ -591,7 +591,7 @@ Load this crontab into cron on the forum user.
     00     06 *  * * run.sh B gtm_freecnt.sh
     00     00 *  * * ls -la j >> log/ls-l-j.log 2>&1
 
-## Enabling Journaling and Replication for GT.M (Step 15)
+## Enabling Journaling and Replication for GT.M (Step #15)
 From /opt/lsb-fws/201301/inst.bin/, run the following to start journaling:
 
     sh gtm_journal_enable.sh
@@ -608,7 +608,7 @@ To disable replication:
 
     sh gtm_replication_stop.sh
 
-## Configuring the tied user (citizen) (Step 16)
+## Configuring the tied user (citizen) (Step #16)
 We previously configured sudo and ssh for the tied user. Now configure .bash_profile.
 
     cat ~citizen/.bash_profile
