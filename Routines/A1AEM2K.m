@@ -1,4 +1,4 @@
-A1AEM2K	; VEN/SMH - Save patches to HFS files ;2014-03-07  2:20 PM
+A1AEM2K	; VEN/SMH - Save patches to HFS files ;2014-04-17  6:30 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014
 	; Original by Dr. Cameron Schleheuber
 	;
@@ -17,9 +17,12 @@ A1AEM2K	; VEN/SMH - Save patches to HFS files ;2014-03-07  2:20 PM
 	. ; ( not no 11007 record for package ! user selection permitted ! ("test site only"& user is [self]"selected" for package )
 	. S DIC("S")="I ($P(^(0),U,8)=""v""!($P(^(0),U,8)=""e"")!($P(^(0),U,8)=""r""))&($S('$D(^A1AE(11007,+$P(^(0),U,2),0)):0,$P(^(0),U,2)=""Y"":1,$P(^(0),U,4)=""y""&($D(^A1AE(11007,""AU"",DUZ,+$P(^A1AE(11005,+Y,0),U,2)))):1,1:0))"
 	. S DIC("S")=DIC("S")_"!$D(^A1AE(11007,""AD"",DUZ,+$P(^A1AE(11005,+Y,0),U,2)))"
-	. S DIC="^A1AE(11005,",DIC(0)="AEMQZ",DIC("A")="Select Patch/Package: " D ^DIC
+	. S DIC="^A1AE(11005,",DIC(0)="AEMQZ",DIC("A")="Select Patch/Package: "
+        . I $G(A1AEUT1IEN) S Y=A1AEUT1IEN  ; Unit testing
+        . E  D ^DIC
 	. I Y<0 QUIT
 	. S PATCHES(+Y)="",PATCHES=PATCHES+1
+        . I $G(A1AEUT1IEN) S Y=-1  ; Unit testing
 	I 'PATCHES QUIT  ; Done. No patches selected.
 	;
 	;
@@ -28,7 +31,9 @@ A1AEM2K	; VEN/SMH - Save patches to HFS files ;2014-03-07  2:20 PM
 	N ROOT ; Where we export these
 	D EN^DDIOL("Enter where I should export these patches.")
 	S DIR("B")=$$DEFDIR^%ZISH()
-	S DIR(0)="F^2:255",DIR("A")="Full path, up to but not including patch names" D ^DIR QUIT:Y="^"  S ROOT=Y
+	S DIR(0)="F^2:255",DIR("A")="Full path, up to but not including patch names"
+        I '$G(A1AEUT1IEN) D ^DIR QUIT:Y="^"  S ROOT=Y I 1  ; For Unit Testing again
+        E  S ROOT=DIR("B")
 	;
 	; Entire stanza below to get Filename. Abstractable.
 	N DIR
