@@ -1,11 +1,12 @@
-A1AEZTST ; A1AE/PKE - check messages;
+A1AEZTST ; A1AE/PKE - check messages;2014-04-16  7:54 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;pke
 ENC	S (Z,Z1)="Completed/Unverified",Z3="",TOT=0 D SIZE Q
 ENV	S (Z,Z1)="Verified ",Z3="SEQ #",TOT=0 D SIZE Q
 	;
-ENIN	W !!?10,"Q-PATCH.VA.GOV input routines",!!
-	S TOT=0,QUE=$O(^XMB(3.7,.5,2,"B","Q-PATCH.VA.GOV",0)) I 'QUE Q
+ENIN	W !!?10,"Q-PATCH input routines",!!
+	S TOT=0
+        S %1=$O(^XMB(3.7,.5,2,"B","Q-PATCH")),QUE=$O(^XMB(3.7,.5,2,"B",%1,0)) I 'QUE Q
 	S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,QUE,1,XMZ)) Q:'XMZ  DO
 	.I '$D(^XMB(3.9,XMZ,0)) Q
 	.W !,$P(^(0),"^")
