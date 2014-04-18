@@ -1,4 +1,4 @@
-A1AEKEY	; RMO,MJK/ALBANY ; Allocate Patch Function Keys ;24 NOV 87 11:00 am
+A1AEKEY	; RMO,MJK/ALBANY ;2014-04-18  12:49 AM;24 NOV 87 11:00 am
 	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 	;----------------------------------------------------------------
@@ -9,7 +9,6 @@ A1AEKEY	; RMO,MJK/ALBANY ; Allocate Patch Function Keys ;24 NOV 87 11:00 am
 	;                in a specific package
 	;----------------------------------------------------------------
 ASKKEY	;Prompt for patch function key
-	I $D(^DD(200,0,"VR")),^("VR")<7 G ^A1AEKEY6
 	S DIC("A")="Select PATCH KEY: ",DIC("S")="S A1AEX=^(0) I $E($P(^(0),U,1),1,4)=""A1AE"",$S($D(^XUSEC(""A1AE MGR"",DUZ)):1,($P(A1AEX,U,1)'=""A1AE XUSEC"")&($P(A1AEX,U,1)'=""A1AE MGR""):1,1:0) K A1AEX",DIC="^DIC(19.1,",DIC(0)="AEMQZ"
 	W ! D ^DIC K DIC("A"),DIC("S") Q:Y<0  S A1AEKYIF=+Y,A1AEKEY=$P(Y,U,2)
 	D ASKHLD K A1AEDUZ0,A1AEPK,A1AEPKIF,A1AEPKNM,A1AEKEY,A1AEUSR,A1AEXRF,A1AEDES,A1AEKYIF,A1AEHDIF,A1AEUSNM Q:X="^"  G ASKKEY
@@ -40,7 +39,6 @@ ASKDEL	;Prompt for deleting the key holder
 	;
 KEY	;Automatic allocation of A1AE SUPPORT, A1AE PHVER, A1AE DEVELOPER keys
 	;for a specific package
-	I $D(^DD(200,0,"VR")),^("VR")<7 G ^A1AEKEY6
 	W !!?3,"...allocating A1AE SUPPORT, A1AE PHVER, and A1AE DEVELOPER keys" S A1AESKY=+$O(^DIC(19.1,"B","A1AE SUPPORT",0)),A1AEVKY=+$O(^DIC(19.1,"B","A1AE PHVER",0)),A1AEDKY=+$O(^DIC(19.1,"B","A1AE DEVELOPER",0))
 	D SUPPORT:A1AESKY,DEVELOP:A1AEDKY W:'A1AESKY !?6,"A1AE SUPPORT key does not exist" W:'A1AEVKY !?6,"A1AE DEVELOPER key does not exist" W:'A1AEDKY !?6,"A1AE DEVELOPER key does not exist"
 	K A1AESKY,A1AEVKY,A1AEDKY,A1AEUSR,A1AEVR,A1AEUSNM
