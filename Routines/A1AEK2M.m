@@ -1,4 +1,4 @@
-A1AEK2M	; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-23  7:41 PM
+A1AEK2M	; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-04-16  1:23 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014
 	;
 	; Based on code written by Dr. Cameron Schlehuber.
@@ -214,10 +214,15 @@ LOAD(ROOT,PATCH,ERROR,RESULT)	; Load TXT message, find KIDS, then load KIDS and 
 	QUIT
 	;
 ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT,ROOTPATH,TXTFIL,KIDFIL)	; Wrapper around all addition functions
+	;
+        ; In case we are invoked from A1AEPSVR, default these so we won't crash
+        S ROOTPATH=$G(ROOTPATH)
+        S TXTFIL=$G(TXTFIL)
+        S KIDFIL=$G(KIDFIL)
+        ;
 	; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
-	; Change designation into Patch Module format from KIDS format
-	; 
 	N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
+	; Change designation into Patch Module format from KIDS format
 	S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
 	; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
 	D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
