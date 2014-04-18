@@ -1,15 +1,17 @@
-KIDS Distribution saved on Mar 31, 2014@19:06:49
-Patch Module v2.4T1
+KIDS Distribution saved on Apr 18, 2014@00:20:38
+T2 Build
 **KIDS**:PATCH MODULE 2.4^
 
 **INSTALL NAME**
 PATCH MODULE 2.4
 "BLD",9262,0)
-PATCH MODULE 2.4^PATCH MODULE^0^3140331^n
+PATCH MODULE 2.4^PATCH MODULE^0^3140418^n
 "BLD",9262,1,0)
-^^1^1^3140304^^^^
+^^2^2^3140418^
 "BLD",9262,1,1,0)
-The PATCH Module from FORUM.va.gov.
+The PATCH Module from FORUM.VA.GOV modified to handle OSEHRA Community 
+"BLD",9262,1,2,0)
+requirements.
 "BLD",9262,4,0)
 ^9.64PA^11005.2^7
 "BLD",9262,4,11005,0)
@@ -57,7 +59,7 @@ y^y^f^^^^n
 "BLD",9262,4,"B",11007.1,11007.1)
 
 "BLD",9262,6.3)
-9
+10
 "BLD",9262,"KRN",0)
 ^9.67PA^779.2^20
 "BLD",9262,"KRN",.4,0)
@@ -295,9 +297,7 @@ A1AE LOAD RELEASED PATCH^^0
 "BLD",9262,"KRN",9.8,0)
 9.8
 "BLD",9262,"KRN",9.8,"NM",0)
-^9.68A^60^56
-"BLD",9262,"KRN",9.8,"NM",1,0)
-A1AE^^0^B1182477
+^9.68A^61^46
 "BLD",9262,"KRN",9.8,"NM",2,0)
 A1AEAU^^0^B22106203
 "BLD",9262,"KRN",9.8,"NM",3,0)
@@ -312,8 +312,6 @@ A1AECOPY^^0^B25072086
 A1AEHSVR^^0^B8406742
 "BLD",9262,"KRN",9.8,"NM",8,0)
 A1AEKEY^^0^B21266795
-"BLD",9262,"KRN",9.8,"NM",9,0)
-A1AEKEY6^^0^B21193544
 "BLD",9262,"KRN",9.8,"NM",10,0)
 A1AEM^^0^B42478438
 "BLD",9262,"KRN",9.8,"NM",11,0)
@@ -326,14 +324,8 @@ A1AEMAL^^0^B44810612
 A1AEMAL1^^0^B24198637
 "BLD",9262,"KRN",9.8,"NM",15,0)
 A1AEMGR^^0^B10155661
-"BLD",9262,"KRN",9.8,"NM",18,0)
-A1AEPB^^0^B970607
 "BLD",9262,"KRN",9.8,"NM",19,0)
 A1AEPB1^^0^B13048468
-"BLD",9262,"KRN",9.8,"NM",20,0)
-A1AEPB2^^0^B1246522
-"BLD",9262,"KRN",9.8,"NM",21,0)
-A1AEPH^^0^B912927
 "BLD",9262,"KRN",9.8,"NM",22,0)
 A1AEPH1^^0^B33099177
 "BLD",9262,"KRN",9.8,"NM",23,0)
@@ -346,22 +338,12 @@ A1AEPH4^^0^B13752635
 A1AEPH5^^0^B8392255
 "BLD",9262,"KRN",9.8,"NM",27,0)
 A1AEPH6^^0^B21002501
-"BLD",9262,"KRN",9.8,"NM",28,0)
-A1AEPH7^^0^B143295
 "BLD",9262,"KRN",9.8,"NM",29,0)
 A1AEPH8^^0^B13651595
-"BLD",9262,"KRN",9.8,"NM",30,0)
-A1AEPHPK^^0^B36681196
 "BLD",9262,"KRN",9.8,"NM",31,0)
 A1AEPHS^^0^B301665940
-"BLD",9262,"KRN",9.8,"NM",32,0)
-A1AEPHSX^^0^B11333163
-"BLD",9262,"KRN",9.8,"NM",33,0)
-A1AEPHSZ^^0^B13656283
 "BLD",9262,"KRN",9.8,"NM",34,0)
 A1AEPK^^0^B41374404
-"BLD",9262,"KRN",9.8,"NM",35,0)
-A1AEPRE^^0^B5253495
 "BLD",9262,"KRN",9.8,"NM",36,0)
 A1AERCON^^0^B5359981
 "BLD",9262,"KRN",9.8,"NM",37,0)
@@ -374,8 +356,6 @@ A1AEUTL^^0^B129518466
 A1AEUTL1^^0^B11371584
 "BLD",9262,"KRN",9.8,"NM",42,0)
 A1AEUTL2^^0^B14417128
-"BLD",9262,"KRN",9.8,"NM",43,0)
-A1AEUTL3^^0^B7017424
 "BLD",9262,"KRN",9.8,"NM",44,0)
 A1AEVP^^0^B30091569
 "BLD",9262,"KRN",9.8,"NM",45,0)
@@ -383,9 +363,9 @@ A1AEVP1^^0^B7355089
 "BLD",9262,"KRN",9.8,"NM",46,0)
 A1AEZCON^^0^B10420189
 "BLD",9262,"KRN",9.8,"NM",47,0)
-A1AEZTST^^0^B1905853
+A1AEZTST^^0^B2013390
 "BLD",9262,"KRN",9.8,"NM",48,0)
-A1AEK2M^^0^B147063589
+A1AEK2M^^0^B151576275
 "BLD",9262,"KRN",9.8,"NM",49,0)
 A1AEK2M0^^0^B191388494
 "BLD",9262,"KRN",9.8,"NM",50,0)
@@ -395,21 +375,21 @@ A1AEK2M2^^0^B30902735
 "BLD",9262,"KRN",9.8,"NM",52,0)
 A1AEK2MT^^0^B47121510
 "BLD",9262,"KRN",9.8,"NM",54,0)
-A1AEUT1^^0^B182186864
+A1AEUT1^^0^B188694393
 "BLD",9262,"KRN",9.8,"NM",55,0)
 A1AEUT2^^0^B101446265
 "BLD",9262,"KRN",9.8,"NM",56,0)
-A1AEPSVR^^0^B230846704
+A1AEPSVR^^0^B231769506
 "BLD",9262,"KRN",9.8,"NM",57,0)
-A1AEM2K^^0^B37432868
+A1AEM2K^^0^B39456093
 "BLD",9262,"KRN",9.8,"NM",58,0)
 A1AEK2V0^^0^B64294184
 "BLD",9262,"KRN",9.8,"NM",59,0)
 A1AEK2VC^^0^B128816935
 "BLD",9262,"KRN",9.8,"NM",60,0)
 A1AEOS^^0^B4736088
-"BLD",9262,"KRN",9.8,"NM","B","A1AE",1)
-
+"BLD",9262,"KRN",9.8,"NM",61,0)
+A1AEK2M3^^0^B12404493
 "BLD",9262,"KRN",9.8,"NM","B","A1AEAU",2)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AECL1",3)
@@ -430,6 +410,8 @@ A1AEOS^^0^B4736088
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEK2M2",51)
 
+"BLD",9262,"KRN",9.8,"NM","B","A1AEK2M3",61)
+
 "BLD",9262,"KRN",9.8,"NM","B","A1AEK2MT",52)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEK2V0",58)
@@ -437,8 +419,6 @@ A1AEOS^^0^B4736088
 "BLD",9262,"KRN",9.8,"NM","B","A1AEK2VC",59)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEKEY",8)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEKEY6",9)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEM",10)
 
@@ -456,13 +436,7 @@ A1AEOS^^0^B4736088
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEOS",60)
 
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPB",18)
-
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPB1",19)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPB2",20)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPH",21)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPH1",22)
 
@@ -476,21 +450,11 @@ A1AEOS^^0^B4736088
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPH6",27)
 
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPH7",28)
-
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPH8",29)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPHPK",30)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPHS",31)
 
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPHSX",32)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPHSZ",33)
-
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPK",34)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEPRE",35)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEPSVR",56)
 
@@ -509,8 +473,6 @@ A1AEOS^^0^B4736088
 "BLD",9262,"KRN",9.8,"NM","B","A1AEUTL1",41)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEUTL2",42)
-
-"BLD",9262,"KRN",9.8,"NM","B","A1AEUTL3",43)
 
 "BLD",9262,"KRN",9.8,"NM","B","A1AEVP",44)
 
@@ -1619,7 +1581,7 @@ DHCP PATCHES LIST
 "KRN",.4,1538,-1)
 0^15
 "KRN",.4,1538,0)
-A1AE VERIFIED PATCH SUMMARY^3140327.1425^^11005^^^3140331^
+A1AE VERIFIED PATCH SUMMARY^3140327.1425^^11005^^^3140417^
 "KRN",.4,1538,"DXS")
 2
 "KRN",.4,1538,"DXS",1,9)
@@ -5355,11 +5317,13 @@ OAKLAND
 "PKG",221,22,0)
 ^9.49I^1^1
 "PKG",221,22,1,0)
-2.4^3140331
+2.4^3140418
 "PKG",221,22,1,1,0)
-^^1^1^3140331
+^^2^2^3140418
 "PKG",221,22,1,1,1,0)
-The PATCH Module from FORUM.va.gov.
+The PATCH Module from FORUM.VA.GOV modified to handle OSEHRA Community 
+"PKG",221,22,1,1,2,0)
+requirements.
 "PKG",221,"DEV")
 FORT/OAKLAND OIFO
 "PKG",221,"VERSION")
@@ -5435,45 +5399,13 @@ NO
 "QUES","XPZ2","M")
 D XPZ2^XPDIQ
 "RTN")
-56
-"RTN","A1AE")
-0^1^B1182477
-"RTN","A1AE",1,0)
-A1AE ;RMO,MJK/ALBANY ; Main Patch/Problem Driver ;24 NOV 87 11:00 am
-"RTN","A1AE",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AE",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
-"RTN","A1AE",4,0)
- G:$D(^DOPT("A1AE",3)) A S ^DOPT("A1AE",0)="Region 1 Patch and Problem Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AE",I,0)=$P(X,";;",2,99)
-"RTN","A1AE",5,0)
- S DIK="^DOPT(""A1AE""," D IXALL^DIK
-"RTN","A1AE",6,0)
-A W !! S DIC="^DOPT(""A1AE"",",DIC(0)="AEQM" D ^DIC Q:Y<0  D @+Y G A
-"RTN","A1AE",7,0)
- ;
-"RTN","A1AE",8,0)
-1 ;;Authorized Users Menu
-"RTN","A1AE",9,0)
- G ^A1AEAU
-"RTN","A1AE",10,0)
- ;
-"RTN","A1AE",11,0)
-2 ;;Patch Menu
-"RTN","A1AE",12,0)
- G ^A1AEPH
-"RTN","A1AE",13,0)
- ;
-"RTN","A1AE",14,0)
-3 ;;Problem Menu
-"RTN","A1AE",15,0)
- G ^A1AEPB
+46
 "RTN","A1AEAU")
 0^2^B22106203
 "RTN","A1AEAU",1,0)
 A1AEAU ; RMO,MJK/ALBANY ; DHCP Problem/Patch File Edits ;24 NOV 87 11:00 am
 "RTN","A1AEAU",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEAU",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AEAU",4,0)
@@ -5605,7 +5537,7 @@ DELUSR S DIK="^A1AE(11007,"_A1AEPKIF_",1,",DA(1)=A1AEPKIF,DA=DUZ D ^DIK W !?3,".
 "RTN","A1AECL1",1,0)
 A1AECL1 ;ISF/RWF - Released Patch ROUTINE file updater ;2014-03-07  7:37 PM
 "RTN","A1AECL1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AECL1",3,0)
  Q
 "RTN","A1AECL1",4,0)
@@ -5863,7 +5795,7 @@ TEST(D0) ;Update ROUTINE file from the Routine list.
 "RTN","A1AECOPD",1,0)
 A1AECOPD ;ISC-Albany/pke-copy message into patch description ;2014-03-28  5:31 PM
 "RTN","A1AECOPD",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AECOPD",3,0)
  ;
 "RTN","A1AECOPD",4,0)
@@ -6001,7 +5933,7 @@ CRCHK I $E(IOST,1)="C" W !!,*7,"Press RETURN to continue or '^' to stop " R X1:D
 "RTN","A1AECOPR",1,0)
 A1AECOPR ;ISC-Albany/pke-copy routines into routine text ;5/1/90
 "RTN","A1AECOPR",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AECOPR",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AECOPR",4,0)
@@ -6141,7 +6073,7 @@ CRCHK I $E(IOST,1)="C" W !!,*7,"Press RETURN to continue or '^' to stop " R X1:D
 "RTN","A1AECOPY",1,0)
 A1AECOPY ;RMO/ALBANY ; Copy Routine Code into Routine Description;24 NOV 87 11:00 am
 "RTN","A1AECOPY",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AECOPY",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AECOPY",4,0)
@@ -6243,7 +6175,7 @@ CRCHK I $E(IOST,1)="C" W !!,*7,"Press RETURN to continue or '^' to stop " R X1:D
 "RTN","A1AEHSVR",1,0)
 A1AEHSVR ;ISF/RWF - HFS Checksum Msg server ;10/17/07  15:19
 "RTN","A1AEHSVR",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEHSVR",3,0)
 EN ;Save the HFS Checksum message for when the patch is released.
 "RTN","A1AEHSVR",4,0)
@@ -6423,11 +6355,11 @@ TEST ;
 "RTN","A1AEHSVR",91,0)
  Q
 "RTN","A1AEK2M")
-0^48^B147063589
+0^48^B151576275
 "RTN","A1AEK2M",1,0)
-A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-03-23  7:41 PM
+A1AEK2M ; VEN/SMH - Load an HFS KIDS file into the Patch Module;2014-04-16  1:23 PM
 "RTN","A1AEK2M",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2M",3,0)
  ;
 "RTN","A1AEK2M",4,0)
@@ -6857,263 +6789,273 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; Load TXT message, find KIDS, then load KIDS and 
 "RTN","A1AEK2M",216,0)
 ADD0(RTN,MSGGLO,CANTLOAD,INFOONLY,RESULT,ROOTPATH,TXTFIL,KIDFIL) ; Wrapper around all addition functions
 "RTN","A1AEK2M",217,0)
- ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
+ ;
 "RTN","A1AEK2M",218,0)
- ; Change designation into Patch Module format from KIDS format
+        ; In case we are invoked from A1AEPSVR, default these so we won't crash
 "RTN","A1AEK2M",219,0)
- ; 
+        S ROOTPATH=$G(ROOTPATH)
 "RTN","A1AEK2M",220,0)
- N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
+        S TXTFIL=$G(TXTFIL)
 "RTN","A1AEK2M",221,0)
- S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
+        S KIDFIL=$G(KIDFIL)
 "RTN","A1AEK2M",222,0)
- ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
+        ;
 "RTN","A1AEK2M",223,0)
- D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
+ ; ** WARNING ** NEXT 2 LINES ARE IMPORTANT AND CONFUSING - I WOULD LOVE TO CHANGE IT.
 "RTN","A1AEK2M",224,0)
- D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
+ N OLDDESIGNATION S OLDDESIGNATION=RTN("DESIGNATION")
 "RTN","A1AEK2M",225,0)
- D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
+ ; Change designation into Patch Module format from KIDS format
 "RTN","A1AEK2M",226,0)
- N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
+ S RTN("DESIGNATION")=$$K2PMD(RTN("DESIGNATION"))
 "RTN","A1AEK2M",227,0)
- D ASSERT(DA)                            ; Assert that we obtained an IEN
+ ; ZEXCEPT: A1AEPKIF is created by PKGADD in the ST.
 "RTN","A1AEK2M",228,0)
- D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
+ D PKGADD(RTN("DESIGNATION"))            ; Add to Patch Module Package file
 "RTN","A1AEK2M",229,0)
- D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
+ D PKGSETUP(A1AEPKIF,.RTN)               ; And set it up.
 "RTN","A1AEK2M",230,0)
- ; 
+ D VERSETUP(A1AEPKIF,RTN("DESIGNATION")) ; Add its version; ZEXCEPT: A1AEVR - Version leaks
 "RTN","A1AEK2M",231,0)
- S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
+ N DA S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.RTN,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
 "RTN","A1AEK2M",232,0)
- ; Now, add the Primary forked version of the patch
+ D ASSERT(DA)                            ; Assert that we obtained an IEN
 "RTN","A1AEK2M",233,0)
- N DA D
+ D ASSERT($P(RTN("DESIGNATION"),"*",3)=A1AENB) ; Assert that the Number is the same as the patch number
 "RTN","A1AEK2M",234,0)
- . N DERIVEDPATCH M DERIVEDPATCH=RTN
+ D ASSERT(RTN("DESIGNATION")=A1AEPD) ; Assert that the designation is the same as the Patch Designation
 "RTN","A1AEK2M",235,0)
- . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
+ ; 
 "RTN","A1AEK2M",236,0)
- . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
+ S RESULT(OLDDESIGNATION,"MSG",DA)="" ; have to use old design b/c we just changed it.
 "RTN","A1AEK2M",237,0)
- . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
+ ; Now, add the Primary forked version of the patch
 "RTN","A1AEK2M",238,0)
- . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
+ N DA D
 "RTN","A1AEK2M",239,0)
- . D ASSERT(DA)                            ; Assert that we obtained an IEN
+ . N DERIVEDPATCH M DERIVEDPATCH=RTN
 "RTN","A1AEK2M",240,0)
- . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
+ . N PRIM S PRIM=$$PRIMSTRM^A1AEUTL()
 "RTN","A1AEK2M",241,0)
- . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
+ . S DERIVEDPATCH("ORIG-DESIGNATION")=DERIVEDPATCH("DESIGNATION")
 "RTN","A1AEK2M",242,0)
- . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
+ . S $P(DERIVEDPATCH("DESIGNATION"),"*",3)=$P(DERIVEDPATCH("DESIGNATION"),"*",3)+PRIM-1
 "RTN","A1AEK2M",243,0)
- QUIT
+ . S DA=$$ADDPATCH^A1AEK2M0(A1AEPKIF,A1AEVR,.DERIVEDPATCH,MSGGLO,CANTLOAD,INFOONLY,ROOTPATH,TXTFIL,KIDFIL)  ; ZEXCEPT: A1AENB,A1AEPD
 "RTN","A1AEK2M",244,0)
- ;
+ . D ASSERT(DA)                            ; Assert that we obtained an IEN
 "RTN","A1AEK2M",245,0)
-K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
+ . D ASSERT($$GET1^DIQ(11005,DA,5.2)=DERIVEDPATCH("ORIG-DESIGNATION")) ; Original designation should be retained in derived field
 "RTN","A1AEK2M",246,0)
- N %
+ . D EN^DDIOL("Forked "_DERIVEDPATCH("ORIG-DESIGNATION")_" into "_DERIVEDPATCH("DESIGNATION"))
 "RTN","A1AEK2M",247,0)
- I PATCH[" " S %=$L(PATCH," "),PATCH=$P(PATCH," ",1,%-1)_"*"_$P(PATCH," ",%)_"*0"
+ . S RESULT(OLDDESIGNATION,"MSG",DA)="" ; ditto... see above.
 "RTN","A1AEK2M",248,0)
- I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
+ QUIT
 "RTN","A1AEK2M",249,0)
- Q PATCH
+ ;
 "RTN","A1AEK2M",250,0)
- ;
+K2PMD(PATCH) ; Private to package; $$; Kids to Patch Module designation. Code by Wally from A1AEHSVR.
 "RTN","A1AEK2M",251,0)
-PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
+ N %
 "RTN","A1AEK2M",252,0)
- ; Input: Designation: Patch designation AAA*1*22; By value
+ I PATCH[" " S %=$L(PATCH," "),PATCH=$P(PATCH," ",1,%-1)_"*"_$P(PATCH," ",%)_"*0"
 "RTN","A1AEK2M",253,0)
- ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
+ I $L(PATCH,"*")=3 S $P(PATCH,"*",2)=+$P(PATCH,"*",2)
 "RTN","A1AEK2M",254,0)
- ;
+ Q PATCH
 "RTN","A1AEK2M",255,0)
- ; When doing lookups for laygo, only look in the Package file's C index for designation.
+ ;
 "RTN","A1AEK2M",256,0)
- N DIC S DIC("PTRIX",11007,.01,9.4)="C"
+PKGADD(DESIGNATION) ; Proc; Private to this routine; Add package to Patch Module
 "RTN","A1AEK2M",257,0)
- N A1AE S A1AE(0)="XLM" ; eXact match, Laygo, Multiple Indexes
+ ; Input: Designation: Patch designation AAA*1*22; By value
 "RTN","A1AEK2M",258,0)
- N X S X=$P(DESIGNATION,"*") ; Input to ^DIC
+ ; ZEXCEPT: A1AEPK,A1AEPKIF,A1AEPKNM - Created by PKG^A1AEUTL
 "RTN","A1AEK2M",259,0)
- D PKG^A1AEUTL
+ ;
 "RTN","A1AEK2M",260,0)
- ; ZEXCEPT: Y leaks from PKG^A1AEUTL
+ ; When doing lookups for laygo, only look in the Package file's C index for designation.
 "RTN","A1AEK2M",261,0)
- I $P($G(Y),U,3) D EN^DDIOL("Added Package "_DESIGNATION_" to "_$P(^A1AE(11007,0),U))
+ N DIC S DIC("PTRIX",11007,.01,9.4)="C"
 "RTN","A1AEK2M",262,0)
- ;
+ N A1AE S A1AE(0)="XLM" ; eXact match, Laygo, Multiple Indexes
 "RTN","A1AEK2M",263,0)
- ; Check that the output variables from PKG^A1AEUTL are defined.
+ N X S X=$P(DESIGNATION,"*") ; Input to ^DIC
 "RTN","A1AEK2M",264,0)
- D ASSERT(A1AEPKIF) ; Must be positive
+ D PKG^A1AEUTL
 "RTN","A1AEK2M",265,0)
- D ASSERT(A1AEPK=$P(DESIGNATION,"*")) ; PK must be the AAA
+ ; ZEXCEPT: Y leaks from PKG^A1AEUTL
 "RTN","A1AEK2M",266,0)
- D ASSERT($L(A1AEPKNM)) ; Must be defined.
+ I $P($G(Y),U,3) D EN^DDIOL("Added Package "_DESIGNATION_" to "_$P(^A1AE(11007,0),U))
 "RTN","A1AEK2M",267,0)
- QUIT
+ ;
 "RTN","A1AEK2M",268,0)
- ;
+ ; Check that the output variables from PKG^A1AEUTL are defined.
 "RTN","A1AEK2M",269,0)
-PKGSETUP(A1AEPKIF,TXTINFO) ; Private; Setup package in Patch module
+ D ASSERT(A1AEPKIF) ; Must be positive
 "RTN","A1AEK2M",270,0)
- ; ZEXCEPT: A1AEPKIF - Created by PKGADD
+ D ASSERT(A1AEPK=$P(DESIGNATION,"*")) ; PK must be the AAA
 "RTN","A1AEK2M",271,0)
- N IENS S IENS=A1AEPKIF_","
+ D ASSERT($L(A1AEPKNM)) ; Must be defined.
 "RTN","A1AEK2M",272,0)
- N A1AEFDA,DIERR
+ QUIT
 "RTN","A1AEK2M",273,0)
- S A1AEFDA(11007,IENS,2)="NO" ; USER SELECTION PERMITTED//^S X="NO"
+ ;
 "RTN","A1AEK2M",274,0)
- S A1AEFDA(11007,IENS,4)="NO" ; FOR TEST SITE ONLY?//^S X="NO"
+PKGSETUP(A1AEPKIF,TXTINFO) ; Private; Setup package in Patch module
 "RTN","A1AEK2M",275,0)
- S A1AEFDA(11007,IENS,5)="YES" ; ASK PATCH DESCRIPTION COPY
+ ; ZEXCEPT: A1AEPKIF - Created by PKGADD
 "RTN","A1AEK2M",276,0)
- D FILE^DIE("EKT",$NA(A1AEFDA)) ; External, lock, transact
+ N IENS S IENS=A1AEPKIF_","
 "RTN","A1AEK2M",277,0)
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ N A1AEFDA,DIERR
 "RTN","A1AEK2M",278,0)
- ;
+ S A1AEFDA(11007,IENS,2)="NO" ; USER SELECTION PERMITTED//^S X="NO"
 "RTN","A1AEK2M",279,0)
- N A1AEFDA
+ S A1AEFDA(11007,IENS,4)="NO" ; FOR TEST SITE ONLY?//^S X="NO"
 "RTN","A1AEK2M",280,0)
- S A1AEFDA(11007.02,"?+1,"_IENS,.01)="`"_$$MKUSR(TXTINFO("VER"),"A1AE PHVER")  ; SUPPORT PERSONNEL
+ S A1AEFDA(11007,IENS,5)="YES" ; ASK PATCH DESCRIPTION COPY
 "RTN","A1AEK2M",281,0)
- S A1AEFDA(11007.02,"?+1,"_IENS,2)="V"  ; VERIFY PERSONNEL
+ D FILE^DIE("EKT",$NA(A1AEFDA)) ; External, lock, transact
 "RTN","A1AEK2M",282,0)
- S A1AEFDA(11007.03,"?+2,"_IENS,.01)="`"_$$MKUSR(TXTINFO("DEV"),"A1AE DEVELOPER") ; DEVELOPMENT PERSONNEL
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
 "RTN","A1AEK2M",283,0)
- S A1AEFDA(11007.03,"?+3,"_IENS,.01)="`"_$$MKUSR(TXTINFO("COM"),"A1AE DEVELOPER") ; DITTO
+ ;
 "RTN","A1AEK2M",284,0)
- D UPDATE^DIE("E",$NA(A1AEFDA))
+ N A1AEFDA
 "RTN","A1AEK2M",285,0)
- I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+ S A1AEFDA(11007.02,"?+1,"_IENS,.01)="`"_$$MKUSR(TXTINFO("VER"),"A1AE PHVER")  ; SUPPORT PERSONNEL
 "RTN","A1AEK2M",286,0)
- D ASSERT($D(^A1AE(11007,A1AEPKIF,"PB")))  ; Verifier Nodes
+ S A1AEFDA(11007.02,"?+1,"_IENS,2)="V"  ; VERIFY PERSONNEL
 "RTN","A1AEK2M",287,0)
- D ASSERT($D(^A1AE(11007,A1AEPKIF,"PH")))  ; Developer Nodes
+ S A1AEFDA(11007.03,"?+2,"_IENS,.01)="`"_$$MKUSR(TXTINFO("DEV"),"A1AE DEVELOPER") ; DEVELOPMENT PERSONNEL
 "RTN","A1AEK2M",288,0)
- QUIT
+ S A1AEFDA(11007.03,"?+3,"_IENS,.01)="`"_$$MKUSR(TXTINFO("COM"),"A1AE DEVELOPER") ; DITTO
 "RTN","A1AEK2M",289,0)
- ;
+ D UPDATE^DIE("E",$NA(A1AEFDA))
 "RTN","A1AEK2M",290,0)
-MKUSR(NAME,KEY) ; Private; Make Users for the Package
-"RTN","A1AEK2M",291,0)
- Q:$O(^VA(200,"B",NAME,0)) $O(^(0)) ; Quit if the entry exists with entry
-"RTN","A1AEK2M",292,0)
- ;
-"RTN","A1AEK2M",293,0)
- ; Get initials
-"RTN","A1AEK2M",294,0)
- D STDNAME^XLFNAME(.NAME,"CP")
-"RTN","A1AEK2M",295,0)
- N INI S INI=$E(NAME("GIVEN"))_$E(NAME("MIDDLE"))_$E(NAME("FAMILY"))
-"RTN","A1AEK2M",296,0)
- ;
-"RTN","A1AEK2M",297,0)
- ; File user with key
-"RTN","A1AEK2M",298,0)
- N A1AEFDA,A1AEIEN,A1AEERR,DIERR
-"RTN","A1AEK2M",299,0)
- S A1AEFDA(200,"?+1,",.01)=NAME ; Name
-"RTN","A1AEK2M",300,0)
- S A1AEFDA(200,"?+1,",1)=INI ; Initials
-"RTN","A1AEK2M",301,0)
- S A1AEFDA(200,"?+1,",28)="NONE" ; Mail Code
-"RTN","A1AEK2M",302,0)
- S:$L($G(KEY)) A1AEFDA(200.051,"?+3,?+1,",.01)="`"_$O(^DIC(19.1,"B",KEY,""))
-"RTN","A1AEK2M",303,0)
- ;
-"RTN","A1AEK2M",304,0)
- N DIC S DIC(0)="" ; An XREF in File 200 requires this.
-"RTN","A1AEK2M",305,0)
- D UPDATE^DIE("E",$NA(A1AEFDA),$NA(A1AEIEN),$NA(A1AEERR)) ; Typical UPDATE
-"RTN","A1AEK2M",306,0)
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
+"RTN","A1AEK2M",291,0)
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PB")))  ; Verifier Nodes
+"RTN","A1AEK2M",292,0)
+ D ASSERT($D(^A1AE(11007,A1AEPKIF,"PH")))  ; Developer Nodes
+"RTN","A1AEK2M",293,0)
+ QUIT
+"RTN","A1AEK2M",294,0)
+ ;
+"RTN","A1AEK2M",295,0)
+MKUSR(NAME,KEY) ; Private; Make Users for the Package
+"RTN","A1AEK2M",296,0)
+ Q:$O(^VA(200,"B",NAME,0)) $O(^(0)) ; Quit if the entry exists with entry
+"RTN","A1AEK2M",297,0)
+ ;
+"RTN","A1AEK2M",298,0)
+ ; Get initials
+"RTN","A1AEK2M",299,0)
+ D STDNAME^XLFNAME(.NAME,"CP")
+"RTN","A1AEK2M",300,0)
+ N INI S INI=$E(NAME("GIVEN"))_$E(NAME("MIDDLE"))_$E(NAME("FAMILY"))
+"RTN","A1AEK2M",301,0)
+ ;
+"RTN","A1AEK2M",302,0)
+ ; File user with key
+"RTN","A1AEK2M",303,0)
+ N A1AEFDA,A1AEIEN,A1AEERR,DIERR
+"RTN","A1AEK2M",304,0)
+ S A1AEFDA(200,"?+1,",.01)=NAME ; Name
+"RTN","A1AEK2M",305,0)
+ S A1AEFDA(200,"?+1,",1)=INI ; Initials
+"RTN","A1AEK2M",306,0)
+ S A1AEFDA(200,"?+1,",28)="NONE" ; Mail Code
 "RTN","A1AEK2M",307,0)
- ;
+ S:$L($G(KEY)) A1AEFDA(200.051,"?+3,?+1,",.01)="`"_$O(^DIC(19.1,"B",KEY,""))
 "RTN","A1AEK2M",308,0)
- Q A1AEIEN(1) ;Provider IEN
+ ;
 "RTN","A1AEK2M",309,0)
- ;
+ N DIC S DIC(0)="" ; An XREF in File 200 requires this.
 "RTN","A1AEK2M",310,0)
-VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
+ D UPDATE^DIE("E",$NA(A1AEFDA),$NA(A1AEIEN),$NA(A1AEERR)) ; Typical UPDATE
 "RTN","A1AEK2M",311,0)
- ; Input: - A1AEPKIF - Package IEN in 11007, value
+ I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
 "RTN","A1AEK2M",312,0)
- ;        - DESIGNATION - Package designation (XXX*1*3)
+ ;
 "RTN","A1AEK2M",313,0)
- ; Output: (In symbol table:) A1AEVR
+ Q A1AEIEN(1) ;Provider IEN
 "RTN","A1AEK2M",314,0)
- ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
+ ;
 "RTN","A1AEK2M",315,0)
- N X,A1AE S A1AE(0)="L" ; X is version number; input to ^DIC
+VERSETUP(A1AEPKIF,DESIGNATION) ; Private; Setup version in 11007
 "RTN","A1AEK2M",316,0)
- S X=$P(DESIGNATION,"*",2)
+ ; Input: - A1AEPKIF - Package IEN in 11007, value
 "RTN","A1AEK2M",317,0)
- D VER^A1AEUTL ; Internal API
+ ;        - DESIGNATION - Package designation (XXX*1*3)
 "RTN","A1AEK2M",318,0)
- D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
+ ; Output: (In symbol table:) A1AEVR
 "RTN","A1AEK2M",319,0)
- QUIT
+ ; ZEXCEPT: A1AEVR - Created here by VER^A1AEUTL
 "RTN","A1AEK2M",320,0)
- ;
+ N X,A1AE S A1AE(0)="L" ; X is version number; input to ^DIC
 "RTN","A1AEK2M",321,0)
-INFOONLY(TXTINFO) ; Private to Package; Is this patch Info Only?
+ S X=$P(DESIGNATION,"*",2)
 "RTN","A1AEK2M",322,0)
- N INFOONLY S INFOONLY=0
+ D VER^A1AEUTL ; Internal API
 "RTN","A1AEK2M",323,0)
- N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Informational" S INFOONLY=1
+ D ASSERT(A1AEVR=$P(DESIGNATION,"*",2))
 "RTN","A1AEK2M",324,0)
- N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Routine" S INFOONLY=0   ; B/c somebody might screw up by adding addtional stuff.
-"RTN","A1AEK2M",325,0)
- Q INFOONLY
-"RTN","A1AEK2M",326,0)
- ;
-"RTN","A1AEK2M",327,0)
-PREREQAD(TXTINFO) ; Private to Package; Add pre-requisites to txt message
-"RTN","A1AEK2M",328,0)
- I $O(TXTINFO("PREREQ","")) D                              ; If we have prerequisites
-"RTN","A1AEK2M",329,0)
- . N LS S LS=$O(TXTINFO("DESC"," "),-1)                    ; Get last sub
-"RTN","A1AEK2M",330,0)
- . N NS S NS=LS+1                                      ; New Sub
-"RTN","A1AEK2M",331,0)
- . S TXTINFO("DESC",NS)=" ",NS=NS+1                        ; Empty line
-"RTN","A1AEK2M",332,0)
- . S TXTINFO("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
-"RTN","A1AEK2M",333,0)
- . N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S TXTINFO("DESC",NS)=" - "_TXTINFO("PREREQ",I),NS=NS+1
-"RTN","A1AEK2M",334,0)
  QUIT
+"RTN","A1AEK2M",325,0)
+ ;
+"RTN","A1AEK2M",326,0)
+INFOONLY(TXTINFO) ; Private to Package; Is this patch Info Only?
+"RTN","A1AEK2M",327,0)
+ N INFOONLY S INFOONLY=0
+"RTN","A1AEK2M",328,0)
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Informational" S INFOONLY=1
+"RTN","A1AEK2M",329,0)
+ N I F I=0:0 S I=$O(TXTINFO("CAT",I)) Q:'I  I TXTINFO("CAT",I)="Routine" S INFOONLY=0   ; B/c somebody might screw up by adding addtional stuff.
+"RTN","A1AEK2M",330,0)
+ Q INFOONLY
+"RTN","A1AEK2M",331,0)
+ ;
+"RTN","A1AEK2M",332,0)
+PREREQAD(TXTINFO) ; Private to Package; Add pre-requisites to txt message
+"RTN","A1AEK2M",333,0)
+ I $O(TXTINFO("PREREQ","")) D                              ; If we have prerequisites
+"RTN","A1AEK2M",334,0)
+ . N LS S LS=$O(TXTINFO("DESC"," "),-1)                    ; Get last sub
 "RTN","A1AEK2M",335,0)
- ;
+ . N NS S NS=LS+1                                      ; New Sub
 "RTN","A1AEK2M",336,0)
- ;
+ . S TXTINFO("DESC",NS)=" ",NS=NS+1                        ; Empty line
 "RTN","A1AEK2M",337,0)
-ASSERT(X,Y) ; Assertion engine
+ . S TXTINFO("DESC",NS)="Associated patches:",NS=NS+1      ; Put the data into (this line and next)
 "RTN","A1AEK2M",338,0)
- ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
+ . N I F I=1:1 Q:'$D(TXTINFO("PREREQ",I))  S TXTINFO("DESC",NS)=" - "_TXTINFO("PREREQ",I),NS=NS+1
 "RTN","A1AEK2M",339,0)
- ; I X="" BREAK
+ QUIT
 "RTN","A1AEK2M",340,0)
- I $D(XTMUNIT) D CHKTF^XTMUNIT(X,$G(Y)) QUIT  ; if we are inside M-Unit, assert using that engine.
+ ;
 "RTN","A1AEK2M",341,0)
- I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"  ; otherwise, throw error if assertion fails.
+ ;
 "RTN","A1AEK2M",342,0)
+ASSERT(X,Y) ; Assertion engine
+"RTN","A1AEK2M",343,0)
+ ; ZEXCEPT: XTMUNIT - Newed on a lower level of the stack if using M-Unit
+"RTN","A1AEK2M",344,0)
+ ; I X="" BREAK
+"RTN","A1AEK2M",345,0)
+ I $D(XTMUNIT) D CHKTF^XTMUNIT(X,$G(Y)) QUIT  ; if we are inside M-Unit, assert using that engine.
+"RTN","A1AEK2M",346,0)
+ I 'X D EN^DDIOL($G(Y)) S $EC=",U-ASSERTION-ERROR,"  ; otherwise, throw error if assertion fails.
+"RTN","A1AEK2M",347,0)
  QUIT
 "RTN","A1AEK2M0")
 0^49^B191388494
 "RTN","A1AEK2M0",1,0)
 A1AEK2M0 ; VEN/SMH - A1AEK2M Continuation;2014-03-24  9:08 PM; 3/24/14 11:35am
 "RTN","A1AEK2M0",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2M0",3,0)
  ;
 "RTN","A1AEK2M0",4,0)
@@ -7817,7 +7759,7 @@ ASSERT(X,Y) ; Assertion engine
 "RTN","A1AEK2M1",1,0)
 A1AEK2M1 ; VEN/SMH - Analyze KIDS file and extract information;2014-03-18  11:57 AM
 "RTN","A1AEK2M1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2M1",3,0)
  ; Inspired by the VISTA XML Parser, a State Machine
 "RTN","A1AEK2M1",4,0)
@@ -8125,7 +8067,7 @@ RED(X) ; Convenience method for Sam to see things on the screen.
 "RTN","A1AEK2M2",1,0)
 A1AEK2M2 ; VEN/SMH - Analyze text message and extract information;2014-03-05  8:17 PM
 "RTN","A1AEK2M2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2M2",3,0)
  ; Inspired by the VISTA XML Parser, a State Machine
 "RTN","A1AEK2M2",4,0)
@@ -8502,12 +8444,192 @@ UNWIND ; Trap unwinder
  S $EC=",UQUIT,"
 "RTN","A1AEK2M2",190,0)
  QUIT  ; This is not hit
+"RTN","A1AEK2M3")
+0^61^B12404493
+"RTN","A1AEK2M3",1,0)
+A1AEK2M3 ; VEN/SMH - Interactive KIDS loading utilities;2014-03-28  4:08 PM
+"RTN","A1AEK2M3",2,0)
+ ;;2.4;PATCH MODULE;;;Build 10
+"RTN","A1AEK2M3",3,0)
+ ; Called from A1AEM1. No other permitted callers.
+"RTN","A1AEK2M3",4,0)
+ ;
+"RTN","A1AEK2M3",5,0)
+SELFILQ(DA) ; Protected; Interactive entry point; Load a Patch from the File System
+"RTN","A1AEK2M3",6,0)
+ ; DA = DHCP PATCH IEN
+"RTN","A1AEK2M3",7,0)
+ ; Select a Patch from the File system for a KIDS build
+"RTN","A1AEK2M3",8,0)
+ N PATCH S PATCH=$$GET1^DIQ(11005,DA,.01)
+"RTN","A1AEK2M3",9,0)
+ N LISTINGOK
+"RTN","A1AEK2M3",10,0)
+ N KIDFIL S KIDFIL=""
+"RTN","A1AEK2M3",11,0)
+ N Y
+"RTN","A1AEK2M3",12,0)
+ N DONE
+"RTN","A1AEK2M3",13,0)
+ F  D  Q:$G(DONE)!(Y=U)
+"RTN","A1AEK2M3",14,0)
+ . N DIR,X,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT ; fur DIR
+"RTN","A1AEK2M3",15,0)
+ . S DIR(0)="F^1:255"
+"RTN","A1AEK2M3",16,0)
+ . S DIR("A")="Import KIDS build from this directory"
+"RTN","A1AEK2M3",17,0)
+ . D ^DIR
+"RTN","A1AEK2M3",18,0)
+ . I $D(DTOUT)!$D(DUOUT)!(U[Y)!(Y[U) S Y=U QUIT
+"RTN","A1AEK2M3",19,0)
+ . N ARRAY S ARRAY("*.KI*")="",ARRAY("*.ki*")="",ARRAY("*.k")=""
+"RTN","A1AEK2M3",20,0)
+ . N FILE
+"RTN","A1AEK2M3",21,0)
+ . S LISTINGOK=$$LIST^%ZISH(Y,$NA(ARRAY),$NA(FILE))
+"RTN","A1AEK2M3",22,0)
+ . I 'LISTINGOK DO  QUIT
+"RTN","A1AEK2M3",23,0)
+ . . W "Couldn't find any KID files here. Try again or '^'."
+"RTN","A1AEK2M3",24,0)
+ . S KIDFIL=$$SELFIL(.FILE,,"Select a KIDS build to match to "_PATCH)
+"RTN","A1AEK2M3",25,0)
+ . ;
+"RTN","A1AEK2M3",26,0)
+ . I U[KIDFIL S Y=U QUIT
+"RTN","A1AEK2M3",27,0)
+ . ;
+"RTN","A1AEK2M3",28,0)
+ . K ^TMP($J,"TKID"),^("ANKID") ; Temp KID; Analysis KID
+"RTN","A1AEK2M3",29,0)
+ . N % S %=$$FTG^%ZISH(Y,KIDFIL,$NA(^TMP($J,"TKID",1,0)),3)   ; To Global
+"RTN","A1AEK2M3",30,0)
+ . I '% S $EC=",U-FILE-DISAPPEARED,"
+"RTN","A1AEK2M3",31,0)
+ . D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"TKID"))) ; Analyze the file
+"RTN","A1AEK2M3",32,0)
+ . ;
+"RTN","A1AEK2M3",33,0)
+ . ; Loop through every patch in the file and make sure at least one matches.
+"RTN","A1AEK2M3",34,0)
+ . N P S P=""
+"RTN","A1AEK2M3",35,0)
+ .  F  S P=$O(^TMP($J,"ANKID",P)) Q:P=""  I $$K2PMD^A1AEK2M(P)=PATCH QUIT
+"RTN","A1AEK2M3",36,0)
+ . I P="" W !,"None of the patches in this KID file match "_PATCH,! QUIT
+"RTN","A1AEK2M3",37,0)
+ . ;
+"RTN","A1AEK2M3",38,0)
+ . ; Okay. Wow. We can finally load this baby into 11005.1. But we have to append it to the $TXT first.
+"RTN","A1AEK2M3",39,0)
+ . K ^TMP($J,"MSG")
+"RTN","A1AEK2M3",40,0)
+ . N % S %=$$GET1^DIQ(11005,DA,5.5,"Z",$NA(^TMP($J,"MSG")))  ; Load WP with zero nodes after each sub
+"RTN","A1AEK2M3",41,0)
+ . ;
+"RTN","A1AEK2M3",42,0)
+ . ; Move over one for the $TXT line added by CLEANHF
+"RTN","A1AEK2M3",43,0)
+ . K ^TMP($J,"MSG2")
+"RTN","A1AEK2M3",44,0)
+ . N I F I=0:0 S I=$O(^TMP($J,"MSG",I)) Q:'I  S ^TMP($J,"MSG2",I+1,0)=^(I,0)
+"RTN","A1AEK2M3",45,0)
+ . K ^TMP($J,"MSG") ; Make sure it dead so I won't use it by mistake
+"RTN","A1AEK2M3",46,0)
+ . ;
+"RTN","A1AEK2M3",47,0)
+ . D CLEANHF^A1AEK2M0($NA(^TMP($J,"MSG2")))
+"RTN","A1AEK2M3",48,0)
+ . N LS S LS=$O(^TMP($J,"MSG2"," "),-1)
+"RTN","A1AEK2M3",49,0)
+ . N NS S NS=LS+1
+"RTN","A1AEK2M3",50,0)
+ . ;
+"RTN","A1AEK2M3",51,0)
+ . N L,LN F L=0:0 S L=$O(^TMP($J,"ANKID",P,L)) Q:'L  S LN=^(L),^TMP($J,"MSG2",NS,0)=LN,NS=NS+1
+"RTN","A1AEK2M3",52,0)
+ . D LDKID^A1AEK2M0($NA(^TMP($J,"MSG2")),DA,0)
+"RTN","A1AEK2M3",53,0)
+ . S DONE=1
+"RTN","A1AEK2M3",54,0)
+ . S A1AEKIDS=1 ; ZEXCEPT: A1AEKIDS - Leak out as this operates the input template
+"RTN","A1AEK2M3",55,0)
+ K ^TMP($J,"TKID"),^("ANKID"),^("MSG"),^("MSG2")
+"RTN","A1AEK2M3",56,0)
+ QUIT
+"RTN","A1AEK2M3",57,0)
+ ;
+"RTN","A1AEK2M3",58,0)
+SELFIL(FILES,EXTFILTER,DIRA) ; Public; INTERACTIVE ; Select a file from a list
+"RTN","A1AEK2M3",59,0)
+ ; FILES = Ref List of files from LIST^%ZISH
+"RTN","A1AEK2M3",60,0)
+ ; EXTFILTER = Val .TXT or so
+"RTN","A1AEK2M3",61,0)
+ ; DIRA = Val What to ask the user for
+"RTN","A1AEK2M3",62,0)
+ ; Uses fileman calls to ease the pain of selecting stuff.
+"RTN","A1AEK2M3",63,0)
+ ;
+"RTN","A1AEK2M3",64,0)
+ N I S I=""
+"RTN","A1AEK2M3",65,0)
+ ; Filter away using the extension
+"RTN","A1AEK2M3",66,0)
+ I $L($G(EXTFILTER)) F  S I=$O(FILES(I)) Q:I=""  D
+"RTN","A1AEK2M3",67,0)
+ . I $E($RE(I),1,$L(EXTFILTER))'=$RE(EXTFILTER) K FILES(I)
+"RTN","A1AEK2M3",68,0)
+ ;
+"RTN","A1AEK2M3",69,0)
+ ; If no files left, quit with an empty string
+"RTN","A1AEK2M3",70,0)
+ Q:'$L($O(FILES(""))) ""
+"RTN","A1AEK2M3",71,0)
+ ;
+"RTN","A1AEK2M3",72,0)
+ ; Create a global for DIR/DIC
+"RTN","A1AEK2M3",73,0)
+ K ^TMP($J,"FILES")
+"RTN","A1AEK2M3",74,0)
+ S ^TMP($J,"FILES",0)="File List"
+"RTN","A1AEK2M3",75,0)
+ N CNT S CNT=1
+"RTN","A1AEK2M3",76,0)
+ F  S I=$O(FILES(I)) Q:I=""  S ^TMP($J,"FILES",CNT,0)=I,CNT=CNT+1
+"RTN","A1AEK2M3",77,0)
+ ;
+"RTN","A1AEK2M3",78,0)
+ ; Index
+"RTN","A1AEK2M3",79,0)
+ N DIK,DA S DIK="^TMP($J,""FILES""," D IXALL^DIK
+"RTN","A1AEK2M3",80,0)
+ ; Select
+"RTN","A1AEK2M3",81,0)
+ N DIR,X,Y,DIROUT,DIRUT,DTOUT,DUOUT,DIROUT
+"RTN","A1AEK2M3",82,0)
+ S DIR(0)="P^TMP($J,""FILES"",",DIR("A")=$G(DIRA,"Select a file from the list") D ^DIR
+"RTN","A1AEK2M3",83,0)
+ I $D(DTOUT)!$D(DUOUT)!(U[Y)!(Y[U) S Y=U QUIT ""
+"RTN","A1AEK2M3",84,0)
+ ; Bye
+"RTN","A1AEK2M3",85,0)
+ K ^TMP($J,"FILES")
+"RTN","A1AEK2M3",86,0)
+ ;
+"RTN","A1AEK2M3",87,0)
+ I $L(Y,U)=2 Q $P(Y,U,2)
+"RTN","A1AEK2M3",88,0)
+ E  QUIT ""
+"RTN","A1AEK2M3",89,0)
+ ;
 "RTN","A1AEK2MT")
 0^52^B47121510
 "RTN","A1AEK2MT",1,0)
 A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-03-28  6:41 PM ; 3/31/14 5:44pm
 "RTN","A1AEK2MT",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2MT",3,0)
  ;
 "RTN","A1AEK2MT",4,0)
@@ -8899,7 +9021,7 @@ CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
 "RTN","A1AEK2V0",1,0)
 A1AEK2V0 ; VEN/SMH - Continuation of A1AEK2VC;2014-03-24  3:56 PM
 "RTN","A1AEK2V0",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2V0",3,0)
  ;
 "RTN","A1AEK2V0",4,0)
@@ -9267,7 +9389,7 @@ RED(X) ; Convenience method for Sam to see things on the screen.
 "RTN","A1AEK2VC",1,0)
 A1AEK2VC ; VEN/SMH - KIDS to Version Control;2014-03-24  3:57 PM; 3/24/14 11:36am
 "RTN","A1AEK2VC",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEK2VC",3,0)
  ;
 "RTN","A1AEK2VC",4,0)
@@ -9873,7 +9995,7 @@ INMUNIT() ; Am I being invoked from M-Unit?
 "RTN","A1AEKEY",1,0)
 A1AEKEY ; RMO,MJK/ALBANY ; Allocate Patch Function Keys ;24 NOV 87 11:00 am
 "RTN","A1AEKEY",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEKEY",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AEKEY",4,0)
@@ -10000,114 +10122,12 @@ SETKEY S X=DA K DA
  K DO,DD D FILE^DICN S DUZ(0)=A1AEDUZ0 K DO,DD,DA,A1AEDUZ0,DE,DQ  I $P(Y,"^",3) W "."
 "RTN","A1AEKEY",65,0)
  Q
-"RTN","A1AEKEY6")
-0^9^B21193544
-"RTN","A1AEKEY6",1,0)
-A1AEKEY6 ; RMO,MJK/ALBANY ; Allocate Patch Function Keys ;24 NOV 87 11:00 am
-"RTN","A1AEKEY6",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEKEY6",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
-"RTN","A1AEKEY6",4,0)
- ;----------------------------------------------------------------
-"RTN","A1AEKEY6",5,0)
- ; This module has two separate entry points:
-"RTN","A1AEKEY6",6,0)
- ;      ASKKEY -- is used to prompt the patch user for patch keys
-"RTN","A1AEKEY6",7,0)
- ;                and to enter/edit holders
-"RTN","A1AEKEY6",8,0)
- ;      KEY    -- for automatic allocation of patch keys to users
-"RTN","A1AEKEY6",9,0)
- ;                in a specific package
-"RTN","A1AEKEY6",10,0)
- ; Called if Kernel 7 not installed
-"RTN","A1AEKEY6",11,0)
- ;----------------------------------------------------------------
-"RTN","A1AEKEY6",12,0)
-ASKKEY ;Prompt for patch function key
-"RTN","A1AEKEY6",13,0)
- S DIC("A")="Select PATCH KEY: ",DIC("S")="S A1AEX=^(0) I $E($P(^(0),U,1),1,4)=""A1AE"",$S($D(^XUSEC(""A1AE MGR"",DUZ)):1,($P(A1AEX,U,1)'=""A1AE XUSEC"")&($P(A1AEX,U,1)'=""A1AE MGR""):1,1:0) K A1AEX",DIC="^DIC(19.1,",DIC(0)="AEMQZ"
-"RTN","A1AEKEY6",14,0)
- W ! D ^DIC K DIC("A"),DIC("S") Q:Y<0  S A1AEKYIF=+Y,A1AEKEY=$P(Y,U,2) S:'$D(^DIC(19.1,A1AEKYIF,2,0)) ^(0)="^19.12PA^^" D ASKHLD K A1AEKEY,A1AEUSR,A1AEXRF,A1AEDES,A1AEKYIF,A1AEHDIF,A1AEUSNM Q:X="^"  G ASKKEY
-"RTN","A1AEKEY6",15,0)
- ;
-"RTN","A1AEKEY6",16,0)
-ASKHLD ;Prompt for key holder
-"RTN","A1AEKEY6",17,0)
- S A1AEDUZ0=DUZ(0),DUZ(0)="@",DA(1)=A1AEKYIF,DIC="^DIC(19.1,A1AEKYIF,2,",DIC(0)="AELMQ" W ! D ^DIC S DUZ(0)=A1AEDUZ0 K A1AEDUZ0 Q:Y<0  S A1AEHDIF=+Y,A1AEUSR=$P(Y,U,2) I $P(Y,U,3) W !?3,"...added as an ",A1AEKEY," key holder" G ASKHLD
-"RTN","A1AEKEY6",18,0)
- S A1AEUSNM=$S($D(^VA(200,A1AEUSR,0)):$E($P(^(0),U,1),1,20),1:"UNKNOWN")
-"RTN","A1AEKEY6",19,0)
- D LIST:A1AEKEY="A1AE DEVELOPER"!(A1AEKEY="A1AE SUPPORT")!(A1AEKEY="A1AE PHVER"),ASKDEL G ASKHLD
-"RTN","A1AEKEY6",20,0)
- ;
-"RTN","A1AEKEY6",21,0)
-LIST ;List the packages the selected holder may require this key for
-"RTN","A1AEKEY6",22,0)
- S A1AEXRF=$S(A1AEKEY="A1AE DEVELOPER":"AD",A1AEKEY="A1AE SUPPORT":"AS",A1AEKEY="A1AE PHVER":"AV",1:""),A1AEDES=$S(A1AEXRF="AD":"developer",A1AEXRF="AS":"support person",A1AEXRF="AV":"verifier",1:"")
-"RTN","A1AEKEY6",23,0)
- I '$D(^A1AE(11007,A1AEXRF,A1AEUSR)) W !!?3,A1AEUSNM," is not a ",A1AEDES," for any package in the Patch file." Q
-"RTN","A1AEKEY6",24,0)
- I $D(^A1AE(11007,A1AEXRF,A1AEUSR)) W !!?3,A1AEUSNM," is a ",A1AEDES," for:" F A1AEPKIF=0:0 S A1AEPKIF=+$O(^A1AE(11007,A1AEXRF,A1AEUSR,A1AEPKIF)) Q:'A1AEPKIF  I $D(^DIC(9.4,A1AEPKIF,0)) W !?7,$P(^(0),"^",2),?12,"-",?14,$P(^(0),"^",1)
-"RTN","A1AEKEY6",25,0)
- Q
-"RTN","A1AEKEY6",26,0)
- ;
-"RTN","A1AEKEY6",27,0)
-ASKDEL ;Prompt for deleting the key holder
-"RTN","A1AEKEY6",28,0)
- S A1AERD("A")="Do you want to delete "_A1AEUSNM_" as an "_A1AEKEY_" key holder? ",A1AERD(0)="S",A1AERD(1)="Yes^delete key holder",A1AERD(2)="No^not delete",A1AERD("B")=2 D SET^A1AERD K A1AERD Q:X="^"!("N"[$E(X,1))
-"RTN","A1AEKEY6",29,0)
- S DIK="^DIC(19.1,A1AEKYIF,2,",DA(1)=A1AEKYIF,DA=A1AEHDIF D ^DIK W !?3,"...deleted as an ",A1AEKEY," key holder"
-"RTN","A1AEKEY6",30,0)
- Q
-"RTN","A1AEKEY6",31,0)
- ;
-"RTN","A1AEKEY6",32,0)
-KEY ;Automatic allocation of A1AE SUPPORT, A1AE PHVER, A1AE DEVELOPER keys
-"RTN","A1AEKEY6",33,0)
- ;for a specific package
-"RTN","A1AEKEY6",34,0)
- W !!?3,"...allocating A1AE SUPPORT, A1AE PHVER, and A1AE DEVELOPER keys" S A1AESKY=+$O(^DIC(19.1,"B","A1AE SUPPORT",0)),A1AEVKY=+$O(^DIC(19.1,"B","A1AE PHVER",0)),A1AEDKY=+$O(^DIC(19.1,"B","A1AE DEVELOPER",0))
-"RTN","A1AEKEY6",35,0)
- D SUPPORT:A1AESKY,DEVELOP:A1AEDKY W:'A1AESKY !?6,"A1AE SUPPORT key does not exist" W:'A1AEVKY !?6,"A1AE DEVELOPER key does not exist" W:'A1AEDKY !?6,"A1AE DEVELOPER key does not exist"
-"RTN","A1AEKEY6",36,0)
- K A1AESKY,A1AEVKY,A1AEDKY,A1AEUSR,A1AEVR,A1AEUSNM
-"RTN","A1AEKEY6",37,0)
- Q
-"RTN","A1AEKEY6",38,0)
- ;
-"RTN","A1AEKEY6",39,0)
-SUPPORT F A1AEUSR=0:0 S A1AEUSR=+$O(^A1AE(11007,A1AEPKIF,"PB",A1AEUSR)) Q:'A1AEUSR  S A1AEVR=$P(^(A1AEUSR,0),"^",2),DA=A1AESKY D SETKEY:'$D(^XUSEC("A1AE SUPPORT",A1AEUSR)) I A1AEVR="V",A1AEVKY D VERIFY
-"RTN","A1AEKEY6",40,0)
- Q
-"RTN","A1AEKEY6",41,0)
- ;
-"RTN","A1AEKEY6",42,0)
-VERIFY S DA=A1AEVKY D SETKEY:'$D(^XUSEC("A1AE PHVER",A1AEUSR))
-"RTN","A1AEKEY6",43,0)
- Q
-"RTN","A1AEKEY6",44,0)
- ;
-"RTN","A1AEKEY6",45,0)
-DEVELOP F A1AEUSR=0:0 S A1AEUSR=+$O(^A1AE(11007,A1AEPKIF,"PH",A1AEUSR)) Q:'A1AEUSR  S DA=A1AEDKY D SETKEY:'$D(^XUSEC("A1AE DEVELOPER",A1AEUSR))
-"RTN","A1AEKEY6",46,0)
- Q
-"RTN","A1AEKEY6",47,0)
- ;
-"RTN","A1AEKEY6",48,0)
-SETKEY S A1AEUSNM=$S($D(^VA(200,A1AEUSR,0)):$E($P(^(0),U,1),1,20),1:"UNKNOWN")
-"RTN","A1AEKEY6",49,0)
- W "." S A1AEDUZ0=DUZ(0),DUZ(0)="@",DIE="^DIC(19.1,",DR="2///"_A1AEUSNM,DR(2,19.12)="1///"_DUZ_";2///T" D ^DIE S DUZ(0)=A1AEDUZ0 K DE,DQ,DIE,A1AEDUZ0
-"RTN","A1AEKEY6",50,0)
- Q
 "RTN","A1AEM")
 0^10^B42478438
 "RTN","A1AEM",1,0)
 A1AEM ;ISC-Albany/pke-called entries for mailing patches ; 3/31/14 1:00pm
 "RTN","A1AEM",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEM",3,0)
  ;
 "RTN","A1AEM",4,0)
@@ -10465,7 +10485,7 @@ EOR ; end of routine A1AEM
 "RTN","A1AEM1",1,0)
 A1AEM1 ;ISC-Albany/pke - copy message ;2014-03-24  10:23 PM
 "RTN","A1AEM1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEM1",3,0)
 MES ;copy mesage into file #11005.1
 "RTN","A1AEM1",4,0)
@@ -10873,7 +10893,7 @@ HFS2(A1AEDA) ;Move Routine Info from HFS file to Routine sub-file.
 "RTN","A1AEM2",1,0)
 A1AEM2 ;ISC-Albany/pke-forward a patch message ; 4/15/90
 "RTN","A1AEM2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEM2",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AEM2",4,0)
@@ -11001,11 +11021,11 @@ DICV ; Verified Patch ;;; change screen to 11005.1
 "RTN","A1AEM2",65,0)
  Q
 "RTN","A1AEM2K")
-0^57^B37432868
+0^57^B39456093
 "RTN","A1AEM2K",1,0)
-A1AEM2K ; VEN/SMH - Save patches to HFS files ;2014-03-07  2:20 PM
+A1AEM2K ; VEN/SMH - Save patches to HFS files ;2014-04-17  6:30 PM
 "RTN","A1AEM2K",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEM2K",3,0)
  ; Original by Dr. Cameron Schleheuber
 "RTN","A1AEM2K",4,0)
@@ -11041,285 +11061,295 @@ A1AEM2K ; VEN/SMH - Save patches to HFS files ;2014-03-07  2:20 PM
 "RTN","A1AEM2K",19,0)
  . S DIC("S")=DIC("S")_"!$D(^A1AE(11007,""AD"",DUZ,+$P(^A1AE(11005,+Y,0),U,2)))"
 "RTN","A1AEM2K",20,0)
- . S DIC="^A1AE(11005,",DIC(0)="AEMQZ",DIC("A")="Select Patch/Package: " D ^DIC
+ . S DIC="^A1AE(11005,",DIC(0)="AEMQZ",DIC("A")="Select Patch/Package: "
 "RTN","A1AEM2K",21,0)
- . I Y<0 QUIT
+        . I $G(A1AEUT1IEN) S Y=A1AEUT1IEN  ; Unit testing
 "RTN","A1AEM2K",22,0)
- . S PATCHES(+Y)="",PATCHES=PATCHES+1
+        . E  D ^DIC
 "RTN","A1AEM2K",23,0)
- I 'PATCHES QUIT  ; Done. No patches selected.
+ . I Y<0 QUIT
 "RTN","A1AEM2K",24,0)
- ;
+ . S PATCHES(+Y)="",PATCHES=PATCHES+1
 "RTN","A1AEM2K",25,0)
- ;
+        . I $G(A1AEUT1IEN) S Y=-1  ; Unit testing
 "RTN","A1AEM2K",26,0)
- ; Ask where to export these patches
+ I 'PATCHES QUIT  ; Done. No patches selected.
 "RTN","A1AEM2K",27,0)
- N DIR,Y
+ ;
 "RTN","A1AEM2K",28,0)
- N ROOT ; Where we export these
+ ;
 "RTN","A1AEM2K",29,0)
- D EN^DDIOL("Enter where I should export these patches.")
+ ; Ask where to export these patches
 "RTN","A1AEM2K",30,0)
- S DIR("B")=$$DEFDIR^%ZISH()
+ N DIR,Y
 "RTN","A1AEM2K",31,0)
- S DIR(0)="F^2:255",DIR("A")="Full path, up to but not including patch names" D ^DIR QUIT:Y="^"  S ROOT=Y
+ N ROOT ; Where we export these
 "RTN","A1AEM2K",32,0)
- ;
+ D EN^DDIOL("Enter where I should export these patches.")
 "RTN","A1AEM2K",33,0)
- ; Entire stanza below to get Filename. Abstractable.
+ S DIR("B")=$$DEFDIR^%ZISH()
 "RTN","A1AEM2K",34,0)
- N DIR
+ S DIR(0)="F^2:255",DIR("A")="Full path, up to but not including patch names"
 "RTN","A1AEM2K",35,0)
- N FN ; File name
+        I '$G(A1AEUT1IEN) D ^DIR QUIT:Y="^"  S ROOT=Y I 1  ; For Unit Testing again
 "RTN","A1AEM2K",36,0)
- I PATCHES>1 D  QUIT:Y="^"  S FN=Y
+        E  S ROOT=DIR("B")
 "RTN","A1AEM2K",37,0)
- . D EN^DDIOL("Because you are exporting more than one patch, you have to pick a name for your file. Don't include the extension as we will append .TXT or .KID to the name you give us.")
+ ;
 "RTN","A1AEM2K",38,0)
- . S DIR(0)="F^2:255",DIR("A")="File name for Multibuild" D ^DIR
+ ; Entire stanza below to get Filename. Abstractable.
 "RTN","A1AEM2K",39,0)
- E  D
+ N DIR
 "RTN","A1AEM2K",40,0)
- . N PATCH S PATCH=$O(PATCHES(""))
+ N FN ; File name
 "RTN","A1AEM2K",41,0)
- . N DESIGNATION S DESIGNATION=$$GET1^DIQ(11005,PATCH,.01) ; Designation
+ I PATCHES>1 D  QUIT:Y="^"  S FN=Y
 "RTN","A1AEM2K",42,0)
- . N PKABBR S PKABBR=$P(DESIGNATION,"*")                   ; Get package abbreviation
+ . D EN^DDIOL("Because you are exporting more than one patch, you have to pick a name for your file. Don't include the extension as we will append .TXT or .KID to the name you give us.")
 "RTN","A1AEM2K",43,0)
- . Q:'$O(^DIC(9.4,"C",PKABBR,""))                          ; Quit if it isn't a valid package
+ . S DIR(0)="F^2:255",DIR("A")="File name for Multibuild" D ^DIR
 "RTN","A1AEM2K",44,0)
- . N VER S VER=$P(DESIGNATION,"*",2)                       ; Version number
+ E  D
 "RTN","A1AEM2K",45,0)
- . N NUM S NUM=$P(DESIGNATION,"*",3)                       ; Patch Number
+ . N PATCH S PATCH=$O(PATCHES(""))
 "RTN","A1AEM2K",46,0)
- . N SEQ S SEQ=$$GET1^DIQ(11005,PATCH,"SEQUENTIAL RELEASE NUMBER")
+ . N DESIGNATION S DESIGNATION=$$GET1^DIQ(11005,PATCH,.01) ; Designation
 "RTN","A1AEM2K",47,0)
- . I SEQ="",NUM'=0 S SEQ="NOSEQ"                           ; If not package release and no SEQ, say so.
+ . N PKABBR S PKABBR=$P(DESIGNATION,"*")                   ; Get package abbreviation
 "RTN","A1AEM2K",48,0)
- . S FN=PKABBR_"-"_$TR(VER,".","P")_"_SEQ-"_SEQ_"_PAT-"_NUM
+ . Q:'$O(^DIC(9.4,"C",PKABBR,""))                          ; Quit if it isn't a valid package
 "RTN","A1AEM2K",49,0)
- ;
+ . N VER S VER=$P(DESIGNATION,"*",2)                       ; Version number
 "RTN","A1AEM2K",50,0)
- ; Stanza to open File.
+ . N NUM S NUM=$P(DESIGNATION,"*",3)                       ; Patch Number
 "RTN","A1AEM2K",51,0)
- N POP
-"RTN","A1AEM2K",52,0)
- D EN^DDIOL("Writing: "_$$DEFDIR^%ZISH(ROOT)_FN_".TXT")
-"RTN","A1AEM2K",53,0)
- D OPEN^%ZISH("TXTFIL",ROOT,FN_".TXT","W")
-"RTN","A1AEM2K",54,0)
- I POP D EN^DDIOL("Can't open file "_FN_" in path "_ROOT) QUIT
-"RTN","A1AEM2K",55,0)
- U IO
-"RTN","A1AEM2K",56,0)
- ;
-"RTN","A1AEM2K",57,0)
- ; Stanza to write text file. Reuses code in A1AEPH6
-"RTN","A1AEM2K",58,0)
- N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
-"RTN","A1AEM2K",59,0)
- . N A1AEIFN,D0 S (A1AEIFN,D0)=PATCH
-"RTN","A1AEM2K",60,0)
- . N A1AEPD S A1AEPD=$$GET1^DIQ(11005,PATCH,.01)
-"RTN","A1AEM2K",61,0)
- . N A1AEVPR S A1AEVPR=""
-"RTN","A1AEM2K",62,0)
- . N A1AEHD S A1AEHD="DHCP Patch Export"
-"RTN","A1AEM2K",63,0)
- . S $P(A1AEPD,"*",2)=$S($P(A1AEPD,"*",2)=999:"DBA",1:$P(A1AEPD,"*",2))
-"RTN","A1AEM2K",64,0)
- . I $P(^A1AE(11005,A1AEIFN,0),"^",8)="e"!($P(^(0),"^",8)="r") D
-"RTN","A1AEM2K",65,0)
- . . N DHD S DHD="@"
-"RTN","A1AEM2K",66,0)
- . . N L S L=0
-"RTN","A1AEM2K",67,0)
- . . N DIC S DIC="^A1AE(11005,"
-"RTN","A1AEM2K",68,0)
- . . D SETFLDS^A1AEPH6
-"RTN","A1AEM2K",69,0)
- . . N BY,FR,TO S BY="",(FR,TO)=A1AEIFN
-"RTN","A1AEM2K",70,0)
- . . D EN1^DIP
-"RTN","A1AEM2K",71,0)
- . I $P(^A1AE(11005,A1AEIFN,0),"^",8)="v"!$D(^A1AE(11007,"AD",DUZ,+$P(^A1AE(11005,+A1AEIFN,0),U,2))) D
-"RTN","A1AEM2K",72,0)
- . . N A1AEPGE S A1AEPGE=0
-"RTN","A1AEM2K",73,0)
- . . ; S ^UTILITY($J,1)="D HD^A1AEPH2" ; Don't print headers at the end of IOSL.
-"RTN","A1AEM2K",74,0)
- . . N DIWF S DIWF="B4X"
-"RTN","A1AEM2K",75,0)
- . . N DN,DXS
-"RTN","A1AEM2K",76,0)
- . . K ^UTILITY($J,"W")
-"RTN","A1AEM2K",77,0)
- . . D HD^A1AEPH2,^A1AEP
-"RTN","A1AEM2K",78,0)
- D CLOSE^%ZISH()
-"RTN","A1AEM2K",79,0)
- D Q^A1AEPH6 ; Kill variables, and Reset to Home Device
-"RTN","A1AEM2K",80,0)
- ;
-"RTN","A1AEM2K",81,0)
- ;
-"RTN","A1AEM2K",82,0)
- ;
-"RTN","A1AEM2K",83,0)
- ; Now export the KIDS file
-"RTN","A1AEM2K",84,0)
- ;
-"RTN","A1AEM2K",85,0)
- ; Block to open File.
-"RTN","A1AEM2K",86,0)
- N POP
-"RTN","A1AEM2K",87,0)
- D EN^DDIOL("Writing: "_$$DEFDIR^%ZISH(ROOT)_FN_".KID")
-"RTN","A1AEM2K",88,0)
- D OPEN^%ZISH("KIDFIL",ROOT,FN_".KID","W")
-"RTN","A1AEM2K",89,0)
- I POP D EN^DDIOL("Can't open file "_FN_" in path "_ROOT) QUIT
-"RTN","A1AEM2K",90,0)
- U IO
-"RTN","A1AEM2K",91,0)
- ; 
-"RTN","A1AEM2K",92,0)
- ; Header (2 lines)
-"RTN","A1AEM2K",93,0)
- W "KIDS Distributions saved on "_$$FMTE^XLFDT($$NOW^XLFDT())_" by the Patch Module on "_^XMB("NETNAME"),!
-"RTN","A1AEM2K",94,0)
- W "Patches/Packages: "
-"RTN","A1AEM2K",95,0)
- N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
-"RTN","A1AEM2K",96,0)
- . N PN S PN=$$PM2KD($$GET1^DIQ(11005,PATCH,.01))
-"RTN","A1AEM2K",97,0)
- . N KIDGLO S KIDGLO=$NA(^TMP($J,"KID",PATCH))
-"RTN","A1AEM2K",98,0)
- . D KIDGLO(KIDGLO,PATCH)
-"RTN","A1AEM2K",99,0)
- . I '$D(KIDGLO) U IO(0) D EN^DDIOL("No global for "_PN) U IO K PATCHES(PATCH) QUIT
-"RTN","A1AEM2K",100,0)
  . N SEQ S SEQ=$$GET1^DIQ(11005,PATCH,"SEQUENTIAL RELEASE NUMBER")
-"RTN","A1AEM2K",101,0)
- . W PN_" SEQ# "_SEQ
-"RTN","A1AEM2K",102,0)
- . W:$O(PATCHES(PATCH)) ", " ; If more, write a comma
-"RTN","A1AEM2K",103,0)
- W !
-"RTN","A1AEM2K",104,0)
+"RTN","A1AEM2K",52,0)
+ . I SEQ="",NUM'=0 S SEQ="NOSEQ"                           ; If not package release and no SEQ, say so.
+"RTN","A1AEM2K",53,0)
+ . S FN=PKABBR_"-"_$TR(VER,".","P")_"_SEQ-"_SEQ_"_PAT-"_NUM
+"RTN","A1AEM2K",54,0)
  ;
-"RTN","A1AEM2K",105,0)
- ; **KIDS** line and blank line.
-"RTN","A1AEM2K",106,0)
- W "**KIDS**:"
-"RTN","A1AEM2K",107,0)
+"RTN","A1AEM2K",55,0)
+ ; Stanza to open File.
+"RTN","A1AEM2K",56,0)
+ N POP
+"RTN","A1AEM2K",57,0)
+ D EN^DDIOL("Writing: "_$$DEFDIR^%ZISH(ROOT)_FN_".TXT")
+"RTN","A1AEM2K",58,0)
+ D OPEN^%ZISH("TXTFIL",ROOT,FN_".TXT","W")
+"RTN","A1AEM2K",59,0)
+ I POP D EN^DDIOL("Can't open file "_FN_" in path "_ROOT) QUIT
+"RTN","A1AEM2K",60,0)
+ U IO
+"RTN","A1AEM2K",61,0)
+ ;
+"RTN","A1AEM2K",62,0)
+ ; Stanza to write text file. Reuses code in A1AEPH6
+"RTN","A1AEM2K",63,0)
  N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
-"RTN","A1AEM2K",108,0)
- . W $$PM2KD($$GET1^DIQ(11005,PATCH,.01))_"^"
-"RTN","A1AEM2K",109,0)
- W !!
-"RTN","A1AEM2K",110,0)
+"RTN","A1AEM2K",64,0)
+ . N A1AEIFN,D0 S (A1AEIFN,D0)=PATCH
+"RTN","A1AEM2K",65,0)
+ . N A1AEPD S A1AEPD=$$GET1^DIQ(11005,PATCH,.01)
+"RTN","A1AEM2K",66,0)
+ . N A1AEVPR S A1AEVPR=""
+"RTN","A1AEM2K",67,0)
+ . N A1AEHD S A1AEHD="DHCP Patch Export"
+"RTN","A1AEM2K",68,0)
+ . S $P(A1AEPD,"*",2)=$S($P(A1AEPD,"*",2)=999:"DBA",1:$P(A1AEPD,"*",2))
+"RTN","A1AEM2K",69,0)
+ . I $P(^A1AE(11005,A1AEIFN,0),"^",8)="e"!($P(^(0),"^",8)="r") D
+"RTN","A1AEM2K",70,0)
+ . . N DHD S DHD="@"
+"RTN","A1AEM2K",71,0)
+ . . N L S L=0
+"RTN","A1AEM2K",72,0)
+ . . N DIC S DIC="^A1AE(11005,"
+"RTN","A1AEM2K",73,0)
+ . . D SETFLDS^A1AEPH6
+"RTN","A1AEM2K",74,0)
+ . . N BY,FR,TO S BY="",(FR,TO)=A1AEIFN
+"RTN","A1AEM2K",75,0)
+ . . D EN1^DIP
+"RTN","A1AEM2K",76,0)
+ . I $P(^A1AE(11005,A1AEIFN,0),"^",8)="v"!$D(^A1AE(11007,"AD",DUZ,+$P(^A1AE(11005,+A1AEIFN,0),U,2))) D
+"RTN","A1AEM2K",77,0)
+ . . N A1AEPGE S A1AEPGE=0
+"RTN","A1AEM2K",78,0)
+ . . ; S ^UTILITY($J,1)="D HD^A1AEPH2" ; Don't print headers at the end of IOSL.
+"RTN","A1AEM2K",79,0)
+ . . N DIWF S DIWF="B4X"
+"RTN","A1AEM2K",80,0)
+ . . N DN,DXS
+"RTN","A1AEM2K",81,0)
+ . . K ^UTILITY($J,"W")
+"RTN","A1AEM2K",82,0)
+ . . D HD^A1AEPH2,^A1AEP
+"RTN","A1AEM2K",83,0)
+ D CLOSE^%ZISH()
+"RTN","A1AEM2K",84,0)
+ D Q^A1AEPH6 ; Kill variables, and Reset to Home Device
+"RTN","A1AEM2K",85,0)
  ;
+"RTN","A1AEM2K",86,0)
+ ;
+"RTN","A1AEM2K",87,0)
+ ;
+"RTN","A1AEM2K",88,0)
+ ; Now export the KIDS file
+"RTN","A1AEM2K",89,0)
+ ;
+"RTN","A1AEM2K",90,0)
+ ; Block to open File.
+"RTN","A1AEM2K",91,0)
+ N POP
+"RTN","A1AEM2K",92,0)
+ D EN^DDIOL("Writing: "_$$DEFDIR^%ZISH(ROOT)_FN_".KID")
+"RTN","A1AEM2K",93,0)
+ D OPEN^%ZISH("KIDFIL",ROOT,FN_".KID","W")
+"RTN","A1AEM2K",94,0)
+ I POP D EN^DDIOL("Can't open file "_FN_" in path "_ROOT) QUIT
+"RTN","A1AEM2K",95,0)
+ U IO
+"RTN","A1AEM2K",96,0)
+ ; 
+"RTN","A1AEM2K",97,0)
+ ; Header (2 lines)
+"RTN","A1AEM2K",98,0)
+ W "KIDS Distributions saved on "_$$FMTE^XLFDT($$NOW^XLFDT())_" by the Patch Module on "_^XMB("NETNAME"),!
+"RTN","A1AEM2K",99,0)
+ W "Patches/Packages: "
+"RTN","A1AEM2K",100,0)
+ N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
+"RTN","A1AEM2K",101,0)
+ . N PN S PN=$$PM2KD($$GET1^DIQ(11005,PATCH,.01))
+"RTN","A1AEM2K",102,0)
+ . N KIDGLO S KIDGLO=$NA(^TMP($J,"KID",PATCH))
+"RTN","A1AEM2K",103,0)
+ . D KIDGLO(KIDGLO,PATCH)
+"RTN","A1AEM2K",104,0)
+ . I '$D(KIDGLO) U IO(0) D EN^DDIOL("No global for "_PN) U IO K PATCHES(PATCH) QUIT
+"RTN","A1AEM2K",105,0)
+ . N SEQ S SEQ=$$GET1^DIQ(11005,PATCH,"SEQUENTIAL RELEASE NUMBER")
+"RTN","A1AEM2K",106,0)
+ . W PN_" SEQ# "_SEQ
+"RTN","A1AEM2K",107,0)
+ . W:$O(PATCHES(PATCH)) ", " ; If more, write a comma
+"RTN","A1AEM2K",108,0)
+ W !
+"RTN","A1AEM2K",109,0)
+ ;
+"RTN","A1AEM2K",110,0)
+ ; **KIDS** line and blank line.
 "RTN","A1AEM2K",111,0)
- ; Write the contents of each KIDS build in sequence
+ W "**KIDS**:"
 "RTN","A1AEM2K",112,0)
  N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
 "RTN","A1AEM2K",113,0)
- . N I F I=0:0 S I=$O(^TMP($J,"KID",PATCH,I)) Q:'I  W ^(I),!
+ . W $$PM2KD($$GET1^DIQ(11005,PATCH,.01))_"^"
 "RTN","A1AEM2K",114,0)
- ;
+ W !!
 "RTN","A1AEM2K",115,0)
- ; KIDS trailer
+ ;
 "RTN","A1AEM2K",116,0)
- W "**END**",!,"**END**",!
+ ; Write the contents of each KIDS build in sequence
 "RTN","A1AEM2K",117,0)
- D CLOSE^%ZISH()
+ N PATCH F PATCH=0:0 S PATCH=$O(PATCHES(PATCH)) Q:'PATCH  D
 "RTN","A1AEM2K",118,0)
- W !,"Done..."
+ . N I F I=0:0 S I=$O(^TMP($J,"KID",PATCH,I)) Q:'I  W ^(I),!
 "RTN","A1AEM2K",119,0)
- K ^TMP($J,"KID")
+ ;
 "RTN","A1AEM2K",120,0)
- QUIT
+ ; KIDS trailer
 "RTN","A1AEM2K",121,0)
- ;
+ W "**END**",!,"**END**",!
 "RTN","A1AEM2K",122,0)
-PM2KD(X) ; $$ Private PM to KIDS designation
+ D CLOSE^%ZISH()
 "RTN","A1AEM2K",123,0)
- N PKABBR,VER,NUM
+ W !,"Done..."
 "RTN","A1AEM2K",124,0)
- S PKABBR=$P(X,"*",1)
+ K ^TMP($J,"KID")
 "RTN","A1AEM2K",125,0)
- S VER=$P(X,"*",2)
+ QUIT
 "RTN","A1AEM2K",126,0)
- S NUM=$P(X,"*",3)
+ ;
 "RTN","A1AEM2K",127,0)
- I VER[".",VER<1 S VER=0_VER ; .1 => 0.1
+PM2KD(X) ; $$ Private PM to KIDS designation
 "RTN","A1AEM2K",128,0)
- I VER'["." S VER=VER_".0" ; 2 => 2.0
+ N PKABBR,VER,NUM
 "RTN","A1AEM2K",129,0)
- I NUM'=0 Q PKABBR_"*"_VER_"*"_NUM
+ S PKABBR=$P(X,"*",1)
 "RTN","A1AEM2K",130,0)
- I NUM=0 N PN D  Q PN
+ S VER=$P(X,"*",2)
 "RTN","A1AEM2K",131,0)
- . N PK S PK=$O(^DIC(9.4,"C",PKABBR,""))
+ S NUM=$P(X,"*",3)
 "RTN","A1AEM2K",132,0)
- . N PKNM S PKNM=$P(^DIC(9.4,PK,0),U)
+ I VER[".",VER<1 S VER=0_VER ; .1 => 0.1
 "RTN","A1AEM2K",133,0)
- . S PN=PKNM_" "_VER
+ I VER'["." S VER=VER_".0" ; 2 => 2.0
 "RTN","A1AEM2K",134,0)
- QUIT
+ I NUM'=0 Q PKABBR_"*"_VER_"*"_NUM
 "RTN","A1AEM2K",135,0)
- ;
+ I NUM=0 N PN D  Q PN
 "RTN","A1AEM2K",136,0)
-KIDGLO(OUTGLO,IEN) ; Private; Load KID contents from 11005.1 to OUTGLO
+ . N PK S PK=$O(^DIC(9.4,"C",PKABBR,""))
 "RTN","A1AEM2K",137,0)
- ; OUTGLO - Global Name
+ . N PKNM S PKNM=$P(^DIC(9.4,PK,0),U)
 "RTN","A1AEM2K",138,0)
- ; IEN - IEN in 11005/11005.1
+ . S PN=PKNM_" "_VER
 "RTN","A1AEM2K",139,0)
- K @OUTGLO
-"RTN","A1AEM2K",140,0)
- I '$D(^A1AE(11005.1,IEN,2)) QUIT
-"RTN","A1AEM2K",141,0)
- N LINE S LINE=0
-"RTN","A1AEM2K",142,0)
- N TEXT
-"RTN","A1AEM2K",143,0)
- F  S LINE=$O(^A1AE(11005.1,IEN,2,LINE)) Q:'LINE  S TEXT=^(LINE,0) Q:TEXT["$END TXT"  ; spin to $END TXT
-"RTN","A1AEM2K",144,0)
- I 'LINE QUIT  ; This line isn't needed but is here for clarity
-"RTN","A1AEM2K",145,0)
- S LINE=$O(^A1AE(11005.1,IEN,2,LINE)),TEXT=^(LINE,0)        ; Get next line
-"RTN","A1AEM2K",146,0)
- I $E(TEXT,1,4)'="$KID" QUIT  ; Must be $KID line
-"RTN","A1AEM2K",147,0)
- F  S LINE=$O(^A1AE(11005.1,IEN,2,LINE)) Q:'LINE  S TEXT=^(LINE,0) Q:TEXT["$END KID"  S @OUTGLO@(LINE)=TEXT  ; load all until $END KID
-"RTN","A1AEM2K",148,0)
  QUIT
-"RTN","A1AEM2K",149,0)
+"RTN","A1AEM2K",140,0)
  ;
+"RTN","A1AEM2K",141,0)
+KIDGLO(OUTGLO,IEN) ; Private; Load KID contents from 11005.1 to OUTGLO
+"RTN","A1AEM2K",142,0)
+ ; OUTGLO - Global Name
+"RTN","A1AEM2K",143,0)
+ ; IEN - IEN in 11005/11005.1
+"RTN","A1AEM2K",144,0)
+ K @OUTGLO
+"RTN","A1AEM2K",145,0)
+ I '$D(^A1AE(11005.1,IEN,2)) QUIT
+"RTN","A1AEM2K",146,0)
+ N LINE S LINE=0
+"RTN","A1AEM2K",147,0)
+ N TEXT
+"RTN","A1AEM2K",148,0)
+ F  S LINE=$O(^A1AE(11005.1,IEN,2,LINE)) Q:'LINE  S TEXT=^(LINE,0) Q:TEXT["$END TXT"  ; spin to $END TXT
+"RTN","A1AEM2K",149,0)
+ I 'LINE QUIT  ; This line isn't needed but is here for clarity
 "RTN","A1AEM2K",150,0)
-TEST D EN^XTMUNIT($T(+0),1) QUIT
+ S LINE=$O(^A1AE(11005.1,IEN,2,LINE)),TEXT=^(LINE,0)        ; Get next line
 "RTN","A1AEM2K",151,0)
-PM2KDT ; @TEST PM to KIDS designation works properly
+ I $E(TEXT,1,4)'="$KID" QUIT  ; Must be $KID line
 "RTN","A1AEM2K",152,0)
- D CHKEQ^XTMUNIT($$PM2KD("LR*.1*3"),"LR*0.1*3")
+ F  S LINE=$O(^A1AE(11005.1,IEN,2,LINE)) Q:'LINE  S TEXT=^(LINE,0) Q:TEXT["$END KID"  S @OUTGLO@(LINE)=TEXT  ; load all until $END KID
 "RTN","A1AEM2K",153,0)
- D CHKEQ^XTMUNIT($$PM2KD("LR*1.5*3"),"LR*1.5*3")
+ QUIT
 "RTN","A1AEM2K",154,0)
- D CHKEQ^XTMUNIT($$PM2KD("LR*3*3"),"LR*3.0*3")
+ ;
 "RTN","A1AEM2K",155,0)
- D CHKEQ^XTMUNIT($$PM2KD("LR*3*0"),"LAB SERVICE 3.0")
+TEST D EN^XTMUNIT($T(+0),1) QUIT
 "RTN","A1AEM2K",156,0)
+PM2KDT ; @TEST PM to KIDS designation works properly
+"RTN","A1AEM2K",157,0)
+ D CHKEQ^XTMUNIT($$PM2KD("LR*.1*3"),"LR*0.1*3")
+"RTN","A1AEM2K",158,0)
+ D CHKEQ^XTMUNIT($$PM2KD("LR*1.5*3"),"LR*1.5*3")
+"RTN","A1AEM2K",159,0)
+ D CHKEQ^XTMUNIT($$PM2KD("LR*3*3"),"LR*3.0*3")
+"RTN","A1AEM2K",160,0)
+ D CHKEQ^XTMUNIT($$PM2KD("LR*3*0"),"LAB SERVICE 3.0")
+"RTN","A1AEM2K",161,0)
  QUIT
 "RTN","A1AEMAL")
 0^13^B44810612
 "RTN","A1AEMAL",1,0)
 A1AEMAL ;ISC-Albany/JLU- creates the mail message when v or c. ;2014-03-26  5:35 PM
 "RTN","A1AEMAL",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEMAL",3,0)
 GET ;Called from A1AEPHS
 "RTN","A1AEMAL",4,0)
@@ -11609,7 +11639,7 @@ RTNINFO ;Put the routine info out
 "RTN","A1AEMAL1",1,0)
 A1AEMAL1 ;ISC-Albany/JLU - creates the Patch mail message ;2014-03-08  3:35 PM
 "RTN","A1AEMAL1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEMAL1",3,0)
  I $G(A1AERCR8) D
 "RTN","A1AEMAL1",4,0)
@@ -11843,7 +11873,7 @@ NOMESS ;from a1aephs write warning that released message already sent
 "RTN","A1AEMGR",1,0)
 A1AEMGR ; RMO/ALBANY ;2014-03-28  5:11 PM;23 MAR 88 9:00 am
 "RTN","A1AEMGR",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEMGR",3,0)
  ;*** NOT FOR GENERAL DISTRIBUTION- Sent to Milt on FORUM 3/23/88 ***
 "RTN","A1AEMGR",4,0)
@@ -11901,7 +11931,7 @@ SETPRT W !?6,$P(^A1AE(11005,A1AEIFN,0),"^")
 "RTN","A1AEOS",1,0)
 A1AEOS ; VEN/SMH - Patch Module Operating System Interface;2014-03-31  1:27 PM
 "RTN","A1AEOS",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEOS",3,0)
  ;
 "RTN","A1AEOS",4,0)
@@ -12010,40 +12040,12 @@ RDPIPE(RTN,CMD) ; [PUBLIC] $$ - Execute a read only (non-interactive) command as
  S $EC=",U-M-VM-NOT-SUPPORTED,"
 "RTN","A1AEOS",56,0)
  QUIT
-"RTN","A1AEPB")
-0^18^B970607
-"RTN","A1AEPB",1,0)
-A1AEPB ; RMO,MJK/ALBANY ; Problem Menu ;24 NOV 87 11:00 am
-"RTN","A1AEPB",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPB",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
-"RTN","A1AEPB",4,0)
- S IOP="HOME" D ^%ZIS
-"RTN","A1AEPB",5,0)
- G:$D(^DOPT("A1AEPB",2)) A S ^DOPT("A1AEPB",0)="Problem Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPB",I,0)=$P(X,";",2,99)
-"RTN","A1AEPB",6,0)
- S DIK="^DOPT(""A1AEPB""," D IXALL^DIK
-"RTN","A1AEPB",7,0)
-A W !! S DIC="^DOPT(""A1AEPB"",",DIC(0)="AEQM" D ^DIC Q:Y<0  D @+Y G A
-"RTN","A1AEPB",8,0)
- ;
-"RTN","A1AEPB",9,0)
-1 ;Entry/Edit Problem Menu
-"RTN","A1AEPB",10,0)
- G ^A1AEPB1
-"RTN","A1AEPB",11,0)
- ;
-"RTN","A1AEPB",12,0)
-2 ;Print Problem Menu
-"RTN","A1AEPB",13,0)
- G ^A1AEPB2
 "RTN","A1AEPB1")
 0^19^B13048468
 "RTN","A1AEPB1",1,0)
 A1AEPB1 ; RMO,MJK/ALBANY ; Entry/Edit Problem Menu ;24 NOV 87 11:00 am
 "RTN","A1AEPB1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPB1",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 "RTN","A1AEPB1",4,0)
@@ -12098,80 +12100,12 @@ DEL2 S DIK="^A1AE(A1AEFL," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'Proble
  ;
 "RTN","A1AEPB1",29,0)
 Q K A1AEIFN,A1AEPKIF,A1AEPKNM,A1AEONE,A1AEPD,A1AEPK,A1AEVR,A1AENB,A1AEFL,A1AETY
-"RTN","A1AEPB2")
-0^20^B1246522
-"RTN","A1AEPB2",1,0)
-A1AEPB2 ; RMO,MJK/ALBANY ; Print Problem Menu ;24 NOV 87 11:00 am
-"RTN","A1AEPB2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPB2",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
-"RTN","A1AEPB2",4,0)
- G:$D(^DOPT("A1AEPB2",4)) A S ^DOPT("A1AEPB2",0)="Print Problem Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPB2",I,0)=$P(X,";;",2,99)
-"RTN","A1AEPB2",5,0)
- S DIK="^DOPT(""A1AEPB2""," D IXALL^DIK
-"RTN","A1AEPB2",6,0)
-A W !! S DIC="^DOPT(""A1AEPB2"",",DIC(0)="AEQM" D ^DIC Q:Y<0  D @+Y G A
-"RTN","A1AEPB2",7,0)
- ;
-"RTN","A1AEPB2",8,0)
-1 ;;Print a Specific Problem
-"RTN","A1AEPB2",9,0)
- G Q
-"RTN","A1AEPB2",10,0)
- ;
-"RTN","A1AEPB2",11,0)
-2 ;;Tabled Problems
-"RTN","A1AEPB2",12,0)
- G Q
-"RTN","A1AEPB2",13,0)
- ;
-"RTN","A1AEPB2",14,0)
-3 ;;Unresolved Problems
-"RTN","A1AEPB2",15,0)
- G Q
-"RTN","A1AEPB2",16,0)
- ;
-"RTN","A1AEPB2",17,0)
-4 ;;Unprinted Problems
-"RTN","A1AEPB2",18,0)
- G Q
-"RTN","A1AEPB2",19,0)
- ;
-"RTN","A1AEPB2",20,0)
-Q Q
-"RTN","A1AEPH")
-0^21^B912927
-"RTN","A1AEPH",1,0)
-A1AEPH ; RMO,MJK/ALBANY ; Patch Menu ;24 NOV 87 11:00 am
-"RTN","A1AEPH",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPH",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
-"RTN","A1AEPH",4,0)
- G:$D(^DOPT("A1AEPH",2)) A S ^DOPT("A1AEPH",0)="Patch Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPH",I,0)=$P(X,";",2,99)
-"RTN","A1AEPH",5,0)
- S DIK="^DOPT(""A1AEPH""," D IXALL^DIK
-"RTN","A1AEPH",6,0)
-A W !! S DIC="^DOPT(""A1AEPH"",",DIC(0)="AEQM" D ^DIC Q:Y<0  D @+Y G A
-"RTN","A1AEPH",7,0)
- ;
-"RTN","A1AEPH",8,0)
-1 ;Entry/Edit Patch Menu
-"RTN","A1AEPH",9,0)
- G ^A1AEPH1
-"RTN","A1AEPH",10,0)
- ;
-"RTN","A1AEPH",11,0)
-2 ;Print Patch Menu
-"RTN","A1AEPH",12,0)
- G ^A1AEPH2
 "RTN","A1AEPH1")
 0^22^B33099177
 "RTN","A1AEPH1",1,0)
 A1AEPH1 ; RMO,MJK/ALBANY - Patch control ;2014-03-28  5:34 PM
 "RTN","A1AEPH1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH1",3,0)
  G:$D(^DOPT("A1AEPH1",5)) A S ^DOPT("A1AEPH1",0)="Entry/Edit Patch Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPH1",I,0)=$P(X,";;",2,99)
 "RTN","A1AEPH1",4,0)
@@ -12397,7 +12331,7 @@ Q K ^UTILITY($J,"A1AECOP"),A1AEOLPD,A1AE0,A1AEPKIF,A1AEPKNM,A1AEPD,A1AEPK,A1AEVR
 "RTN","A1AEPH2",1,0)
 A1AEPH2 ;  REW/WCIOFO,RMO,MJK/ALBANY ;2014-03-28  4:27 PM
 "RTN","A1AEPH2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH2",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 "RTN","A1AEPH2",4,0)
@@ -13087,7 +13021,7 @@ SECDET ; [PROTECTED] - Secondary Status Detailed Report
 "RTN","A1AEPH3",1,0)
 A1AEPH3 ; RMO,MJK/ALBANY ;2014-03-28  4:14 PM
 "RTN","A1AEPH3",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH3",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92;Build 2
 "RTN","A1AEPH3",4,0)
@@ -13147,7 +13081,7 @@ DESG ; VEN/SMH - Print by designation
 "RTN","A1AEPH4",1,0)
 A1AEPH4 ;RMO/ALBANY ;2014-03-27  4:30 PM;24 NOV 87 11:00 am
 "RTN","A1AEPH4",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH4",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 "RTN","A1AEPH4",4,0)
@@ -13217,7 +13151,7 @@ CRCHK I A1AEPGE,$E(IOST,1)="C" W !!,*7,"Press RETURN to continue or '^' to stop 
 "RTN","A1AEPH5",1,0)
 A1AEPH5 ;RMO/ALBANY : Detailed Report of Verified Patches by Date;22 OCT 87 11:00 am;24 NOV 87 11:00 am ;6/29/07  10:59
 "RTN","A1AEPH5",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH5",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92;Build 2
 "RTN","A1AEPH5",4,0)
@@ -13255,7 +13189,7 @@ GETIFN F A1AEIFN=0:0 S A1AEIFN=$O(^A1AE(11005,"AV",A1AEPKIF,A1AEDTV,A1AEIFN)) Q:
 "RTN","A1AEPH6",1,0)
 A1AEPH6 ; RMO/ALBANY ;6/29/07  11:01
 "RTN","A1AEPH6",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH6",3,0)
 COMDIS ;Display a Completed/NotReleased Patch
 "RTN","A1AEPH6",4,0)
@@ -13338,26 +13272,12 @@ Q W ! K ^UTILITY($J),DN,D0,DXS,DIS(0),A1AEOUT,A1AES,A1AED0,A1AEIX,A1AEJ,A1AEN,A1
  ;
 "RTN","A1AEPH6",43,0)
        
-"RTN","A1AEPH7")
-0^28^B143295
-"RTN","A1AEPH7",1,0)
-A1AEPH7 ; RMO/ALBANY ;10/17/07  15:08
-"RTN","A1AEPH7",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPH7",3,0)
- ;Version 1.1
-"RTN","A1AEPH7",4,0)
- D PKG^A1AEUTL G Q:'$D(A1AEPK) D VER^A1AEUTL G Q:'$D(A1AEVR)
-"RTN","A1AEPH7",5,0)
- S A1AERD("A")=1
-"RTN","A1AEPH7",6,0)
-Q Q
 "RTN","A1AEPH8")
 0^29^B13651595
 "RTN","A1AEPH8",1,0)
 A1AEPH8 ; RMO/ALBANY ; Copy a Patch into a New Patch ;24 NOV 87 11:00 am
 "RTN","A1AEPH8",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPH8",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 "RTN","A1AEPH8",4,0)
@@ -13410,266 +13330,12 @@ Q K DA,AXMZ,ADT K ^UTILITY($J,"A1AECOP"),A1AEOLPD,A1AE0,A1AEPKIF,A1AEPKNM,A1AEPD
  ;added (x,)
 "RTN","A1AEPH8",28,0)
 FILE S (X,DINUM)=DA,DIC="^A1AE(11005.1,",DIC("DR")="2///"_AXMZ_";3///"_ADT_";20///"_"No routines included" K DD,DO D FILE^DICN K DE,DQ,DR,DIC("DR") Q
-"RTN","A1AEPHPK")
-0^30^B36681196
-"RTN","A1AEPHPK",1,0)
-A1AEPHPK ; ISF/RWF ;2014-03-28  4:47 PM
-"RTN","A1AEPHPK",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPHPK",3,0)
-        ;
-"RTN","A1AEPHPK",4,0)
-        ; VEN/SMH:
-"RTN","A1AEPHPK",5,0)
-        ; B4 my edits, edited at 11/23/92
-"RTN","A1AEPHPK",6,0)
-        ; This is a probably unused copy of A1AEPK.
-"RTN","A1AEPHPK",7,0)
- G:$D(^DOPT("A1AEPK",5)) A S ^DOPT("A1AEPK",0)="Entry/Edit Package Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPK",I,0)=$P(X,";;",2,99)
-"RTN","A1AEPHPK",8,0)
- S DIK="^DOPT(""A1AEPK""," D IXALL^DIK
-"RTN","A1AEPHPK",9,0)
-A W !! S DIC="^DOPT(""A1AEPK"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
-"RTN","A1AEPHPK",10,0)
- ;
-"RTN","A1AEPHPK",11,0)
-1 ;;Add a Package
-"RTN","A1AEPHPK",12,0)
- ;N A1AEFL,A1AETY,A1AEPKIF,A1AEPK,A1AEVR
-"RTN","A1AEPHPK",13,0)
- S A1AEFL=11005,A1AETY="PK",DIC("S")="I $D(^A1AE(11007,+Y,""PH"",DUZ,0))" D PKG^A1AEUTL G Q:'$D(A1AEPK)
-"RTN","A1AEPHPK",14,0)
- D VER G Q:'$D(A1AEVR)
-"RTN","A1AEPHPK",15,0)
- S A1AENB=0,X=A1AEPK_"*"_A1AEVR_"*0",DIC="^A1AE(11005,",DIC(0)="LE" D ^DIC Q:Y<1
-"RTN","A1AEPHPK",16,0)
- S DA=+Y,A1AEPD=$P(Y,U,2),A1AEPD2=$TR($P(A1AEPD,"*",1,2),"*"," "),$P(^A1AE(11005,DA,0),U,2,4)=A1AEPKIF_U_A1AEVR_U_"0"
-"RTN","A1AEPHPK",17,0)
- W !!,"Package Added: ",A1AEPD2,!
-"RTN","A1AEPHPK",18,0)
- S $P(^A1AE(11005,DA,0),"^",8)="u",$P(^(0),"^",9)=DUZ,$P(^(0),"^",12)=DT,^A1AE(11005,"AS",A1AEPKIF,A1AEVR,"u",A1AENB,DA)=""
-"RTN","A1AEPHPK",19,0)
- S DIE="^A1AE(11005,",DR="40///"_A1AEPD2 D ^DIE
-"RTN","A1AEPHPK",20,0)
- ;
-"RTN","A1AEPHPK",21,0)
- S (X,DINUM)=DA,DIC="^A1AE(11005.1,",DIC("DR")="20///"_"No routines included" K DD,DO D FILE^DICN K DE,DQ,DR,DIC("DR")
-"RTN","A1AEPHPK",22,0)
- S (X,DINUM)=DA,DIC="^A1AE(11005.5," K DD,D0 D FILE^DICN K DE,DQ,DR
-"RTN","A1AEPHPK",23,0)
- ;
-"RTN","A1AEPHPK",24,0)
- S DR="[A1AE ADD/EDIT PATCHES]" D ^DIE K DQ,DE,DIE
-"RTN","A1AEPHPK",25,0)
- D Q G 1
-"RTN","A1AEPHPK",26,0)
- ;
-"RTN","A1AEPHPK",27,0)
-2 ;;Delete an Unverified Package
-"RTN","A1AEPHPK",28,0)
- S DIC("A")="Select PATCH: ",DIC("S")="I ($P(^(0),U,8)=""u""!($P(^(0),U,8)=""c"")),$D(^A1AE(11007,+$P(^(0),U,2),""PH"",DUZ,0))",DIC="^A1AE(11005,",DIC(0)="AEMQZ" W ! D ^DIC K DIC("A"),DIC("S") G Q:Y<0 S DA=+Y,A1AEPD=$P(Y,U,2),A1AE0=Y(0)
-"RTN","A1AEPHPK",29,0)
- S $P(A1AEPD,"*",2)=$S($P(A1AEPD,"*",2)=999:"DBA",1:$P(A1AEPD,"*",2))
-"RTN","A1AEPHPK",30,0)
- S A1AEPD2=$P($G(^A1AE(11005,DA,4)),U,1)
-"RTN","A1AEPHPK",31,0)
-PMT2 W !!,"Are you sure you want to delete package "_A1AEPD2_"? N// " R X:DTIME G Q:'$T!(X="^")!("Nn"[$E(X,1)) G DEL2:"Yy"[$E(X,1) W:X'["?" *7 W !!,"Enter Y to delete the selected patch, or N to exit." G PMT2
-"RTN","A1AEPHPK",32,0)
-DEL2 S DIK="^A1AE(11005," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'DHCP Patch File' completed"
-"RTN","A1AEPHPK",33,0)
- L +^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH"):0 E  W $C(7),"Couldn't obtain lock at "_$ST($ST,"PLACE"),! QUIT
-"RTN","A1AEPHPK",34,0)
-        I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4)
-"RTN","A1AEPHPK",35,0)
-        L -^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")
-"RTN","A1AEPHPK",36,0)
- ;delete message entry
-"RTN","A1AEPHPK",37,0)
- S DIK="^A1AE(11005.1," D ^DIK
-"RTN","A1AEPHPK",38,0)
- G Q
-"RTN","A1AEPHPK",39,0)
- ;
-"RTN","A1AEPHPK",40,0)
-3 ;;Edit a Package
-"RTN","A1AEPHPK",41,0)
- N A1AESTOP
-"RTN","A1AEPHPK",42,0)
- S A1AESTOP=0
-"RTN","A1AEPHPK",43,0)
- F  D  D Q Q:A1AESTOP
-"RTN","A1AEPHPK",44,0)
- . N DIC,X,Y,DA,A1AEPD
-"RTN","A1AEPHPK",45,0)
- . S DIC("A")="Select PACKAGE: "
-"RTN","A1AEPHPK",46,0)
- . S DIC("S")="I $D(^A1AE(11007,+$P(^(0),U,2),""PH"",DUZ,0))"
-"RTN","A1AEPHPK",47,0)
- . S DIC="^A1AE(11005,",DIC(0)="AEMQ"
-"RTN","A1AEPHPK",48,0)
- . W !
-"RTN","A1AEPHPK",49,0)
- . D ^DIC I Y<0 S A1AESTOP=1 Q
-"RTN","A1AEPHPK",50,0)
- . S DA=+Y,A1AEPD=$P(Y,U,2),A1AEPD2=$P($G(^A1AE(11005,DA,4)),U) K DIC Q:A1AEPD2=""
-"RTN","A1AEPHPK",51,0)
- . ;I $P(A1AEPD,"*",2)=999 S $P(A1AEPD,"*",2)="DBA"
-"RTN","A1AEPHPK",52,0)
- . I '$D(^A1AE(11005.1,DA,0)) D
-"RTN","A1AEPHPK",53,0)
- . . N DINUM,DD,DO,DIC
-"RTN","A1AEPHPK",54,0)
- . . S (X,DINUM)=DA,DIC(0)="LE",DIC="^A1AE(11005.1,"
-"RTN","A1AEPHPK",55,0)
- . . S DIC("DR")="20///No routines included"
-"RTN","A1AEPHPK",56,0)
- . . D FILE^DICN
-"RTN","A1AEPHPK",57,0)
- . W !!,"Editing Package: ",A1AEPD2,!
-"RTN","A1AEPHPK",58,0)
- . L +^A1AE(11005,DA):5 E  D  Q
-"RTN","A1AEPHPK",59,0)
- . . W !,$C(7),"This package is being edited by another user" H 3
-"RTN","A1AEPHPK",60,0)
- . N A1AEOLD
-"RTN","A1AEPHPK",61,0)
- . S A1AEOLD=$P($G(^A1AE(11005,DA,0)),U,8)
-"RTN","A1AEPHPK",62,0)
- . D
-"RTN","A1AEPHPK",63,0)
- . . N A1AEOLD,DIE,DR ; Preserve A1AEOLD.  It's killed in Q^A1AEPHS
-"RTN","A1AEPHPK",64,0)
- . . S DIE="^A1AE(11005,",DR="[A1AE ADD/EDIT PATCHES]"
-"RTN","A1AEPHPK",65,0)
- . . D ^DIE
-"RTN","A1AEPHPK",66,0)
- . N A1AE0,A1AENEW
-"RTN","A1AEPHPK",67,0)
- . S A1AE0=$G(^A1AE(11005,DA,0))
-"RTN","A1AEPHPK",68,0)
- . L -^A1AE(11005,DA)
-"RTN","A1AEPHPK",69,0)
- . S A1AENEW=$P(A1AE0,U,8)
-"RTN","A1AEPHPK",70,0)
- . I A1AEOLD'="v"!(A1AENEW'="e") Q
-"RTN","A1AEPHPK",71,0)
- . ; Send the 'Entered in Error' bulletin
-"RTN","A1AEPHPK",72,0)
- . N A1AETX,X,A1AEOPT
-"RTN","A1AEPHPK",73,0)
- . S A1AEOPT="'Entered in Error'"
-"RTN","A1AEPHPK",74,0)
- . S X=$$GET1^DIQ(11005,DA_",",8.5,"Z","A1AETX")
-"RTN","A1AEPHPK",75,0)
- . S A1AETX(.1,0)=""
-"RTN","A1AEPHPK",76,0)
- . S A1AETX(.2,0)="Entered in Error Description:"
-"RTN","A1AEPHPK",77,0)
- . D BOTH^A1AEPHS
-"RTN","A1AEPHPK",78,0)
- Q
-"RTN","A1AEPHPK",79,0)
- ;
-"RTN","A1AEPHPK",80,0)
-4 ;;Verify a Package
-"RTN","A1AEPHPK",81,0)
- S DIC("A")="Select PACKAGE: ",DIC("S")="I $P(^(0),U,8)=""c"",$D(^A1AE(11007,+$P(^(0),U,2),""PB"",DUZ,0)),$P(^(0),U,2)=""V""",DIC="^A1AE(11005,",DIC(0)="AEMQZ"
-"RTN","A1AEPHPK",82,0)
- W ! D ^DIC K DIC G Q:Y<0 S (A1AEIFN,DA)=+Y,A1AEPD=$P(Y,U,2),A1AEPD2=$P($G(^A1AE(11005,DA,4)),U) Q:A1AEPD2=""
-"RTN","A1AEPHPK",83,0)
- ;S $P(A1AEPD,"*",2)=$S($P(A1AEPD,"*",2)=999:"DBA",1:$P(A1AEPD,"*",2))
-"RTN","A1AEPHPK",84,0)
- ;
-"RTN","A1AEPHPK",85,0)
- S Y=$P(Y(0),"^",17) I Y,Y>DT W !!,"Do not release until: " D DT^DIQ
-"RTN","A1AEPHPK",86,0)
- S A1AEST=$S($P(Y(0),U,7)="e":2,1:31) ;get status
-"RTN","A1AEPHPK",87,0)
- ;
-"RTN","A1AEPHPK",88,0)
- W !!,"Internal Comments to developers/releasers for: ",A1AEPD2,! K Y S DIE="^A1AE(11005,",DR="16;" D ^DIE K DQ,DE,DIE,DIC,DR,D0,DA
-"RTN","A1AEPHPK",89,0)
- W ! S DIR(0)="Y",DIR("B")="No",DIR("A")="Continue and Display Patch " D ^DIR K DIR I 'Y D Q G 4
-"RTN","A1AEPHPK",90,0)
- ;check routine patches
-"RTN","A1AEPHPK",91,0)
- F AX=0:0 S AX=$O(^A1AE(11005,A1AEIFN,"P",AX)) Q:'AX  I $D(^(AX,0)) S X=^(0) D RCHK^A1AEM2
-"RTN","A1AEPHPK",92,0)
- W ! S DIR(0)="E" D ^DIR K DIR I 'Y D Q G 4
-"RTN","A1AEPHPK",93,0)
- ;
-"RTN","A1AEPHPK",94,0)
- S D0=A1AEIFN,A1AEVPR="",A1AEHD="DHCP Completed/NotReleased Patch Display"
-"RTN","A1AEPHPK",95,0)
- W ! S %ZIS="",A1AEPGE=0 D ^%ZIS G Q:POP K IOP,%ZIS U IO S ^UTILITY($J,1)="D HD^A1AEPH2",DIWF=B4X K ^UTILITY($J,"W"),DXS D HD^A1AEPH2,^A1AEP ;SO DI*22*152
-"RTN","A1AEPHPK",96,0)
- K DN,DXS,DIWF ;;; I A1AEOUT'["^" B  G Q
-"RTN","A1AEPHPK",97,0)
- K A1AEHD,A1AELNE,A1AEOUT,A1AEPGE,A1AEVPR D CLOSE^A1AEUTL1
-"RTN","A1AEPHPK",98,0)
- S X2=A1AEST,X1=DT D C^%DTC S Y=X D DD^%DT S A1AEST=Y
-"RTN","A1AEPHPK",99,0)
- W !!,"Releasing Package: ",A1AEPD2,! K Y
-"RTN","A1AEPHPK",100,0)
- S DA=A1AEIFN,DIE="^A1AE(11005,",DR="18//^S X=A1AEST;8;S Y=$S(X=""e"":""@10"",1:"""");@10;8.5" ;;;D ^DIE K DQ,DE
-"RTN","A1AEPHPK",101,0)
- L +@(DIE_DA_")"):5
-"RTN","A1AEPHPK",102,0)
- I '$T W !,$C(7),"This package is being released by another user" H 3
-"RTN","A1AEPHPK",103,0)
- E  D ^DIE K DQ,DE L -@(DIE_DA_")")
-"RTN","A1AEPHPK",104,0)
- D Q G 4
-"RTN","A1AEPHPK",105,0)
- ;
-"RTN","A1AEPHPK",106,0)
-6 ;;Create a packman message
-"RTN","A1AEPHPK",107,0)
- G PACK^A1AEM
-"RTN","A1AEPHPK",108,0)
- ;
-"RTN","A1AEPHPK",109,0)
-7 ;;Forward a Complete/unverified message
-"RTN","A1AEPHPK",110,0)
- G FCOM^A1AEM2
-"RTN","A1AEPHPK",111,0)
- ;
-"RTN","A1AEPHPK",112,0)
-8 ;;Forward a Verified patch message
-"RTN","A1AEPHPK",113,0)
- G FVER^A1AEM2
-"RTN","A1AEPHPK",114,0)
- ;
-"RTN","A1AEPHPK",115,0)
-Q K ^UTILITY($J,"A1AECOP"),A1AEOLPD,A1AE0,A1AEPKIF,A1AEPKNM,A1AEPD,A1AEPD2,A1AEPK,A1AEVR,A1AENB,A1AEFL,A1AETY
-"RTN","A1AEPHPK",116,0)
- K DIK,A1AEHD,A1AEIFN,A1AELNE,A1AEOUT,A1AEPGE,A1AEVPR
-"RTN","A1AEPHPK",117,0)
- K AEQ,A1AESUB,A1AETX,A1AEXMZ,A1NAM,A1NAM1,AX,AXMZ,A1AEST,A1AETVR
-"RTN","A1AEPHPK",118,0)
- K JL2,SAVEX,C,D0,DA,DI,DIG,DIH,DIW,DIV,DR,XMB,XMDT,XMDUZ,XMM,XMSUB Q
-"RTN","A1AEPHPK",119,0)
- ;
-"RTN","A1AEPHPK",120,0)
-VER ;Get a NEW Version #.
-"RTN","A1AEPHPK",121,0)
- N VR,CV
-"RTN","A1AEPHPK",122,0)
- S CV=$O(^A1AE(11007,A1AEPKIF,"V",""),-1)
-"RTN","A1AEPHPK",123,0)
- R !,"New Version Number: ",VR:$G(DTIME,300) Q:'VR
-"RTN","A1AEPHPK",124,0)
- I VR'>CV W !,"The New Package Version must be greater than the current version of ",CV G VER
-"RTN","A1AEPHPK",125,0)
- S A1AEVR=VR
-"RTN","A1AEPHPK",126,0)
- Q
 "RTN","A1AEPHS")
 0^31^B301665940
 "RTN","A1AEPHS",1,0)
 A1AEPHS ; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ; 3/31/14 6:49pm
 "RTN","A1AEPHS",2,0)
- ;;2.3;Patch Module;;Oct 17, 2007;Build 9
+ ;;2.3;Patch Module;;Oct 17, 2007;Build 10
 "RTN","A1AEPHS",3,0)
  ;
 "RTN","A1AEPHS",4,0)
@@ -14868,156 +14534,12 @@ XM I '$D(XMDUZ) D
  ;
 "RTN","A1AEPHS",601,0)
 EOR ; end of routine A1AEPHS
-"RTN","A1AEPHSX")
-0^32^B11333163
-"RTN","A1AEPHSX",1,0)
-A1AEPHSX ; RMO,MJK/ALBANY ;2014-03-28  5:13 PM; 3/12/85 4pm
-"RTN","A1AEPHSX",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPHSX",3,0)
- ; Version 1.00
-"RTN","A1AEPHSX",4,0)
- S A1AENEW=$E(X,1),A1AEOLD=$C($A(A1AEOLD)-32) I A1AEOLD="C"!(A1AEOLD="E")!(A1AEOLD="U")!(A1AEOLD="V") D @A1AEOLD G Q
-"RTN","A1AEPHSX",5,0)
- ;
-"RTN","A1AEPHSX",6,0)
-NEW D CHKDEV G Q:'$D(X) I A1AENEW="v" W !?3,"The Status may only be set to 'C'ompleted/not verified, 'E'ntered in error, or 'U'nder development" K X
-"RTN","A1AEPHSX",7,0)
- ;
-"RTN","A1AEPHSX",8,0)
-Q K A1AEOLD,A1AENEW Q
-"RTN","A1AEPHSX",9,0)
- ;
-"RTN","A1AEPHSX",10,0)
-C I A1AENEW="u" W !?3,"The Status may not be changed to 'U'nder development" K X Q
-"RTN","A1AEPHSX",11,0)
- I A1AENEW="e" D CHKDEV,CHKERR:$D(X) Q
-"RTN","A1AEPHSX",12,0)
- I A1AENEW="v",$D(^A1AE(11007,A1AEPKIF,"PB",DUZ,0)),$P(^(0),"^",2)="V" Q
-"RTN","A1AEPHSX",13,0)
- W !?3,"You are not an Authorized Verifier" K X
-"RTN","A1AEPHSX",14,0)
- Q
-"RTN","A1AEPHSX",15,0)
- ;
-"RTN","A1AEPHSX",16,0)
-E W !?3,"Once the Status has been set to 'E'ntered in error it can not be changed" K X Q
-"RTN","A1AEPHSX",17,0)
- ;
-"RTN","A1AEPHSX",18,0)
-U I A1AENEW'="c" W !?3,"The Status may only be changed to 'C'ompleted/not verified!" W:A1AENEW="e" !?3,"Use the 'Delete Under Development Patches' option",!?3,"rather than 'Entered in Error' status" K X Q
-"RTN","A1AEPHSX",19,0)
- D CHKDEV Q:'$D(X)  S XMB="A1AE COMPLETED PATCH",XMB(1)=$P(^DIC(9.4,$P(^A1AE(11005,DA,0),"^",2),0),"^",1),XMB(2)=$P(^A1AE(11005,DA,0),"^",1),XMB(3)=$P(^(0),"^",5)
-"RTN","A1AEPHSX",20,0)
- S XMB(4)=$P($P(^DD(11005,7,0),$P(^A1AE(11005,DA,0),"^",7)_":",2),";",1)
-"RTN","A1AEPHSX",21,0)
- S A1AEX=X D M^A1AEUTL1 S X=A1AEX K A1AEX W !!,?3,"...Selected Users have been notified" Q
-"RTN","A1AEPHSX",22,0)
- ;
-"RTN","A1AEPHSX",23,0)
-V I A1AENEW="e" D CHKDEV,CHKERR:$D(X) Q
-"RTN","A1AEPHSX",24,0)
- W !?3,"The Status may only be changed to 'E'ntered in error" K X Q
-"RTN","A1AEPHSX",25,0)
- Q
-"RTN","A1AEPHSX",26,0)
- ;
-"RTN","A1AEPHSX",27,0)
-CHKDEV I '$D(^A1AE(11007,A1AEPKIF,"PH",DUZ,0)) W !?3,"You are not an Authorized Developer" K X
-"RTN","A1AEPHSX",28,0)
- Q
-"RTN","A1AEPHSX",29,0)
- ;
-"RTN","A1AEPHSX",30,0)
-CHKERR R !!,"Are you sure you want to change the status to 'ENTERED IN ERROR'? No// ",X1:DTIME I '$T!(X1="^")!("Nn"[$E(X1,1)) S X=$C($A(A1AEOLD)+32) Q
-"RTN","A1AEPHSX",31,0)
- I "Yy"[$E(X1,1) W !?3,"...Status changed to 'E'ntered in error" D SENDER Q
-"RTN","A1AEPHSX",32,0)
- W:X1'["?" *7 W !!,"Enter Y to change the Status to 'E'ntered in Error, or N to leave the same." G CHKERR
-"RTN","A1AEPHSX",33,0)
- ;
-"RTN","A1AEPHSX",34,0)
-SENDER S XMB="A1AE ENTERED IN ERROR PATCH",XMB(1)=$P(^DIC(9.4,$P(^A1AE(11005,DA,0),"^",2),0),"^",1),XMB(2)=$P(^A1AE(11005,DA,0),"^",1),XMB(3)=$P(^(0),"^",5) D M^A1AEUTL1 W !!?3,"...Selected Users have been notified",!
-"RTN","A1AEPHSX",35,0)
- Q
-"RTN","A1AEPHSZ")
-0^33^B13656283
-"RTN","A1AEPHSZ",1,0)
-A1AEPHS ; RMO,MJK/ALBANY ; 20 MAR 86  1:30 PM ; 3/12/85 4pm
-"RTN","A1AEPHSZ",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPHSZ",3,0)
- ; Version 1.00
-"RTN","A1AEPHSZ",4,0)
- S A1AENEW=$E(X,1),A1AEOLD=$C($A(A1AEOLD)-32),A1AEOPT=$S(A1AENEW="e":"'Entered in Error'",A1AENEW="c":"'Completed/not verified'",1:"") I A1AEOLD="C"!(A1AEOLD="E")!(A1AEOLD="U")!(A1AEOLD="V") D @A1AEOLD G Q
-"RTN","A1AEPHSZ",5,0)
- ;
-"RTN","A1AEPHSZ",6,0)
-NEW D CHKDEV G Q:'$D(X) I A1AENEW="v" W !?3,"The Status may only be set to 'C'ompleted/not verified, 'E'ntered in error, or 'U'nder development" K X
-"RTN","A1AEPHSZ",7,0)
- ;
-"RTN","A1AEPHSZ",8,0)
-Q K A1AEOLD,A1AENEW,A1AEOPT,A1AEX Q
-"RTN","A1AEPHSZ",9,0)
- ;
-"RTN","A1AEPHSZ",10,0)
-C I A1AENEW="u" W !?3,"The Status may not be changed to 'U'nder development" K X Q
-"RTN","A1AEPHSZ",11,0)
- I A1AENEW="e" D CHKDEV Q:'$D(X)  D CHKSTA,SENDER:X=A1AEX Q
-"RTN","A1AEPHSZ",12,0)
- I A1AENEW="v",$D(^A1AE(11007,A1AEPKIF,"PB",DUZ,0)),$P(^(0),"^",2)="V" Q
-"RTN","A1AEPHSZ",13,0)
- W !?3,"You are not an Authorized Verifier" K X
-"RTN","A1AEPHSZ",14,0)
- Q
-"RTN","A1AEPHSZ",15,0)
- ;
-"RTN","A1AEPHSZ",16,0)
-E W !?3,"Once the Status has been set to 'E'ntered in error it can not be changed" K X Q
-"RTN","A1AEPHSZ",17,0)
- ;
-"RTN","A1AEPHSZ",18,0)
-U I A1AENEW'="c" W !?3,"The Status may only be changed to 'C'ompleted/not verified!" W:A1AENEW="e" !?3,"Use the 'Delete Under Development Patches' option",!?3,"rather than 'Entered in Error' status" K X Q
-"RTN","A1AEPHSZ",19,0)
- D CHKDEV Q:'$D(X)  D CHKSTA Q:X'=A1AEX  S XMB="A1AE COMPLETED PATCH",XMB(1)=$P(^DIC(9.4,$P(^A1AE(11005,DA,0),"^",2),0),"^",1),XMB(2)=$P(^A1AE(11005,DA,0),"^",1),XMB(3)=$P(^(0),"^",5)
-"RTN","A1AEPHSZ",20,0)
- S XMB(4)=$P($P(^DD(11005,7,0),$P(^A1AE(11005,DA,0),"^",7)_":",2),";",1)
-"RTN","A1AEPHSZ",21,0)
- S A1AEX=X D M^A1AEUTL1 S X=A1AEX K A1AEX W !!,?3,"...Selected Users have been notified" Q
-"RTN","A1AEPHSZ",22,0)
- ;
-"RTN","A1AEPHSZ",23,0)
-V I A1AENEW="e" D CHKDEV Q:'$D(X)  D CHKSTA,SENDER:X=A1AEX Q
-"RTN","A1AEPHSZ",24,0)
- W !?3,"The Status may only be changed to 'E'ntered in error" K X Q
-"RTN","A1AEPHSZ",25,0)
- Q
-"RTN","A1AEPHSZ",26,0)
- ;
-"RTN","A1AEPHSZ",27,0)
-CHKDEV I '$D(^A1AE(11007,A1AEPKIF,"PH",DUZ,0)) W !?3,"You are not an Authorized Developer" K X
-"RTN","A1AEPHSZ",28,0)
- Q
-"RTN","A1AEPHSZ",29,0)
- ;
-"RTN","A1AEPHSZ",30,0)
-CHKSTA S A1AEX=X,A1AERD("A")="Are you sure you want to change status to "_A1AEOPT_"? ",A1AERD(0)="S",A1AERD(1)="Yes^change status and send a message to users",A1AERD(2)="No^leave the status the same",A1AERD("B")=2
-"RTN","A1AEPHSZ",31,0)
- W ! D SET^A1AERD K A1AERD S X=$S("Y"[$E(X,1):A1AEX,1:$C($A(A1AEOLD)+32)) W:A1AEX=X !?3,"...status changed to ",A1AEOPT
-"RTN","A1AEPHSZ",32,0)
- Q
-"RTN","A1AEPHSZ",33,0)
- ;
-"RTN","A1AEPHSZ",34,0)
-SENDER S XMB="A1AE ENTERED IN ERROR PATCH",XMB(1)=$P(^DIC(9.4,$P(^A1AE(11005,DA,0),"^",2),0),"^",1),XMB(2)=$P(^A1AE(11005,DA,0),"^",1),XMB(3)=$P(^(0),"^",5) D M^A1AEUTL1 W !!?3,"...Selected Users have been notified",!
-"RTN","A1AEPHSZ",35,0)
- Q
 "RTN","A1AEPK")
 0^34^B41374404
 "RTN","A1AEPK",1,0)
 A1AEPK ; ISF/RWF - Package Module ;2014-03-28  4:56 PM
 "RTN","A1AEPK",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPK",3,0)
  G:$D(^DOPT("A1AEPK",5)) A S ^DOPT("A1AEPK",0)="Entry/Edit Package Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPK",I,0)=$P(X,";;",2,99)
 "RTN","A1AEPK",4,0)
@@ -15298,58 +14820,12 @@ UPVER ;Update files 11007 and 120102.
  S FDA(120102,IEN_",",1)=VR D FILE^DIE("K","FDA")
 "RTN","A1AEPK",142,0)
  Q
-"RTN","A1AEPRE")
-0^35^B5253495
-"RTN","A1AEPRE",1,0)
-A1AEPRE ;RMO/ALBANY ; Pre-Initialization Procedure ;24 NOV 87 11:00 am
-"RTN","A1AEPRE",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEPRE",3,0)
- ;;Version 2.1 ;February 23, 1990
-"RTN","A1AEPRE",4,0)
- S:'$D(^A1AE("VERSION")) ^A1AE("VERSION")=1.1 Q:^A1AE("VERSION")>1.1  S IOP="HOME" D ^%ZIS K IOP S %DT="",X="T" D ^%DT S DT=Y
-"RTN","A1AEPRE",5,0)
- W !!,"...forcing 'Completed/not Verified' Patches to 'Verified' by POSTMASTER"
-"RTN","A1AEPRE",6,0)
- F A1AEPKIF=0:0 S A1AEPKIF=$O(^A1AE(11005,"AV",A1AEPKIF)) Q:'A1AEPKIF  D GETDTC
-"RTN","A1AEPRE",7,0)
- W !,"...removing the 'AV' cross-reference from DATE PATCH COMPLETED field"
-"RTN","A1AEPRE",8,0)
- F A1AEXREF=0:0 S A1AEXREF=$O(^DD(11005,10,1,A1AEXREF)) Q:'A1AEXREF  I $D(^(A1AEXREF,0)),$P(^(0),"^",2)="AV" S DA(2)=11005,DA(1)=10,DA=A1AEXREF,DIK="^DD(11005,10,1," D ^DIK K DA,DIK
-"RTN","A1AEPRE",9,0)
- ;
-"RTN","A1AEPRE",10,0)
-Q K ^DOPT("A1AEPH2"),A1AE0,A1AEDTC,A1AEIFN,A1AEPKIF,A1AEXREF
-"RTN","A1AEPRE",11,0)
- Q
-"RTN","A1AEPRE",12,0)
- ;
-"RTN","A1AEPRE",13,0)
-GETDTC F A1AEDTC=0:0 S A1AEDTC=$O(^A1AE(11005,"AV",A1AEPKIF,A1AEDTC)) Q:'A1AEDTC  D GETIFN
-"RTN","A1AEPRE",14,0)
- Q
-"RTN","A1AEPRE",15,0)
- ;
-"RTN","A1AEPRE",16,0)
-GETIFN F A1AEIFN=0:0 S A1AEIFN=$O(^A1AE(11005,"AV",A1AEPKIF,A1AEDTC,A1AEIFN)) Q:'A1AEIFN  I $D(^A1AE(11005,A1AEIFN,0)),$P(^(0),"^",8)="c" S A1AE0=^(0) D SETVER W "."
-"RTN","A1AEPRE",17,0)
- Q
-"RTN","A1AEPRE",18,0)
- ;
-"RTN","A1AEPRE",19,0)
-SETVER S $P(^A1AE(11005,A1AEIFN,0),"^",8)="v",$P(^(0),"^",11)=DT,$P(^(0),"^",14)=.5
-"RTN","A1AEPRE",20,0)
- K ^A1AE(11005,"AS",A1AEPKIF,+$P(A1AE0,"^",3),"c",+$P(A1AE0,"^",4),A1AEIFN) S ^A1AE(11005,"AS",A1AEPKIF,+$P(A1AE0,"^",3),"v",+$P(A1AE0,"^",4),A1AEIFN)=""
-"RTN","A1AEPRE",21,0)
- K ^A1AE(11005,"AV",A1AEPKIF,A1AEDTC,A1AEIFN) S ^A1AE(11005,"AV",A1AEPKIF,9999999-DT,A1AEIFN)=""
-"RTN","A1AEPRE",22,0)
- Q
 "RTN","A1AEPSVR")
-0^56^B230846704
+0^56^B231769506
 "RTN","A1AEPSVR",1,0)
-A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-03-23  7:22 PM
+A1AEPSVR ; VEN/SMH - Mailman Patch Server;2014-04-15  9:27 PM
 "RTN","A1AEPSVR",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEPSVR",3,0)
  ; This routine reads patches coming via email from VA Forum
 "RTN","A1AEPSVR",4,0)
@@ -15613,7 +15089,7 @@ UT1 ; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
 "RTN","A1AEPSVR",133,0)
  ;
 "RTN","A1AEPSVR",134,0)
- D CHKTF^XTMUNIT('$D(^A1AE(11005,"D",PKIEN)))
+ D CHKTF^XTMUNIT('$D(^A1AE(11005,"D",PKIEN)),"Package should be gone")
 "RTN","A1AEPSVR",135,0)
  N MESS,LN0,LN
 "RTN","A1AEPSVR",136,0)
@@ -15631,7 +15107,7 @@ UT1 ; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
 "RTN","A1AEPSVR",142,0)
  HANG 10
 "RTN","A1AEPSVR",143,0)
- D CHKTF^XTMUNIT($D(^A1AE(11005,"D",PKIEN)))
+ D CHKTF^XTMUNIT($D(^A1AE(11005,"D",PKIEN)),"Package should be present")
 "RTN","A1AEPSVR",144,0)
  QUIT
 "RTN","A1AEPSVR",145,0)
@@ -16411,7 +15887,7 @@ MESSAGE ;;
 "RTN","A1AERCON",1,0)
 A1AERCON ;CJS/SLC - Check for routie overlap on unreleased patchs ;4/25/05  18:59
 "RTN","A1AERCON",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AERCON",3,0)
 EN K ^TMP($J) S LINE=0,DIC=11005,DIC(0)="AEMQ",DIC("S")="I ""cu""[$P(^(0),U,8)" D ^DIC S PATCH=+Y G:PATCH'>0 EXIT
 "RTN","A1AERCON",4,0)
@@ -16459,7 +15935,7 @@ EXIT K ^TMP($J),PATCH,RLIST,PROU,OTHERP,LINE,LINE0,PNAME,MONTHS,REL,VER
 "RTN","A1AERD",1,0)
 A1AERD ; RMO,MJK/ALBANY ; Read Processor ;24 NOV 87 11:00 am
 "RTN","A1AERD",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AERD",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AERD",4,0)
@@ -16517,7 +15993,7 @@ UPPER ;
 "RTN","A1AESP",1,0)
 A1AESP ;ISF/RWF - Special load of package releases ;08/19/2010  5079.826506
 "RTN","A1AESP",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AESP",3,0)
 EN ;Read an HFS Package release.
 "RTN","A1AESP",4,0)
@@ -16851,11 +16327,11 @@ BKOT(RN,PCH,OCS) ;Backout Checksum from Routine file.
 "RTN","A1AESP",168,0)
  Q
 "RTN","A1AEUT1")
-0^54^B182186864
+0^54^B188694393
 "RTN","A1AEUT1",1,0)
-A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-03-28  5:31 PM
+A1AEUT1 ; VEN/SMH - Unit Tests for the Patch Module ;2014-04-17  6:39 PM
 "RTN","A1AEUT1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEUT1",3,0)
  ;
 "RTN","A1AEUT1",4,0)
@@ -17597,247 +17073,227 @@ PATCHVER ; @TEST Verify a Patch
 "RTN","A1AEUT1",372,0)
  ;
 "RTN","A1AEUT1",373,0)
-PATCH2 ; @TEST Create a second patch - complete this one
+PATCHEX ; @TEST Export Verified patch to KIDS build on file system
 "RTN","A1AEUT1",374,0)
- N DIC
+ N A1AEUT1IEN S A1AEUT1IEN=DA
 "RTN","A1AEUT1",375,0)
- D PKGADD,VERSETUP
+ D ^A1AEM2K
 "RTN","A1AEUT1",376,0)
- N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*2" ; override patch in mail kids
+ D OPEN^%ZISH("KIDFIL",$$DEFDIR^%ZISH(),"ZZZ-2_SEQ-10001_PAT-10001.KID","R")
 "RTN","A1AEUT1",377,0)
- D MAILKIDS
-"RTN","A1AEUT1",378,0)
- D QUE
-"RTN","A1AEUT1",379,0)
- N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+1 ; override patch number
-"RTN","A1AEUT1",380,0)
- D PATCHNO,PATCHSET,PATCHROU
-"RTN","A1AEUT1",381,0)
- D LOC
-"RTN","A1AEUT1",382,0)
- D PATCHCR
-"RTN","A1AEUT1",383,0)
- D PATCHCOM
-"RTN","A1AEUT1",384,0)
- QUIT
-"RTN","A1AEUT1",385,0)
- ;
-"RTN","A1AEUT1",386,0)
-PATCH3 ; @TEST Create a third patch - don't complete or verify
-"RTN","A1AEUT1",387,0)
- N DIC
-"RTN","A1AEUT1",388,0)
- D PKGADD,VERSETUP
-"RTN","A1AEUT1",389,0)
- N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*3" ; override patch in mail kids
-"RTN","A1AEUT1",390,0)
- D MAILKIDS
-"RTN","A1AEUT1",391,0)
- D QUE
-"RTN","A1AEUT1",392,0)
- N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+2 ; override patch number
-"RTN","A1AEUT1",393,0)
- D PATCHNO,PATCHSET,PATCHROU
-"RTN","A1AEUT1",394,0)
- D LOC
-"RTN","A1AEUT1",395,0)
- D PATCHCR
-"RTN","A1AEUT1",396,0)
- QUIT
-"RTN","A1AEUT1",397,0)
- ;
-"RTN","A1AEUT1",398,0)
-A1AEPH25 ; @TEST Test Report 5^A1AEPH2
-"RTN","A1AEUT1",399,0)
- ; ZEXCEPT: DEV - Created by MKUSRTST
-"RTN","A1AEUT1",400,0)
- S DUZ=DEV
-"RTN","A1AEUT1",401,0)
- N %ZIS
-"RTN","A1AEUT1",402,0)
- N DIC
-"RTN","A1AEUT1",403,0)
- D PKGADD,VERSETUP
-"RTN","A1AEUT1",404,0)
- N A1AEREV S A1AEREV=1
-"RTN","A1AEUT1",405,0)
- N A1AEDEV S A1AEDEV="HFS;80;99999"
-"RTN","A1AEUT1",406,0)
- S %ZIS("HFSMODE")="W"
-"RTN","A1AEUT1",407,0)
- S %ZIS("HFSNAME")="A1AEPH25.TXT"
-"RTN","A1AEUT1",408,0)
- D DQ5^A1AEPH2
-"RTN","A1AEUT1",409,0)
- ;
-"RTN","A1AEUT1",410,0)
- ; Read it back now
-"RTN","A1AEUT1",411,0)
- N POP
-"RTN","A1AEUT1",412,0)
- D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),"A1AEPH25.TXT","R")
-"RTN","A1AEUT1",413,0)
- I POP D FAIL^XTMUNIT("IO problems") QUIT
-"RTN","A1AEUT1",414,0)
  U IO
-"RTN","A1AEUT1",415,0)
- N ARR,CNT
-"RTN","A1AEUT1",416,0)
- S CNT=1
-"RTN","A1AEUT1",417,0)
- N X
-"RTN","A1AEUT1",418,0)
- F  R X:1 Q:$$STATUS^%ZISH()  I $E(X,1,3)="ZZZ" S ARR(CNT)=X,CNT=CNT+1
-"RTN","A1AEUT1",419,0)
- U $P D CLOSE^%ZISH("FILE1")
-"RTN","A1AEUT1",420,0)
- D ASSERT($D(ARR))
-"RTN","A1AEUT1",421,0)
- N % S %("A1AEPH25.TXT")=""
-"RTN","A1AEUT1",422,0)
- S %=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
-"RTN","A1AEUT1",423,0)
+"RTN","A1AEUT1",378,0)
+ N %1,%2,%3
+"RTN","A1AEUT1",379,0)
+ R %1:1,%2:1,%3:1
+"RTN","A1AEUT1",380,0)
+ D CLOSE^%ZISH("KIDFIL")
+"RTN","A1AEUT1",381,0)
+ D ASSERT(%3["**KIDS**")
+"RTN","A1AEUT1",382,0)
  QUIT
-"RTN","A1AEUT1",424,0)
+"RTN","A1AEUT1",383,0)
  ;
-"RTN","A1AEUT1",425,0)
-A1AEPH21 ; @TEST Test Report 1^A1AEPH2
-"RTN","A1AEUT1",426,0)
- ; ZEXCEPT: DEV - Created by MKUSRTST
-"RTN","A1AEUT1",427,0)
- ; Index: AB - By designation
-"RTN","A1AEUT1",428,0)
- ; Index: AC - By category
-"RTN","A1AEUT1",429,0)
- ; Index: AP - By priority
-"RTN","A1AEUT1",430,0)
- ; Index: AS - By Status
-"RTN","A1AEUT1",431,0)
- N A1AEHD ; Header - used below
-"RTN","A1AEUT1",432,0)
- N A1AEIX F A1AEIX="AB","AC","AP","AS" D
-"RTN","A1AEUT1",433,0)
- . S DUZ=DEV
-"RTN","A1AEUT1",434,0)
- . N DIC,DIS
-"RTN","A1AEUT1",435,0)
- . D PKGADD,VERSETUP
-"RTN","A1AEUT1",436,0)
- . N A1AES ; Suppress asking for sorting by status
-"RTN","A1AEUT1",437,0)
- . S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=""c""",A1AEHD="Completed/NotReleased DHCP Patches Report",A1AES=""
-"RTN","A1AEUT1",438,0)
- . N A1AEHDSAV S A1AEHDSAV=A1AEHD ; HD is killed off
-"RTN","A1AEUT1",439,0)
- . S DIC("S")="I $S($D(^A1AE(11007,+Y,""PH"",DUZ,0)):1,'$D(^A1AE(11007,+Y,""PB"",DUZ,0)):0,$P(^(0),U,2)=""V"":1,1:0)"
-"RTN","A1AEUT1",440,0)
- . N FN S FN="A1AEPH21-"_A1AEIX_".TXT"
-"RTN","A1AEUT1",441,0)
- . N POP
-"RTN","A1AEUT1",442,0)
- . D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),FN,"W")
-"RTN","A1AEUT1",443,0)
- . I POP D FAIL^XTMUNIT("IO problems") QUIT
-"RTN","A1AEUT1",444,0)
- . D START^A1AEPH3
-"RTN","A1AEUT1",445,0)
- . D CLOSE^%ZISH("FILE1")
-"RTN","A1AEUT1",446,0)
- . D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),FN,"R")
-"RTN","A1AEUT1",447,0)
- . I POP D FAIL^XTMUNIT("IO problems") QUIT
-"RTN","A1AEUT1",448,0)
- . U IO
-"RTN","A1AEUT1",449,0)
- . N X F  R X:0 Q:$$STATUS^%ZISH()  Q:X[A1AEHDSAV
-"RTN","A1AEUT1",450,0)
- . U $P D CLOSE^%ZISH("FILE1")
-"RTN","A1AEUT1",451,0)
- . D ASSERT(X[A1AEHDSAV)
-"RTN","A1AEUT1",452,0)
- . N % S %(FN)="",%=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
-"RTN","A1AEUT1",453,0)
- QUIT
-"RTN","A1AEUT1",454,0)
- ;
-"RTN","A1AEUT1",455,0)
-PATCH999 ; #TEST Try to exceed 999 - not applicable any more
-"RTN","A1AEUT1",456,0)
- ; ZEXCEPT: DEV - Created by MKUSRTST
-"RTN","A1AEUT1",457,0)
- ;
-"RTN","A1AEUT1",458,0)
- ; Get the old primary stream
-"RTN","A1AEUT1",459,0)
- N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"PRIM",1,""))
-"RTN","A1AEUT1",460,0)
- I 'OLDPRIM S OLDPRIM=1
-"RTN","A1AEUT1",461,0)
- ;
-"RTN","A1AEUT1",462,0)
- ; Make VA patch stream primary
-"RTN","A1AEUT1",463,0)
- N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
-"RTN","A1AEUT1",464,0)
- ;
-"RTN","A1AEUT1",465,0)
- N DIC ; don't leak this to the next calls
-"RTN","A1AEUT1",466,0)
- ; Next two lines required by API.
-"RTN","A1AEUT1",467,0)
- N A1AEFL,A1AETY
-"RTN","A1AEUT1",468,0)
- S A1AEFL=11005,A1AETY="PH"
-"RTN","A1AEUT1",469,0)
+"RTN","A1AEUT1",384,0)
+PATCH2 ; @TEST Create a second patch - complete this one
+"RTN","A1AEUT1",385,0)
+ N DIC
+"RTN","A1AEUT1",386,0)
  D PKGADD,VERSETUP
-"RTN","A1AEUT1",470,0)
- S DUZ=DEV
-"RTN","A1AEUT1",471,0)
- S DIC("S")="I $D(^A1AE(11007,+Y,A1AETY,DUZ,0))"
-"RTN","A1AEUT1",472,0)
- N CNT S CNT=0
-"RTN","A1AEUT1",473,0)
- ; ZEXCEPT: A1AENB - leaked by NUM^A1AEUTL
-"RTN","A1AEUT1",474,0)
- F  D  Q:(A1AENB>999)  Q:(CNT>1010)
-"RTN","A1AEUT1",475,0)
- . N DINUM  ; S DINUM=$O(^A1AE(A1AEFL," "),-1)+1
-"RTN","A1AEUT1",476,0)
- . S DIC("DR")=".001///10;5///TEST"
-"RTN","A1AEUT1",477,0)
- . S DIC(0)="L"
-"RTN","A1AEUT1",478,0)
- . D NUM^A1AEUTL
-"RTN","A1AEUT1",479,0)
- . S CNT=CNT+1
-"RTN","A1AEUT1",480,0)
- . I CNT>1010 S $EC=",U-INIFITE-LOOP,"
-"RTN","A1AEUT1",481,0)
- D CHKEQ(A1AENB,1000)
-"RTN","A1AEUT1",482,0)
- ;
-"RTN","A1AEUT1",483,0)
- ; Get old primary back
-"RTN","A1AEUT1",484,0)
- N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
-"RTN","A1AEUT1",485,0)
+"RTN","A1AEUT1",387,0)
+ N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*2" ; override patch in mail kids
+"RTN","A1AEUT1",388,0)
+ D MAILKIDS
+"RTN","A1AEUT1",389,0)
+ D QUE
+"RTN","A1AEUT1",390,0)
+ N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+1 ; override patch number
+"RTN","A1AEUT1",391,0)
+ D PATCHNO,PATCHSET,PATCHROU
+"RTN","A1AEUT1",392,0)
+ D LOC
+"RTN","A1AEUT1",393,0)
+ D PATCHCR
+"RTN","A1AEUT1",394,0)
+ D PATCHCOM
+"RTN","A1AEUT1",395,0)
  QUIT
-"RTN","A1AEUT1",486,0)
+"RTN","A1AEUT1",396,0)
  ;
-"RTN","A1AEUT1",487,0)
+"RTN","A1AEUT1",397,0)
+PATCH3 ; @TEST Create a third patch - don't complete or verify
+"RTN","A1AEUT1",398,0)
+ N DIC
+"RTN","A1AEUT1",399,0)
+ D PKGADD,VERSETUP
+"RTN","A1AEUT1",400,0)
+ N A1AEUT1PD S A1AEUT1PD="ZZZ*2.0*3" ; override patch in mail kids
+"RTN","A1AEUT1",401,0)
+ D MAILKIDS
+"RTN","A1AEUT1",402,0)
+ D QUE
+"RTN","A1AEUT1",403,0)
+ N A1AEUT1PN S A1AEUT1PN=$$PRIMSTRM^A1AEUTL()+2 ; override patch number
+"RTN","A1AEUT1",404,0)
+ D PATCHNO,PATCHSET,PATCHROU
+"RTN","A1AEUT1",405,0)
+ D LOC
+"RTN","A1AEUT1",406,0)
+ D PATCHCR
+"RTN","A1AEUT1",407,0)
+ QUIT
+"RTN","A1AEUT1",408,0)
+ ;
+"RTN","A1AEUT1",409,0)
+WRITEID ; @TEST Test write identifier on the Patch Module
+"RTN","A1AEUT1",410,0)
+ D FIND^DIC(11005,,"@;WID","PQ","ZZZ","B") ; Find ZZZ patches in B index
+"RTN","A1AEUT1",411,0)
+ D ASSERT(^TMP("DILIST",$J,1,0)["|")  ; This format is introduced with patch module 2.4 if DIQUIET is turned on.
+"RTN","A1AEUT1",412,0)
+ N P1IEN S P1IEN=+^TMP("DILIST",$J,1,0) ; 1st IEN
+"RTN","A1AEUT1",413,0)
+ N P2IEN S P2IEN=+^TMP("DILIST",$J,2,0) ; 2nd IEN
+"RTN","A1AEUT1",414,0)
+ N FDA S FDA(11005,P2IEN_",","DERIVED FROM PATCH")=P1IEN ; populate this
+"RTN","A1AEUT1",415,0)
+ D FILE^DIE("",$NA(FDA)) ; ditto
+"RTN","A1AEUT1",416,0)
+ D FIND^DIC(11005,,"@;WID","A",P2IEN) ; A = Use IEN for lookup
+"RTN","A1AEUT1",417,0)
+ D ASSERT(^TMP("DILIST",$J,"ID","WRITE",1,2)["erived from") ; Contains derived from...
+"RTN","A1AEUT1",418,0)
+ QUIT
+"RTN","A1AEUT1",419,0)
+ ;
+"RTN","A1AEUT1",420,0)
+A1AEPH25 ; @TEST Test Report 5^A1AEPH2
+"RTN","A1AEUT1",421,0)
+ ; ZEXCEPT: DEV - Created by MKUSRTST
+"RTN","A1AEUT1",422,0)
+ S DUZ=DEV
+"RTN","A1AEUT1",423,0)
+ N %ZIS
+"RTN","A1AEUT1",424,0)
+ N DIC
+"RTN","A1AEUT1",425,0)
+ D PKGADD,VERSETUP
+"RTN","A1AEUT1",426,0)
+ N A1AEREV S A1AEREV=1
+"RTN","A1AEUT1",427,0)
+ N A1AEDEV S A1AEDEV="HFS;80;99999"
+"RTN","A1AEUT1",428,0)
+ S %ZIS("HFSMODE")="W"
+"RTN","A1AEUT1",429,0)
+ S %ZIS("HFSNAME")="A1AEPH25.TXT"
+"RTN","A1AEUT1",430,0)
+ D DQ5^A1AEPH2
+"RTN","A1AEUT1",431,0)
+ ;
+"RTN","A1AEUT1",432,0)
+ ; Read it back now
+"RTN","A1AEUT1",433,0)
+ N POP
+"RTN","A1AEUT1",434,0)
+ D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),"A1AEPH25.TXT","R")
+"RTN","A1AEUT1",435,0)
+ I POP D FAIL^XTMUNIT("IO problems") QUIT
+"RTN","A1AEUT1",436,0)
+ U IO
+"RTN","A1AEUT1",437,0)
+ N ARR,CNT
+"RTN","A1AEUT1",438,0)
+ S CNT=1
+"RTN","A1AEUT1",439,0)
+ N X
+"RTN","A1AEUT1",440,0)
+ F  R X:1 Q:$$STATUS^%ZISH()  I $E(X,1,3)="ZZZ" S ARR(CNT)=X,CNT=CNT+1
+"RTN","A1AEUT1",441,0)
+ U $P D CLOSE^%ZISH("FILE1")
+"RTN","A1AEUT1",442,0)
+ D ASSERT($D(ARR))
+"RTN","A1AEUT1",443,0)
+ N % S %("A1AEPH25.TXT")=""
+"RTN","A1AEUT1",444,0)
+ S %=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
+"RTN","A1AEUT1",445,0)
+ QUIT
+"RTN","A1AEUT1",446,0)
+ ;
+"RTN","A1AEUT1",447,0)
+A1AEPH21 ; @TEST Test Report 1^A1AEPH2
+"RTN","A1AEUT1",448,0)
+ ; ZEXCEPT: DEV - Created by MKUSRTST
+"RTN","A1AEUT1",449,0)
+ ; Index: AB - By designation
+"RTN","A1AEUT1",450,0)
+ ; Index: AC - By category
+"RTN","A1AEUT1",451,0)
+ ; Index: AP - By priority
+"RTN","A1AEUT1",452,0)
+ ; Index: AS - By Status
+"RTN","A1AEUT1",453,0)
+ N A1AEHD ; Header - used below
+"RTN","A1AEUT1",454,0)
+ N A1AEIX F A1AEIX="AB","AC","AP","AS" D
+"RTN","A1AEUT1",455,0)
+ . S DUZ=DEV
+"RTN","A1AEUT1",456,0)
+ . N DIC,DIS
+"RTN","A1AEUT1",457,0)
+ . D PKGADD,VERSETUP
+"RTN","A1AEUT1",458,0)
+ . N A1AES ; Suppress asking for sorting by status
+"RTN","A1AEUT1",459,0)
+ . S DIS(0)="I $P(^A1AE(11005,D0,0),U,8)=""c""",A1AEHD="Completed/NotReleased DHCP Patches Report",A1AES=""
+"RTN","A1AEUT1",460,0)
+ . N A1AEHDSAV S A1AEHDSAV=A1AEHD ; HD is killed off
+"RTN","A1AEUT1",461,0)
+ . S DIC("S")="I $S($D(^A1AE(11007,+Y,""PH"",DUZ,0)):1,'$D(^A1AE(11007,+Y,""PB"",DUZ,0)):0,$P(^(0),U,2)=""V"":1,1:0)"
+"RTN","A1AEUT1",462,0)
+ . N FN S FN="A1AEPH21-"_A1AEIX_".TXT"
+"RTN","A1AEUT1",463,0)
+ . N POP
+"RTN","A1AEUT1",464,0)
+ . D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),FN,"W")
+"RTN","A1AEUT1",465,0)
+ . I POP D FAIL^XTMUNIT("IO problems") QUIT
+"RTN","A1AEUT1",466,0)
+ . D START^A1AEPH3
+"RTN","A1AEUT1",467,0)
+ . D CLOSE^%ZISH("FILE1")
+"RTN","A1AEUT1",468,0)
+ . D OPEN^%ZISH("FILE1",$$DEFDIR^%ZISH(),FN,"R")
+"RTN","A1AEUT1",469,0)
+ . I POP D FAIL^XTMUNIT("IO problems") QUIT
+"RTN","A1AEUT1",470,0)
+ . U IO
+"RTN","A1AEUT1",471,0)
+ . N X F  R X:0 Q:$$STATUS^%ZISH()  Q:X[A1AEHDSAV
+"RTN","A1AEUT1",472,0)
+ . U $P D CLOSE^%ZISH("FILE1")
+"RTN","A1AEUT1",473,0)
+ . D ASSERT(X[A1AEHDSAV)
+"RTN","A1AEUT1",474,0)
+ . N % S %(FN)="",%=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
+"RTN","A1AEUT1",475,0)
+ QUIT
+"RTN","A1AEUT1",476,0)
+ ;
+"RTN","A1AEUT1",477,0)
  ; Convenience Methods for M-Unit
-"RTN","A1AEUT1",488,0)
+"RTN","A1AEUT1",478,0)
 CHKEQ(X,Y,Z) S Z=$G(Z) D CHKEQ^XTMUNIT(X,Y,Z) QUIT
-"RTN","A1AEUT1",489,0)
+"RTN","A1AEUT1",479,0)
 ASSERT(X,Y) S Y=$G(Y) D CHKTF^XTMUNIT(X,Y) QUIT
-"RTN","A1AEUT1",490,0)
+"RTN","A1AEUT1",480,0)
  ;
 "RTN","A1AEUT2")
 0^55^B101446265
 "RTN","A1AEUT2",1,0)
 A1AEUT2 ; VEN/SMH - KIDS test file;2014-01-22  1:40 PM
 "RTN","A1AEUT2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEUT2",3,0)
 KIDS ;;
 "RTN","A1AEUT2",4,0)
@@ -18523,7 +17979,7 @@ KIDS ;;
 "RTN","A1AEUTL",1,0)
 A1AEUTL ;RMO,MJK/ALBANY,VEN/SMH&TOAD - Patch Utilities ;2014-03-26  4:29 PM
 "RTN","A1AEUTL",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEUTL",3,0)
  ;
 "RTN","A1AEUTL",4,0)
@@ -19157,7 +18613,7 @@ EOR ; end of routine A1AEUTL
 "RTN","A1AEUTL1",1,0)
 A1AEUTL1 ; RMO,MJK/ALBANY ;2014-03-27  1:54 PM
 "RTN","A1AEUTL1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEUTL1",3,0)
  ;
 "RTN","A1AEUTL1",4,0)
@@ -19279,7 +18735,7 @@ TM X ^DD("DD") Q  ; Expect Y and output Y.
 "RTN","A1AEUTL2",1,0)
 A1AEUTL2 ;ISF/RWF - Utility: Routine Info ;2014-03-07  7:51 PM
 "RTN","A1AEUTL2",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEUTL2",3,0)
  Q
 "RTN","A1AEUTL2",4,0)
@@ -19486,134 +18942,12 @@ PTLDSP(RET,PATCH) ;Display list of patches.
  . S RET(IX)=RET(IX)_J_I,J=", "
 "RTN","A1AEUTL2",105,0)
  Q
-"RTN","A1AEUTL3")
-0^43^B7017424
-"RTN","A1AEUTL3",1,0)
-A1AEUTL3 ; PKE,RMO,MJK/ALBANY ;2014-03-28  5:25 PM;10 OCT 92 11:00 pm
-"RTN","A1AEUTL3",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
-"RTN","A1AEUTL3",3,0)
- ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
-"RTN","A1AEUTL3",4,0)
- ;
-"RTN","A1AEUTL3",5,0)
- I $D(DIFROM)
-"RTN","A1AEUTL3",6,0)
- E  W !?3,$C(7),"This routine should only be after v2.2 inits "
-"RTN","A1AEUTL3",7,0)
- E  W !?3,"This routine locks SEQ # by package version" Q
-"RTN","A1AEUTL3",8,0)
-EN W !?0,"Post initialization running ...  "
-"RTN","A1AEUTL3",9,0)
- D NOW^%DTC S Y=% D DD^%DT W Y,!
-"RTN","A1AEUTL3",10,0)
- D GET
-"RTN","A1AEUTL3",11,0)
- S CT=0,IFN=0
-"RTN","A1AEUTL3",12,0)
- W !?3,"Finding verified patches for last 2 versions",!
-"RTN","A1AEUTL3",13,0)
- F  S IFN=$O(^A1AE(11005,IFN)) Q:'IFN  I $D(^(IFN,0)) S IF0=^(0) DO
-"RTN","A1AEUTL3",14,0)
- .S A1AEPKIF=+$P(IF0,"^",2),A1AEVR=+$P(IF0,"^",3),VDT=+$P(IF0,"^",11)
-"RTN","A1AEUTL3",15,0)
- .;I $D(^TMP("A1AEV",A1AEPKIF,A1AEVR)),$P(IF0,"^",8)="v" DO
-"RTN","A1AEUTL3",16,0)
- .I $D(^TMP("A1AEV",A1AEPKIF,A1AEVR)),"ver"[$E($P(IF0,"^",8)_0) DO
-"RTN","A1AEUTL3",17,0)
- ..S ^TMP("A1AEV",A1AEPKIF,A1AEVR,VDT,IFN)="",CT=CT+1
-"RTN","A1AEUTL3",18,0)
- ..W:CT#10=0 "." W:$X>65 !
-"RTN","A1AEUTL3",19,0)
- W !
-"RTN","A1AEUTL3",20,0)
- ;Q
-"RTN","A1AEUTL3",21,0)
-SET S A1AEPKIF=0,CT=0,A1AENEW="v",SEQ=0
-"RTN","A1AEUTL3",22,0)
- W !?3,"Adding SEQ # to verified patches",!
-"RTN","A1AEUTL3",23,0)
- F  S A1AEPKIF=$O(^TMP("A1AEV",A1AEPKIF)) Q:'A1AEPKIF  DO
-"RTN","A1AEUTL3",24,0)
- .S A1AEVR=0
-"RTN","A1AEUTL3",25,0)
- .F  S A1AEVR=$O(^TMP("A1AEV",A1AEPKIF,A1AEVR)) Q:'A1AEVR  DO
-"RTN","A1AEUTL3",26,0)
- ..W !?3,^(A1AEVR),"*",A1AEVR,?15
-"RTN","A1AEUTL3",27,0)
- ..L +^A1AE(11007,A1AEPKIF,"V",A1AEVR,"PR"):60
-"RTN","A1AEUTL3",28,0)
- ..S VDT=0
-"RTN","A1AEUTL3",29,0)
- ..F  S VDT=$O(^TMP("A1AEV",A1AEPKIF,A1AEVR,VDT)) Q:'VDT  DO
-"RTN","A1AEUTL3",30,0)
- ...S IFN=0
-"RTN","A1AEUTL3",31,0)
- ...F  S IFN=$O(^TMP("A1AEV",A1AEPKIF,A1AEVR,VDT,IFN)) Q:'IFN  DO
-"RTN","A1AEUTL3",32,0)
- ....S DA=IFN D SEQ
-"RTN","A1AEUTL3",33,0)
- ....S CT=CT+1 W SEQ,"  " W:$X>67 !?15 Q
-"RTN","A1AEUTL3",34,0)
- ..L -^A1AE(11007,A1AEPKIF,"V",A1AEVR,"PR") Q
-"RTN","A1AEUTL3",35,0)
- ;
-"RTN","A1AEUTL3",36,0)
- W !
-"RTN","A1AEUTL3",37,0)
- W !?0,"... Post initialization complete:  "
-"RTN","A1AEUTL3",38,0)
- D NOW^%DTC S Y=% D DD^%DT W Y,!!
-"RTN","A1AEUTL3",39,0)
- K AZ,A1AEPKIF,A1AEVR,A1AENEW,VDT,IFN,DA,Y
-"RTN","A1AEUTL3",40,0)
- ;K ^TMP("A1AEV")
-"RTN","A1AEUTL3",41,0)
- Q
-"RTN","A1AEUTL3",42,0)
-SEQ S:'$D(^A1AE(11007,A1AEPKIF,"V",A1AEVR,"PR")) ^("PR")=0 S SEQ=^("PR")+1,^("PR")=SEQ
-"RTN","A1AEUTL3",43,0)
- I A1AENEW="v" S $P(^A1AE(11005,DA,0),"^",6)=SEQ
-"RTN","A1AEUTL3",44,0)
- Q
-"RTN","A1AEUTL3",45,0)
- ;
-"RTN","A1AEUTL3",46,0)
- ;sets tmp for all packages,versions
-"RTN","A1AEUTL3",47,0)
-GET S A1AEPKIF=0 K ^TMP("A1AEV")
-"RTN","A1AEUTL3",48,0)
- W !?3,"Finding last 2 versions of packages",!
-"RTN","A1AEUTL3",49,0)
- F  S A1AEPKIF=$O(^A1AE(11007,A1AEPKIF)) Q:'A1AEPKIF  DO
-"RTN","A1AEUTL3",50,0)
- .S A1AEVR=0
-"RTN","A1AEUTL3",51,0)
- .F  S A1AEVR=$O(^A1AE(11007,A1AEPKIF,"V",A1AEVR)) Q:'A1AEVR  DO
-"RTN","A1AEUTL3",52,0)
- ..S AZ(A1AEPKIF,A1AEVR)=""
-"RTN","A1AEUTL3",53,0)
- ..I A1AEVR'=999
-"RTN","A1AEUTL3",54,0)
- ..E  S ^TMP("A1AEV",A1AEPKIF,999)=$P(^DIC(9.4,A1AEPKIF,0),"^",2)
-"RTN","A1AEUTL3",55,0)
- .;
-"RTN","A1AEUTL3",56,0)
- .S A1AEVR=999 ;skip db versions 999
-"RTN","A1AEUTL3",57,0)
- .F N=1:1 S A1AEVR=$O(AZ(A1AEPKIF,A1AEVR),-1) Q:'A1AEVR  DO
-"RTN","A1AEUTL3",58,0)
- ..I N>2 Q
-"RTN","A1AEUTL3",59,0)
- ..S ^TMP("A1AEV",A1AEPKIF,A1AEVR)=$P(^DIC(9.4,A1AEPKIF,0),"^",2) Q
-"RTN","A1AEUTL3",60,0)
- Q
 "RTN","A1AEVP")
 0^44^B30091569
 "RTN","A1AEVP",1,0)
 A1AEVP ; RMO,MJK/ALBANY ; Screen Display and Print of New Verified Patches ;24 NOV 87 11:00 am
 "RTN","A1AEVP",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEVP",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AEVP",4,0)
@@ -19739,7 +19073,7 @@ CHKNEW S %DT="",X="T" D ^%DT S DT=Y,Y=1 I '$D(^A1AE(11007,"AU",DUZ)) W !!?3,*7,"
 "RTN","A1AEVP1",1,0)
 A1AEVP1 ; RMO,pke/ALBANY-Update as printed ;2014-03-28  5:39 PM
 "RTN","A1AEVP1",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEVP1",3,0)
  ;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 "RTN","A1AEVP1",4,0)
@@ -19803,7 +19137,7 @@ SETPRT W !?6,$P(^A1AE(11005,A1AEIFN,0),"^")
 "RTN","A1AEZCON",1,0)
 A1AEZCON ;RMO/ALBANY ;2014-03-28  5:00 PM;21 JAN 88 10:00 am
 "RTN","A1AEZCON",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEZCON",3,0)
  ;Version 2.0 ; *** NOT FOR GENERAL DISTRIBUTION ***
 "RTN","A1AEZCON",4,0)
@@ -19843,11 +19177,11 @@ CHGPAT S A1AEPAT=A1AENPRE_"*"_$P(A1AEPD,"*",2)_"*"_$P(A1AEPD,"*",3) I $D(^A1AE(1
 "RTN","A1AEZCON",21,0)
  Q
 "RTN","A1AEZTST")
-0^47^B1905853
+0^47^B2013390
 "RTN","A1AEZTST",1,0)
-A1AEZTST ; A1AE/PKE - check messages;
+A1AEZTST ; A1AE/PKE - check messages;2014-04-16  7:54 PM
 "RTN","A1AEZTST",2,0)
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 9
+ ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 10
 "RTN","A1AEZTST",3,0)
  ;pke
 "RTN","A1AEZTST",4,0)
@@ -19857,46 +19191,48 @@ ENV S (Z,Z1)="Verified ",Z3="SEQ #",TOT=0 D SIZE Q
 "RTN","A1AEZTST",6,0)
  ;
 "RTN","A1AEZTST",7,0)
-ENIN W !!?10,"Q-PATCH.VA.GOV input routines",!!
+ENIN W !!?10,"Q-PATCH input routines",!!
 "RTN","A1AEZTST",8,0)
- S TOT=0,QUE=$O(^XMB(3.7,.5,2,"B","Q-PATCH.VA.GOV",0)) I 'QUE Q
+ S TOT=0
 "RTN","A1AEZTST",9,0)
- S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,QUE,1,XMZ)) Q:'XMZ  DO
+        S %1=$O(^XMB(3.7,.5,2,"B","Q-PATCH")),QUE=$O(^XMB(3.7,.5,2,"B",%1,0)) I 'QUE Q
 "RTN","A1AEZTST",10,0)
- .I '$D(^XMB(3.9,XMZ,0)) Q
+ S XMZ=0 F  S XMZ=$O(^XMB(3.7,.5,2,QUE,1,XMZ)) Q:'XMZ  DO
 "RTN","A1AEZTST",11,0)
- .W !,$P(^(0),"^")
+ .I '$D(^XMB(3.9,XMZ,0)) Q
 "RTN","A1AEZTST",12,0)
- .S (I,X,Y)=0
+ .W !,$P(^(0),"^")
 "RTN","A1AEZTST",13,0)
- .F  S X=$O(^XMB(3.9,XMZ,2,X)) Q:X=""  S I=I+1,Y=Y+$L(^(X,0)) I I#100=0 W "." I $X>70 W !
-"RTN","A1AEZTST",14,0)
- .S TOT=TOT+Y
-"RTN","A1AEZTST",15,0)
- .W !?40,Y,?60,"Total KB = ",$P(TOT/1024,"."),!!
-"RTN","A1AEZTST",16,0)
- .R ZZZ:0 I  Q
-"RTN","A1AEZTST",17,0)
- Q
-"RTN","A1AEZTST",18,0)
- ;
-"RTN","A1AEZTST",19,0)
-SIZE F Z2=0:1 S Z=$O(^XMB(3.9,"B",Z)) Q:Z'[Z1  S XMZ=$O(^(Z,0)) I XMZ DO
-"RTN","A1AEZTST",20,0)
- .I Z'[Z3 Q
-"RTN","A1AEZTST",21,0)
  .S (I,X,Y)=0
-"RTN","A1AEZTST",22,0)
+"RTN","A1AEZTST",14,0)
  .F  S X=$O(^XMB(3.9,XMZ,2,X)) Q:X=""  S I=I+1,Y=Y+$L(^(X,0)) I I#100=0 W "." I $X>70 W !
-"RTN","A1AEZTST",23,0)
+"RTN","A1AEZTST",15,0)
  .S TOT=TOT+Y
-"RTN","A1AEZTST",24,0)
- .W !?3,Y,?20,Z,?60,"Total KB = ",$P(TOT/1024,"."),!
-"RTN","A1AEZTST",25,0)
+"RTN","A1AEZTST",16,0)
+ .W !?40,Y,?60,"Total KB = ",$P(TOT/1024,"."),!!
+"RTN","A1AEZTST",17,0)
  .R ZZZ:0 I  Q
-"RTN","A1AEZTST",26,0)
+"RTN","A1AEZTST",18,0)
  Q
+"RTN","A1AEZTST",19,0)
+ ;
+"RTN","A1AEZTST",20,0)
+SIZE F Z2=0:1 S Z=$O(^XMB(3.9,"B",Z)) Q:Z'[Z1  S XMZ=$O(^(Z,0)) I XMZ DO
+"RTN","A1AEZTST",21,0)
+ .I Z'[Z3 Q
+"RTN","A1AEZTST",22,0)
+ .S (I,X,Y)=0
+"RTN","A1AEZTST",23,0)
+ .F  S X=$O(^XMB(3.9,XMZ,2,X)) Q:X=""  S I=I+1,Y=Y+$L(^(X,0)) I I#100=0 W "." I $X>70 W !
+"RTN","A1AEZTST",24,0)
+ .S TOT=TOT+Y
+"RTN","A1AEZTST",25,0)
+ .W !?3,Y,?20,Z,?60,"Total KB = ",$P(TOT/1024,"."),!
+"RTN","A1AEZTST",26,0)
+ .R ZZZ:0 I  Q
 "RTN","A1AEZTST",27,0)
+ Q
+"RTN","A1AEZTST",28,0)
  ;
 "SEC","^DIC",11005,11005,0,"DD")
 #
