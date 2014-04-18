@@ -1,4 +1,4 @@
-A1AEPSVR	; VEN/SMH - Mailman Patch Server;2014-03-23  7:22 PM
+A1AEPSVR	; VEN/SMH - Mailman Patch Server;2014-04-15  9:27 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014
 	; This routine reads patches coming via email from VA Forum
 	; and files them into this forum
@@ -131,7 +131,7 @@ UT1	; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
 	. . F DIK="^A1AE(11005,","^A1AE(11005.1," D ^DIK  ; PM Patch and Message files
 	. S DIK="^A1AE(11007,",DA=PKIEN D ^DIK  ; PM Package File
 	;
-	D CHKTF^XTMUNIT('$D(^A1AE(11005,"D",PKIEN)))
+	D CHKTF^XTMUNIT('$D(^A1AE(11005,"D",PKIEN)),"Package should be gone")
 	N MESS,LN0,LN
 	N I F I=1:1 S LN0=$T(MESSAGE+I),LN=$P(LN0,";;",2,99) S MESS(I,0)=LN Q:LN["$END KID"
 	N FLAGS S FLAGS("TYPE")="K" ; KIDS
@@ -140,7 +140,7 @@ UT1	; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
 	D SENDMSG^XMXAPI(DUZ,PD,$NA(MESS),"S.A1AE LOAD RELEASED PATCH",.FLAGS,.MESSAGEIEN)
 	D EN^DDIOL("Waiting 10 seconds for taskman to finish...")
 	HANG 10
-	D CHKTF^XTMUNIT($D(^A1AE(11005,"D",PKIEN)))
+	D CHKTF^XTMUNIT($D(^A1AE(11005,"D",PKIEN)),"Package should be present")
 	QUIT
 	;
 MESSAGE	;;
