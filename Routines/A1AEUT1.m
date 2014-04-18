@@ -1,4 +1,4 @@
-A1AEUT1	; VEN/SMH - Unit Tests for the Patch Module ;2014-03-28  5:31 PM
+A1AEUT1	; VEN/SMH - Unit Tests for the Patch Module ;2014-04-17  6:39 PM
 	;;2.4;PATCH MODULE;;Mar 28, 2014
 	;
 	; Change History:
@@ -370,6 +370,17 @@ PATCHVER	; @TEST Verify a Patch
 	D CHKEQ($P(^A1AE(11005,DA,0),U,8),"v")
 	QUIT
 	;
+PATCHEX ; @TEST Export Verified patch to KIDS build on file system
+ N A1AEUT1IEN S A1AEUT1IEN=DA
+ D ^A1AEM2K
+ D OPEN^%ZISH("KIDFIL",$$DEFDIR^%ZISH(),"ZZZ-2_SEQ-10001_PAT-10001.KID","R")
+ U IO
+ N %1,%2,%3
+ R %1:1,%2:1,%3:1
+ D CLOSE^%ZISH("KIDFIL")
+ D ASSERT(%3["**KIDS**")
+ QUIT
+ ;
 PATCH2	; @TEST Create a second patch - complete this one
 	N DIC
 	D PKGADD,VERSETUP
@@ -395,6 +406,17 @@ PATCH3	; @TEST Create a third patch - don't complete or verify
 	D PATCHCR
 	QUIT
 	;
+WRITEID ; @TEST Test write identifier on the Patch Module
+ D FIND^DIC(11005,,"@;WID","PQ","ZZZ","B") ; Find ZZZ patches in B index
+ D ASSERT(^TMP("DILIST",$J,1,0)["|")  ; This format is introduced with patch module 2.4 if DIQUIET is turned on.
+ N P1IEN S P1IEN=+^TMP("DILIST",$J,1,0) ; 1st IEN
+ N P2IEN S P2IEN=+^TMP("DILIST",$J,2,0) ; 2nd IEN
+ N FDA S FDA(11005,P2IEN_",","DERIVED FROM PATCH")=P1IEN ; populate this
+ D FILE^DIE("",$NA(FDA)) ; ditto
+ D FIND^DIC(11005,,"@;WID","A",P2IEN) ; A = Use IEN for lookup
+ D ASSERT(^TMP("DILIST",$J,"ID","WRITE",1,2)["erived from") ; Contains derived from...
+ QUIT
+ ;
 A1AEPH25	; @TEST Test Report 5^A1AEPH2
 	; ZEXCEPT: DEV - Created by MKUSRTST
 	S DUZ=DEV
@@ -450,38 +472,6 @@ A1AEPH21	; @TEST Test Report 1^A1AEPH2
 	. U $P D CLOSE^%ZISH("FILE1")
 	. D ASSERT(X[A1AEHDSAV)
 	. N % S %(FN)="",%=$$DEL^%ZISH($$DEFDIR^%ZISH(),$NA(%))
-	QUIT
-	;
-PATCH999	; #TEST Try to exceed 999 - not applicable any more
-	; ZEXCEPT: DEV - Created by MKUSRTST
-	;
-	; Get the old primary stream
-	N OLDPRIM S OLDPRIM=$O(^A1AE(11007.1,"PRIM",1,""))
-	I 'OLDPRIM S OLDPRIM=1
-	;
-	; Make VA patch stream primary
-	N DA,DIE,DR S DA=1,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
-	;
-	N DIC ; don't leak this to the next calls
-	; Next two lines required by API.
-	N A1AEFL,A1AETY
-	S A1AEFL=11005,A1AETY="PH"
-	D PKGADD,VERSETUP
-	S DUZ=DEV
-	S DIC("S")="I $D(^A1AE(11007,+Y,A1AETY,DUZ,0))"
-	N CNT S CNT=0
-	; ZEXCEPT: A1AENB - leaked by NUM^A1AEUTL
-	F  D  Q:(A1AENB>999)  Q:(CNT>1010)
-	. N DINUM  ; S DINUM=$O(^A1AE(A1AEFL," "),-1)+1
-	. S DIC("DR")=".001///10;5///TEST"
-	. S DIC(0)="L"
-	. D NUM^A1AEUTL
-	. S CNT=CNT+1
-	. I CNT>1010 S $EC=",U-INIFITE-LOOP,"
-	D CHKEQ(A1AENB,1000)
-	;
-	; Get old primary back
-	N DA,DIE,DR S DA=OLDPRIM,DIE="^A1AE(11007.1,",DR="2///1" D ^DIE
 	QUIT
 	;
 	; Convenience Methods for M-Unit
