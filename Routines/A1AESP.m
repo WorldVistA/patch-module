@@ -1,5 +1,5 @@
 A1AESP	;ISF/RWF - Special load of package releases ;08/19/2010  5079.826506
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 EN	;Read an HFS Package release.
 	W !,"Use LDINS entry point" Q
 	N PACKAGE,RTN,NOW,RR,X,Y,DONE

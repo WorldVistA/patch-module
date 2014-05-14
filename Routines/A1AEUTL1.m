@@ -1,5 +1,5 @@
-A1AEUTL1	; RMO,MJK/ALBANY ;1/11/07  12:01
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEUTL1	; RMO,MJK/ALBANY ;2014-03-27  1:54 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;
 PCHK	;call if $d(^(d0,"q","b")), return az(), k az,print
 	S AZ=0 F  S AZ=$O(^A1AE(11005,D0,"Q",AZ)) Q:'AZ  I $D(^(AZ,0)) S AZ0=^(0),AZ(+AZ0)=$S($D(^A1AE(11005,+AZ0,0)):"("_$P(^(0),"^",8)_")"_$P(^(0),"^"),1:"patch not available") DO
@@ -56,5 +56,5 @@ DATE	;Ask Date Range of Verified patches
 	W ! S %DT="APEX",%DT("A")="   Ending    DATE : " D ^%DT K %DT S:Y<0 POP=1 Q:Y<0  W ! S ENDDATE=Y
 	Q
 XTM	S Y=$E(Y,4,5)_"/"_$E(Y,6,7)_"/"_$E(Y,2,3)_$P("@"_$E(Y_0,9,10)_":"_$E(Y_"000",11,12),"^",Y[".") S:Y="//" Y="" Q
-TM	S Y=$E(Y,4,5)_"/"_$E(Y,6,7)_"/"_$E(Y,2,3) S:Y="//" Y="" Q
+TM	X ^DD("DD") Q  ; Expect Y and output Y.
 	Q

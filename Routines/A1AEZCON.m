@@ -1,5 +1,5 @@
-A1AEZCON	;RMO/ALBANY ; Utility- Prefix Conversion;21 JAN 88 10:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEZCON	;RMO/ALBANY ;2014-03-28  5:00 PM;21 JAN 88 10:00 am
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;Version 2.0 ; *** NOT FOR GENERAL DISTRIBUTION ***
 CONPAT	;Package prefix conversion entry point.
 	I '$D(^XUSEC("A1AE MGR",DUZ)) W !,*7,"You must hold the 'A1AE MGR' key to proceed with this option." G Q
@@ -16,6 +16,6 @@ CONPAT	;Package prefix conversion entry point.
 Q	K A1AEIFN,A1AELP,A1AEPD,A1AEPKIF,A1AECPRE,A1AENPRE,A1AEPAT,X,Y
 	Q
 	;
-CHGPAT	B  S A1AEPAT=A1AENPRE_"*"_$P(A1AEPD,"*",2)_"*"_$P(A1AEPD,"*",3) I $D(^A1AE(11005,"B",A1AEPAT)) W !,"...",A1AEPD," not changed ",A1AEPAT," already exists" Q
+CHGPAT	S A1AEPAT=A1AENPRE_"*"_$P(A1AEPD,"*",2)_"*"_$P(A1AEPD,"*",3) I $D(^A1AE(11005,"B",A1AEPAT)) W !,"...",A1AEPD," not changed ",A1AEPAT," already exists" Q
 	S DA=A1AEIFN,DIE="^A1AE(11005,",DR=".01////"_A1AEPAT D ^DIE K DA,DE,DQ,DIE W !,"...",A1AEPD," changed to ",A1AEPAT
 	Q

@@ -1,5 +1,5 @@
-A1AEPH1	; RMO,MJK/ALBANY - Patch control ;6/29/07  10:54
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+A1AEPH1	; RMO,MJK/ALBANY - Patch control ;2014-03-28  5:34 PM
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	G:$D(^DOPT("A1AEPH1",5)) A S ^DOPT("A1AEPH1",0)="Entry/Edit Patch Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPH1",I,0)=$P(X,";;",2,99)
 	S DIK="^DOPT(""A1AEPH1""," D IXALL^DIK
 A	W !! S DIC="^DOPT(""A1AEPH1"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
@@ -20,7 +20,9 @@ A	W !! S DIC="^DOPT(""A1AEPH1"",",DIC(0)="AEMQ" D ^DIC Q:Y<0  D @+Y G A
 	S $P(A1AEPD,"*",2)=$S($P(A1AEPD,"*",2)=999:"DBA",1:$P(A1AEPD,"*",2))
 PMT2	W !!,"Are you sure you want to delete patch "_A1AEPD_"? N// " R X:DTIME G Q:'$T!(X="^")!("Nn"[$E(X,1)) G DEL2:"Yy"[$E(X,1) W:X'["?" *7 W !!,"Enter Y to delete the selected patch, or N to exit." G PMT2
 DEL2	S DIK="^A1AE(11005," D ^DIK W !!?3,"...deletion of "_A1AEPD_" from 'DHCP Patch File' completed"
-	L ^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH") I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4) L
+	L +^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH"):60
+	I $D(^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")) S:$P(A1AE0,"^",4)<^("PH") ^("PH")=$P(A1AE0,"^",4)
+	L -^A1AE(11007,$P(A1AE0,"^",2),"V",$P(A1AE0,"^",3),"PH")
 	;delete message entry
 	S DIK="^A1AE(11005.1," D ^DIK
 	G Q

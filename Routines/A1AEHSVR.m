@@ -1,5 +1,5 @@
 A1AEHSVR	;ISF/RWF - HFS Checksum Msg server ;10/17/07  15:19
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 EN	;Save the HFS Checksum message for when the patch is released.
 	N IEN,TYPE,DATE,PATCH,PACKAGE,FDA,FIE,Y,X,CNT,EXIT
 	K ^TMP("A1AE",$J)

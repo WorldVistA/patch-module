@@ -1,12 +1,12 @@
-A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-03-05  2:24 PM
- ;;2.4;DHCP PATCH MODULE;
+A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-03-28  6:41 PM ; 3/31/14 5:44pm
+ ;;2.4;PATCH MODULE;;Mar 28, 2014
  ;
 TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 STARTUP ; M-Unit Start-up
  ; ZEXCEPT: OLDPWD,A1AEK2MTIEN
- I $D(DUZ)[0 NEW  D ^XUP ; X-New. Protect our variables from XUP's global kill.
+ I $D(DUZ)[0 D ^XUP ; X-New. Protect our variables from XUP's global kill.
  ; Make the user a surrogate to postmaster
- N FDA 
+ N FDA
  S FDA(3.703,"?+1,.5,",.01)="`"_DUZ
  S FDA(3.703,"?+1,.5,",1)="y" ; Read Priv
  S FDA(3.703,"?+1,.5,",2)="y" ; Send Priv
@@ -30,16 +30,14 @@ STARTUP ; M-Unit Start-up
  . S $P(^A1AE(11005,0),U,3,4)=0_U_0 ; Zero out the header node so we start counting at zero
  ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
- S OLDPWD=$ZDIRECTORY
+ S OLDPWD=$$PWD^A1AEOS()
  D EN^DDIOL("Cloning the OSEHRA repository. This will take some time.")
- N P S P="cmdpipe"
- O P:(shell="/bin/sh":command="mkdir osehra-repo")::"pipe"
- U P C P
- S $ZDIRECTORY=OLDPWD_"/"_"osehra-repo"
- O P:(shell="/bin/sh":command="git clone --depth=0 https://github.com/OSEHRA/VistA":READONLY:PARSE)::"pipe"
- U P
- N X F  R X:1 Q:$ZEOF  ; just loop around until we are done.
- C P
+        N % S %=$$MKDIR^A1AEOS("osehra-repo")
+        I % S $EC=",U-MKDIR-FAILED,"
+        N D S D=$$D^A1AEOS()
+        N % S %=$$CD^A1AEOS(OLDPWD_D_"osehra-repo")
+        I %'["osehra" S $EC=",U-CD-FAILED,"
+        N % S %=$$RDPIPE^A1AEOS(,"git clone --depth=0 https://github.com/OSEHRA/VistA")
  QUIT
  ;
 SHUTDOWN ; M-Unit Shutdown
@@ -48,9 +46,8 @@ SHUTDOWN ; M-Unit Shutdown
  N C S C=","
  N FDA S FDA(3.703,A1AEK2MTIEN(1)_C_.5_C,.01)="@" D FILE^DIE("E",$NA(FDA))
  ;
- I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  N P S P="cmdpipe"
- S $ZDIRECTORY=OLDPWD
+        N % S %=$$CD^A1AEOS(OLDPWD)
  K OLDPWD,A1AEK2MTIEN
  ; Don't delete. Takes forever to clone again.
  ; O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
@@ -84,9 +81,9 @@ SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
  N FILE
  N % S %=$$LIST^%ZISH(ROOT,"ARRAY","FILE")
  I '% S $EC=",U-WRONG-DIRECTORY,"
- N % S %=$$SELFIL^A1AEK2M0(.FILE)
+ N % S %=$$SELFIL^A1AEK2M3(.FILE)
  W !,%
- N % S %=$$SELFIL^A1AEK2M0(.FILE,".TXT")
+ N % S %=$$SELFIL^A1AEK2M3(.FILE,".TXT")
  W !,%
  QUIT
  ;
@@ -107,22 +104,17 @@ ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  QUIT
  ;
 ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
- ; REALLY REALLY NOT SAC COMPLIANT.
- I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
- N P S P="cmdpipe"
- O P:(shell="/bin/sh":command="find . -name '*.TXT'")::"pipe"
- U P
- N X F  U P R X:1 Q:$ZEOF  U $P D
+        N FILES N % S %=$$RDPIPE^A1AEOS(.FILES,"find . -name '*.TXT'")
+        N I F I=0:0 S I=$O(FILES(I)) Q:'I  D 
  . K ^TMP($J,"TXT")
- . N Y S Y=$$FTG^%ZISH($ZD,X,$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
+ . N Y S Y=$$FTG^%ZISH($$PWD^A1AEOS(),FILES(I),$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
  . D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT"))) ; Clean header and footer.
  . N RTN
  . N $ET,$ES ; We do a try catch with ANALYZE^A1AEK2M2
- . S $ET="D ANATRAP^A1AEK2M2(X)"
+ . S $ET="D ANATRAP^A1AEK2M2(FILES(I))"
  . D ANALYZE^A1AEK2M2(.RTN,$NA(^TMP($J,"TXT")),"")
  . D ASSERT($L(RTN("SEQ")))
  . D ASSERT($L(RTN("SUBJECT")))
- C P
  QUIT  ; /END ANALYZE2
  ;
 SB ; @TEST Analyze Single build KIDS file
@@ -160,7 +152,7 @@ LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
  N P S P="cmdpipe"
  N A S A("VistA/Packages/*")=""
  N PACKAGES
- N % S %=$$LIST^%ZISH($ZD,$NA(A),$NA(PACKAGES))
+ N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PACKAGES))
  I '% S $EC=",U-LISTER-FAILED,"
  ;
  ; Get MB directory
@@ -177,7 +169,7 @@ LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
  . I PACKAGE="Uncategorized" QUIT
  . N A S A("VistA/Packages/"_PACKAGE_"/Patches/*")=""
  . N PATCHES
- . N % S %=$$LIST^%ZISH($ZD,$NA(A),$NA(PATCHES))
+ . N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PATCHES))
  . I '% S $EC=",U-LISTER-FAILED,"
  . N PATCH S PATCH=""
  . F  S PATCH=$O(PATCHES(PATCH)) Q:PATCH=""  D

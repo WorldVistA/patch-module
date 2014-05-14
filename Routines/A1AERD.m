@@ -1,5 +1,5 @@
 A1AERD	; RMO,MJK/ALBANY ; Read Processor ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 SET	S:'$D(A1AERD(0)) A1AERD(0)="" W:A1AERD(0)'["S" !?2,"Choose one of the following:"
 	F I=0:0 S I=$O(A1AERD(I)) Q:'I  W:A1AERD(0)'["S" !?10,$P(A1AERD(I),"^",1) S V=$P(A1AERD(I),"^",1) D UPPER S $P(A1AERD(I),"^",3)=S

@@ -1,5 +1,5 @@
 A1AEPB1	; RMO,MJK/ALBANY ; Entry/Edit Problem Menu ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 	G:$D(^DOPT("A1AEPB1",5)) A S ^DOPT("A1AEPB1",0)="Entry/Edit Problem Menu Option^1N^" F I=1:1 S X=$T(@I) Q:X=""  S ^DOPT("A1AEPB1",I,0)=$P(X,";;",2,99)
 	S DIK="^DOPT(""A1AEPB1""," D IXALL^DIK

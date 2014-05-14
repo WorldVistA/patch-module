@@ -1,5 +1,5 @@
 A1AEM2	;ISC-Albany/pke-forward a patch message ; 4/15/90
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;12/02/92
 	;change FCOM,FVER dic 11005.1 ,scrn lookup
 RCHK	;input transform on routine name x

@@ -1,5 +1,5 @@
 A1AEPH8	; RMO/ALBANY ; Copy a Patch into a New Patch ;24 NOV 87 11:00 am
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 	;;Version 2.2;PROBLEM/PATCH REPORTING;;11/23/92
 	;added logic to copy 11005.1 if present, PCOPY
 COPY	S DIC("A")="Select PATCH TO COPY: ",DIC("S")="I $D(^A1AE(11007,+$P(^(0),U,2),""PH"",DUZ,0))",DIC="^A1AE(11005,",DIC(0)="AEMQZ" W ! D ^DIC K DIC("A"),DIC("S") Q:Y<0  S A1AEIFN=+Y,A1AEOLPD=$P(Y(0),"^",1),A1AEPKIF=$P(Y(0),"^",2)

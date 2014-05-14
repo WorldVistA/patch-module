@@ -1,5 +1,5 @@
 A1AERCON	;CJS/SLC - Check for routie overlap on unreleased patchs ;4/25/05  18:59
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
+	;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
 EN	K ^TMP($J) S LINE=0,DIC=11005,DIC(0)="AEMQ",DIC("S")="I ""cu""[$P(^(0),U,8)" D ^DIC S PATCH=+Y G:PATCH'>0 EXIT
 	S DIR(0)="NO^0:999:0",DIR("A")="Include patches released within how many months? (0 for only active overlaps)",DIR("B")=0 D ^DIR S MONTHS=Y
 	S VER=$P(^A1AE(11005,PATCH,0),"*",2),RLIST=0 F  S RLIST=$O(^A1AE(11005,PATCH,"P",RLIST)) Q:RLIST'>0  D

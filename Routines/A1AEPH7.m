@@ -1,6 +1,0 @@
-A1AEPH7	; RMO/ALBANY ;10/17/07  15:08
-	;;2.3;Patch Module;;Oct 17, 2007;Build 8
-	;Version 1.1
-	D PKG^A1AEUTL G Q:'$D(A1AEPK) D VER^A1AEUTL G Q:'$D(A1AEVR)
-	S A1AERD("A")=1
-Q	Q
