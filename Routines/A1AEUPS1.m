@@ -1,4 +1,4 @@
-A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-08-21  3:50 AM; 8/20/14 11:07pm ; 9/29/14 5:50pm
+A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-02  5:28 PM; 8/20/14 11:07pm ; 9/29/14 5:50pm
  ;;2.4;PATCH MODULE;;AUG 20, 2014
  ;
  ; CHANGE: (VEN/LGC) Corrected calls to Post Install
@@ -159,10 +159,24 @@ UTSUBS() N UTSUBS S (A1AEI,UTSUBS)=0
  .  I $P(^A1AE(11007.1,A1AEI,0),U,6) S UTSUBS=A1AEI
  Q UTSUBS
  ;
+CHKPLUS  ; @TEST check setting of Pre-LookUp Transforms
+ ; remove existing nodes that will be set
+ K ^DD(9.49,.01,7.5),^DD(9.6,.01,7.5),^DD(9.7,.01,7.5)
+ ; now run code to set them
+ D SETPLUS^A1AE2POS
+ ; and check that they are set
+ D CHKTF^%ut($D(^DD(9.49,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for subfile 9.49")
+ D CHKTF^%ut($D(^DD(9.6,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for file 9.6")
+ D CHKTF^%ut($D(^DD(9.7,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for file 9.7")
+ Q
+ ;
 XTENT ;
  ;;UTP0;Testing setting of all PRIMARY? to NO in 11007.1
  ;;UTPR;Testing setting PRIMARY? to yes if FORUM site
  ;;UTS0;Testing setting of SUBSCRIPTION to FOIA VISTA
  Q
+ ;
+XTROU   ;
+ ;;A1AEUPS2;additional tests
  ;
 EOR ; end of routine A1AEUPS1
