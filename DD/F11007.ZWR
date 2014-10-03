@@ -1,11 +1,11 @@
 KBANXDD - FILE 11007
-3140102.151645 ZWR
+3141002.22464 ZWR
 ^DIC(11007,0)="DHCP PATCH/PROBLEM PACKAGE^11007PI"
 ^DIC(11007,0,"DD")="#"
 ^DIC(11007,0,"DEL")="#"
 ^DIC(11007,0,"GL")="^A1AE(11007,"
 ^DIC(11007,"%",0)="^1.005^0^0"
-^DIC(11007,"%D",0)="^^5^5^2910612^^^^"
+^DIC(11007,"%D",0)="^1.001^5^5^3140211^^^^"
 ^DIC(11007,"%D",1,0)="This file contains DHCP packages for the DHCP PATCHES file (#11005)."
 ^DIC(11007,"%D",2,0)="For a package to be added to this file it must reside in the PACKAGE"
 ^DIC(11007,"%D",3,0)="file (#9.4). This file also contains authorized development, support"

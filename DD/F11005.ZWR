@@ -1,5 +1,5 @@
 KBANXDD - FILE 11005
-3140331.185418 ZWR
+3141002.224345 ZWR
 ^DIC(11005,0)="DHCP PATCHES^11005I"
 ^DIC(11005,0,"DD")="#"
 ^DIC(11005,0,"DEL")="#"
@@ -11,7 +11,7 @@ KBANXDD - FILE 11005
 ^DIC(11005,"%D",4,0)="enter patches s/he must be an authorized developer of the package in"
 ^DIC(11005,"%D",5,0)="file (#11007)."
 ^DD(11005,0)="FIELD^^5.6^52"
-^DD(11005,0,"DT")=3140328
+^DD(11005,0,"DT")=3140812
 ^DD(11005,0,"ID",5)="W """""
 ^DD(11005,0,"ID","WRITE")="D ID11005^A1AEUTL"
 ^DD(11005,0,"IX","AC",11005.05,.01)=""
@@ -30,6 +30,8 @@ KBANXDD - FILE 11005
 ^DD(11005,0,"IX","PS",11005,5)=""
 ^DD(11005,0,"IX","R",11005.03,.01)=""
 ^DD(11005,0,"NM","DHCP PATCHES")=""
+^DD(11005,0,"PT",9.619,.01)=""
+^DD(11005,0,"PT",9.719,.01)=""
 ^DD(11005,0,"PT",11005,5.2)=""
 ^DD(11005,0,"PT",11005,5.7)=""
 ^DD(11005,0,"PT",11005.09,.01)=""
@@ -50,10 +52,10 @@ KBANXDD - FILE 11005
 ^DD(11005,.01,2)="S Y(0)=Y S:$P(Y,""*"",2)=999 $P(Y,""*"",2)=""DBA"""
 ^DD(11005,.01,2.1)="S:$P(Y,""*"",2)=999 $P(Y,""*"",2)=""DBA"""
 ^DD(11005,.01,3)="ANSWER MUST BE 6-20 CHARACTERS IN LENGTH"
-^DD(11005,.01,7.5)="N V S V=$P(X,""*"",2) S:+V'=V&(V'="""") $P(X,""*"",2)=$S(""DBAdba""[V:999,1:+V)"
+^DD(11005,.01,7.5)="D PLU11005^A1AEDD1"
 ^DD(11005,.01,21,0)="^^1^1^3140110^^^^"
 ^DD(11005,.01,21,1,0)="Patch Designation has the following format: Package Namespace*Version Number*System Assigned Patch Number."
-^DD(11005,.01,"DT")=3140324
+^DD(11005,.01,"DT")=3140813
 ^DD(11005,.2,0)="PATCH STREAM^RP11007.1'^A1AE(11007.1,^0;20^Q"
 ^DD(11005,.2,3)="Select a patch stream."
 ^DD(11005,.2,9)="^"
@@ -86,7 +88,7 @@ KBANXDD - FILE 11005
 ^DD(11005,.2,23,22,0)="Tuesday, 25 February 2014: (VEN/TOAD) Revised Description, wrote "
 ^DD(11005,.2,23,23,0)="Technical Description, added Change History, and write-protected the "
 ^DD(11005,.2,23,24,0)="field to prevent user editing."
-^DD(11005,.2,"DT")=3140324
+^DD(11005,.2,"DT")=3140813
 ^DD(11005,.21,0)="CURRENTLY IMPORTING^S^1:Yes;0:No;^0;21^Q"
 ^DD(11005,.21,3)="Not user editable."
 ^DD(11005,.21,21,0)="^^2^2^3140307^"
@@ -103,7 +105,7 @@ KBANXDD - FILE 11005
 ^DD(11005,2,21,1,0)="The Package must reside in the Package File(#9.4) and in the"
 ^DD(11005,2,21,2,0)="DHCP Patch/Problem File(#11007) to be used in the Patch Module."
 ^DD(11005,2,"DT")=3140324
-^DD(11005,3,0)="VERSION^RFXIO^^0;3^K:X[""""""""!($A(X)=45) X I $D(X) K:$L(X)>10!($L(X)<1) X"
+^DD(11005,3,0)="VERSION^RFXOI^^0;3^K:X[""""""""!($A(X)=45) X I $D(X) K:$L(X)>10!($L(X)<1) X"
 ^DD(11005,3,1,0)="^.1^^0"
 ^DD(11005,3,2)="S Y(0)=Y S Y=$S(Y=999:""DBA"",1:Y)"
 ^DD(11005,3,2.1)="S Y=$S(Y=999:""DBA"",1:Y)"
@@ -113,7 +115,7 @@ KBANXDD - FILE 11005
 ^DD(11005,3,21,1,0)="The most recent Version is used as the default, but other valid"
 ^DD(11005,3,21,2,0)="Version Numbers may be entered. Version '999' is reserved for DBA"
 ^DD(11005,3,21,3,0)="type patches."
-^DD(11005,3,"DT")=3140324
+^DD(11005,3,"DT")=3140812
 ^DD(11005,4,0)="PATCH NUMBER^RNJ5,0I^^0;4^K:+X'=X!(X>99999)!(X<0)!(X?.E1"".""1N.N) X"
 ^DD(11005,4,1,0)="^.1^^0"
 ^DD(11005,4,3)="TYPE A WHOLE NUMBER BETWEEN 0 AND 99999"
@@ -969,6 +971,19 @@ KBANXDD - FILE 11005
 ^DD("IX",IEN,11.1,"AC",1,1)=""
 ^DD("IX",IEN,11.1,"B",1,1)=""
 ^DD("IX",IEN,11.1,"BB",1,1)=""
+^DD("IX",IEN,0)="11005^APTCSTM^Quick lookup for patch and patch stream^R^^R^IR^I^11005^^^^^S"
+^DD("IX",IEN,1)="S ^A1AE(11005,""APTCSTM"",$E(X(1),1,30),X(2),DA)="""""
+^DD("IX",IEN,2)="K ^A1AE(11005,""APTCSTM"",$E(X(1),1,30),X(2),DA)"
+^DD("IX",IEN,2.5)="K ^A1AE(11005,""APTCSTM"")"
+^DD("IX",IEN,11.1,0)="^.114IA^2^2"
+^DD("IX",IEN,11.1,1,0)="1^F^11005^.01^30^1^F"
+^DD("IX",IEN,11.1,2,0)="2^F^11005^.2^^2^F"
+^DD("IX",IEN,11.1,"AC",1,1)=""
+^DD("IX",IEN,11.1,"AC",2,2)=""
+^DD("IX",IEN,11.1,"B",1,1)=""
+^DD("IX",IEN,11.1,"B",2,2)=""
+^DD("IX",IEN,11.1,"BB",1,1)=""
+^DD("IX",IEN,11.1,"BB",2,2)=""
 ^DD("KEY",IEN,0)="11005^A^P^1030"
 ^DD("KEY",IEN,2,0)="^.312IA^1^1"
 ^DD("KEY",IEN,2,1,0)=".01^11005^1"
