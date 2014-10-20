@@ -1,4 +1,4 @@
-A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-02  5:28 PM; 8/20/14 11:07pm ; 9/29/14 5:50pm
+A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-17  10:21 PM; 8/20/14 11:07pm ; 10/20/14 5:52am
  ;;2.4;PATCH MODULE;;AUG 20, 2014
  ;
  ; CHANGE: (VEN/LGC) Corrected calls to Post Install
@@ -9,15 +9,55 @@ A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-02  5:28 PM; 8/2
  ;        Added code at UTS0+7 to save entry temporarily
  ;        stream set to subscription, to assure after
  ;        testing this was returned to 0
+ ; CHANGE: (VEN/LGC) 10/16/2014
+ ;        Added code to check for exsitence and DD
+ ;        of files before continuing with testing
+ ;        Added A1AEFAIL to indicate when testing
+ ;        should not continue.
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
+ ; N A1AEFAIL S A1AEFAIL=0 ; JLI 141017 moved to STARTUP
  D EN^%ut($T(+0),1)
  Q
  ;
-STARTUP L +^A1AE(11007.1):1 I '$T D  Q
- .  W !,"*** COULD NOT GET LOCK.  TRY LATER ***"
+STARTUP ;
+ S A1AEFAIL=0 ; KILLED IN SHUTDOWN ; JLI 141017
+ I '$D(^A1AE(11007.1)) D  Q
+ . S A1AEFAIL=1
+ . W !,"DHCP PATCH STREAM [#11007.1] file missing"
+ . W !,"Unable to continue testing.  Try again later"
+ .;
+ L +^A1AE(11007.1):1 I '$T D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to obtain lock on DHCP PATCH STREAM [#11007.1] file"
+ . W !,"Unable to continue testing.  Try again later"
  ;
-SHUTDOWN L -^A1AE(11007.1) Q
+ ; Check structure of 11007.1 correct
+ I $$GET1^DIQ(11007.1,1,.01)'="FOIA VISTA" D  Q
+ . S A1AEFAIL=1
+ . W !,"DHCP PATCH STREAM [#11007.1] missing FOIA VISTA"
+ . W !,"Unable to continue testing.  Try again later"
+ ;
+ I $$GET1^DIQ(11007.1,10001,.01)'="OSEHRA VISTA" D  Q
+ . S A1AEFAIL=1
+ . W !,"DHCP PATCH STREAM [#11007.1] missing OSEHRA VISTA"
+ . W !,"Unable to continue testing.  Try again later"
+ ;
+ I $$GET1^DIQ(11007.1,1,.001)'=1 D  Q
+ . S A1AEFAIL=1
+ . W !,"File #11007.1 FOIA VISTA .001 field corrupt. "
+ . W !,"Unable to continue testing.  Try again later"
+ ;
+ I $$GET1^DIQ(11007.1,10001,.001)'=10001 D  Q
+ . S A1AEFAIL=1
+ . W !,"File #11007.1] OSEHRA .001 field corrupt"
+ . W !,"Unable to continue testing.  Try again later"
+ Q
+ ;
+SHUTDOWN L -^A1AE(11007.1)
+ ; ZEXCEPT: A1AEFAIL - defined in STARTUP
+ K A1AEFAIL
+ Q
  ;
  ; Unit Test setting all PRIMARY to 0
  ;   1. Save the IEN of entry now set as PRIMARY
@@ -26,7 +66,13 @@ SHUTDOWN L -^A1AE(11007.1) Q
  ;   4. Return original PRIMARY setting
  ;   5. Run Unit Test
  ;
-UTP0 N A1AEI,UTOIEN,UTPOST
+ ;
+UTP1 ;
+ ; ZEXCEPT: A1AEFAIL - defined in STARTUP, killed in SHUTDOWN
+ I A1AEFAIL=1 D  Q
+ . ;D FAIL^%ut("Unable to perform testing") ;commented out JLI 141017
+ ;
+ N A1AEI,UTOIEN,UTPOST
  ; Save IEN of entry now set as PRIMARY?
  S UTOIEN=$$UTPRIEN
  ; If no Stream was set to PRIMARY, we must set one 
@@ -63,7 +109,12 @@ UTP0 N A1AEI,UTOIEN,UTPOST
  ;       A FORUM DOMAIN entry = MAIL PARAMETER DOMAIN = is PRIMARY
  ;       No FORUM DOMAIN entry = MAIL PARAMETER DOMAIN = NO PRIMARY
  ;
-UTPR N A1AEI,UTDOM,UTOIEN,UTPOST,X
+UTP2 ;
+ ; ZEXCEPT: A1AEFAIL - defined in STARTUP, killed in SHUTDONW
+ I A1AEFAIL=1 D  Q
+ . ;D FAIL^%ut("Unable to perform testing") ; JLI 141017 COMMENTED OUT
+ ;
+ N A1AEI,UTDOM,UTOIEN,UTPOST,X
  S UTDOM=$$GET1^DIQ(4.3,"1,",.01)
  ; Save present PRIMARY patch stream IEN - if one set
  S UTOIEN=$$UTPRIEN
@@ -116,7 +167,12 @@ UTPR N A1AEI,UTDOM,UTOIEN,UTPOST,X
  ;   3. Set the IEN for Stream SUBSCRIPTION back to original
  ;   4. Run Unit Test code 
  ;
-UTS0 N A1AEI,UTOIEN,UTPOST,UTMPOST
+UTP3 ;
+ ; ZEXCEPT: A1AEFAIL - defined in STARTUP, killed in SHUTDOWN
+ I A1AEFAIL=1 D  Q
+ . ;D FAIL^%ut("Unable to perform testing") ; JLI 141017 commented out
+ ;
+ N A1AEI,UTOIEN,UTPOST,UTMPOST
  ; Save off stream now set to SUBSCRIPTION
  S UTOIEN=$$UTSUBS
  ; If no Stream was set to SUBSCRIPTION, we must set one
@@ -171,12 +227,10 @@ CHKPLUS  ; @TEST check setting of Pre-LookUp Transforms
  Q
  ;
 XTENT ;
- ;;UTP0;Testing setting of all PRIMARY? to NO in 11007.1
- ;;UTPR;Testing setting PRIMARY? to yes if FORUM site
- ;;UTS0;Testing setting of SUBSCRIPTION to FOIA VISTA
+ ;;UTP1;Testing setting of all PRIMARY? to NO in 11007.1
+ ;;UTP2;Testing setting PRIMARY? to yes if FORUM site
+ ;;UTP3;Testing setting of SUBSCRIPTION to FOIA VISTA
  Q
  ;
-XTROU   ;
- ;;A1AEUPS2;additional tests
  ;
 EOR ; end of routine A1AEUPS1

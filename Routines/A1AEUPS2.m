@@ -1,91 +1,87 @@
-A1AEUPS2 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE ;2014-10-02  5:17 PM
+A1AEUPS2 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE ; 10/20/14 5:58am
  ;;2.4;PATCH MODULE;;AUG 26, 2014
  ;
- ;
+ ; CHANGE: (VEN/LGC) 10/14/2014
+ ;     Added code to check for correct PATCH field
+ ;     DD in file 9.6 and 9.7
  ;
  ; Unit Test for Post Install which loads all BUILD [#9.6]
  ;   and INSTALL [#9.7] entries with pointers to 
  ;   DHCP PATCHES [#11005] file in the PAT multiple
  ;   
  ;   1. Lock DHCP PATCHES,BUILD,INSTALL files
- ;
  ;   2. Select 10 patches from DHCP PATCHES [#11005]
- ;       Save in A1AEP array A1AEP(1..10)
- ;       Replace A1AEP(3) with a patch with "1" in version
- ;       Replace A1AEP(10) with patch name  not in DHCP PATCHES
- ;          A1AE*999.1*12345
- ;
- ;       Save in A1AEP array A1AEP(10) *** should NOT build PAT
- ;       >>>>>>>>>>>>>>>>>>>>D SEL10(.A1AEP)
- ;
  ;   3. Install test entries
- ;      a.  Remove any BUILD / INSTALLs we will be testing
- ;       >>>>>>>>>>>>>>>>>> D ENTDEL
- ;
- ;      b.  one build (1) without multiple build [#10] field entries
- ;            BUILD=A1AE*1.0*9999980
- ;               BUILD MULTIPLE
- ;                  A1AEP(1)
- ;      >>>>>>>>>>>>>>>>>> D LOADBLDS
- ;
- ;      c.  one build (2) with multiple build [#10] entries
- ;            BUILD=A1AE MUNITPOO 1.0
- ;               BUILD MULTIPLE
- ;                  A1AEP(2)
- ;                  A1AEP(3)
- ;                  A1AEP(4)
- ;                  A1AEP(5)
- ;                  A1AEP(6)
- ;                  A1AEP(7)
- ;                  A1AEP(8)
- ;      >>>>>>>>>>>>>>>>>> D LOADBLDS
- ;
- ;      d.  One build (3) with multiple build entries - one
- ;          of which is build (2)
- ;            BUILD=A1AE*1.0*9999981
- ;               BUILD MULTIPLE
- ;                  A1AEP(9)
- ;                  A1AEP(10)
- ;                  A1AE MUNITPOO 1.0
- ;      >>>>>>>>>>>>>>>>>> D LOADBLDS
- ;
- ;      e.  two  install (2) which matches build (1)
- ;            INSTALL=A1AE*1.0*9999980
- ;      >>>>>>>>>>>>>>>>>> D LOADINST
- ;
- ;   3. Check new entries match expected
- ;      >>>>>>>>>>>>>>>>>> D CHKIBENT
- ;
- ;   4. Run section of Post Install to be tested
- ;      >>>>>>>>>>>>>>>>>> D RUNPOST
- ;
- ;   5. Run Unit Test to ensure PAT entries correct
- ;      >>>>>>>>>>>>>>>>>> D CHKIBPAT
- ;
- ;   6. Delete builds (1),(2) and (3)
- ;      >>>>>>>>>>>>>>>>>> D ENTDEL
- ;
- ;   7. Release Locks
+ ;   5. Check new entries match expected
+ ;   6. Run section of Post Install to be tested
+ ;   7. Run Unit Test to ensure PAT entries correct
+ ;   8. Delete builds (1),(2) and (3)
+ ;   9. Release Locks
  ;
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
+ ; N A1AEFAIL S A1AEFAIL=0 ; moved to STARTUP
  D EN^%ut($T(+0),1)
  Q
  ;
-STARTUP L +^XPD(9.6):1 I '$T D  Q
- .  W !,"*** COULD NOT GET LOCK ON BUILD [#9.6]  TRY LATER ***"
- L +^XPD(9.7):1 I '$T D  Q
- .  W !,"*** COULD NOT GET LOCK ON INSTALL [#9.7]  TRY LATER ***"
- D ENTDEL I ERRMSG'["OK" D  Q
- . D FAIL^%ut("Unable to clear special 9.6,9.7 entries before test")
+STARTUP ;
+ S A1AEFAIL=0 ; KILLED IN SHUTDOWN
+ I '$D(^XPD(9.6)) D  Q
+ . S A1AEFAIL=1
+ . W !,"BUILD [#9.6] file not in environment"
+ . W !," Unable to perform testing."
  ;
-SHUTDOWN L -^XPD(9.6):1
- L -^XPD(9.7):1
+ I '$D(^XPD(9.7)) D  Q
+ . S A1AEFAIL=1
+ . W !,"INSTALL [#9.7] file not in environment"
+ . W !," Unable to perform testing."
+ ;
+ L +^XPD(9.6):1 I '$T D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to obtain lock on BUILD [#9.6] file"
+ . W !," Unable to perform testing."
+ ;
+ L +^XPD(9.7):1 I '$T D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to obtain lock on INSTALL [#9.6] file"
+ . W !," Unable to perform testing."
+ ;
+ I '$D(^A1AE(11005)) D  Q
+ . S A1AEFAIL=1
+ . W !,"DHCP PATCHES [#11005] not in environment"
+ . W !," Unable to perform testing."
+ ;
+ I $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
+ . S A1AEFAIL=1
+ . W !,"PATCH multiple [#19] not found in BUILD file"
+ . W !," Unable to perform testing."
+ ;
+ I $G(^DD(9.7,19,0))'["PATCH^9.719PA^^PAT;0" D  Q
+ . S A1AEFAIL=1
+ . W !,"PATCH multiple [#19] not found in INSTALL file"
+ . W !," Unable to perform testing."
+ ;
  D ENTDEL I ERRMSG'["OK" D  Q
- . D FAIL^%ut("Unable to clear special 9.6,9.7 entries after test")
+ . S A1AEFAIL=1
+ . W !,"Unable to clear special 9.6,9.7 entries before test"
+ . W !," Unable to perform testing."
  Q
  ;
-UTP0 N ERRMSG S ERRMSG="OK"
+SHUTDOWN L -^XPD(9.6)
+ L -^XPD(9.7)
+ ; ZEXCEPT: A1AEFAIL - defined in STARTUP
+ K A1AEFAIL
+ D ENTDEL I ERRMSG'["OK" D  Q
+ . W !,"***** WARNING *****"
+ . W !,"Unable to clear special 9.6,9.7 entries after test"
+ . W !,"  BUILDS with names beginning with  A1AEXTST*1*"
+ . W !,"  may need to be deleted manually."
+ Q
+ ;
+UTP4 I $G(A1AEFAIL) D  Q
+ . D FAIL^%ut("Unable to perform test.")
+ ;
+ N ERRMSG S ERRMSG="OK"
  D SEL10(.A1AEP)
  D LOADBLDS I ERRMSG'["OK" D  Q
  .  D FAIL^%ut(ERRMSG)
@@ -102,7 +98,7 @@ UTP0 N ERRMSG S ERRMSG="OK"
  ;
  ; Build an array of entries in DHCP PATCHES [#11005]
 SEL10(A1AEP) K A1AEP
- N A1AEPM,ACNT S ACNT=0,A1AEPM="DG"
+ N A1AEPI,A1AEPM,ACNT S ACNT=0,A1AEPM="DG"
  F  S A1AEPM=$O(^A1AE(11005,"B",A1AEPM)) Q:'$L(A1AEPM)  D  Q:ACNT>9
  .  S A1AEPI=$O(^A1AE(11005,"B",A1AEPM,0))
  .  Q:'A1AEPI
@@ -203,7 +199,7 @@ LDINST(KFILE,PM) ;
  ; Run post install subroutine which builds
  ;  the BUILD [#9.6] and INSTALL [#9.7] PAT [#19] multiple
 RUNPOST ;
- N KIEN S KIEN=$O(^XPD(9.6,"B","A1AE*1.0*9999980",0))
+ N BN,KIEN S KIEN=$O(^XPD(9.6,"B","A1AE*1.0*9999980",0))
  S BN="A1AE*1.0*9999980"
  N BMARR D A1AEP2A^A1AE2POS(BN,.BMARR,KIEN)
  Q
@@ -333,9 +329,7 @@ CHKIBP(FILENBR,BINAME,PTCHS) N A1AEI,BIEN,OK S OK=0
  ;
  ;
 XTENT ;
- ;;UTP0;Testing post install setting 9.6, 9.7 PAT multiple
+ ;;UTP4;Testing post install setting 9.6, 9.7 PAT multiple
  Q
-XTROU ;
- ;;A1AEUPS1;more unit tests
  ;
 EOR ; end of routine A1AEUPS2

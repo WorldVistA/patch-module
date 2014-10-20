@@ -1,4 +1,4 @@
-A1AE2POS ;VEN-LGC - POST INSTALLS FOR A1AE PKG ;2014-10-02  5:04 PM
+A1AE2POS ;VEN/LGC - POST INSTALLS FOR A1AE PKG ; 10/16/14 5:54pm
  ;;2.4;PATCH MODULE;;AUG 26, 2014
  ;
  ; CHANGE: (VEN/LGC) 8/27/2014
@@ -7,6 +7,22 @@ A1AE2POS ;VEN-LGC - POST INSTALLS FOR A1AE PKG ;2014-10-02  5:04 PM
  ;        BUILD [#9.6] and INSTALL [#9.7] over from 
  ;        A1AEUTL with decision to keep post installs
  ;        in the A1AE2POS routine
+ ;
+ ; CHANGE: (VEN/LGC) 10/14/2014
+ ;        Additional code to check for existence
+ ;        of DHCP PATCH STREAM [#11007.1] file
+ ;        and expected entries.
+ ;
+ ; CHANGE: (VEN/LGC) 10/15/2014  A1AEP0
+ ;        Additional code to kill all entries in
+ ;        file 11007.1 and re-build with correct
+ ;        FOIA VISTA and OSEHRA VISTA entries
+ ;
+ ; POST INSTALL entry A1AEP0
+ ;                Delete any entries in DHCP PATCH STREAM
+ ;                [#11007.1] file and rebuild with correctlyFOIA VISTA
+ ;                entered FOIA VISTA and OSEHRA VISTA.
+ ;
  ;
  ; POST INSTALL entry A1AEP1
  ;                Following DHCP PATCH STREAM [#11007.1] KIDS
@@ -30,7 +46,61 @@ A1AE2POS ;VEN-LGC - POST INSTALLS FOR A1AE PKG ;2014-10-02  5:04 PM
  ;                all SUBSCRIPTION to No, then set FOIA VISTA
  ;                to YES.  Then ask installer whether they
  ;                wish to change their site's SUBSCRIPTION.
+ ;
 A1AEP1 ;
+ I '$D(^A1AE(11007.1)) D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] not installed")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ ; Kill any existing entries and rebuild
+ ;
+ I '$$CLRFILE D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("Unable to clear DHCP PATCH STREAM [#11007.1]")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I '$$LOADFILE D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("Unable to build DHCP PATCH STREAM [#11007.1]")
+ . D MES^XPDUTL(" with FOIA VISTA and OSEHRA VISTA entries.")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+A1AEP1R ;
+ I $$GET1^DIQ(11007.1,1,.01)'="FOIA VISTA" D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] is incomplete")
+ . D MES^XPDUTL(" Missing FOIA VISTA entry.")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I $$GET1^DIQ(11007.1,10001,.01)'="OSEHRA VISTA" D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] is incomplete")
+ . D MES^XPDUTL(" Missing OSEHRA VISTA entry.")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I $$GET1^DIQ(11007.1,1,.001)'=1 D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] is CORRUPTED")
+ . D MES^XPDUTL(" FOIA VISTA entry .001 not 1.")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I $$GET1^DIQ(11007.1,10001,.001)'=10001 D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] is CORRUPTED")
+ . D MES^XPDUTL(" OSEHRA VISTA entry .001 not 10001")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ If $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("PATCH multiple [#19] not found in BUILD file")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I $G(^DD(9.7,19,0))'["PATCH^9.719PA^^PAT;0" D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("PATCH multiple [#19] not found in INSTALL file")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
  ; Set all PRIMARY? [#.02] in 11007.1 to 0 [NO]
  D A1AEP1A
  ;
@@ -101,7 +171,7 @@ A1AEP1D ; WAS A1AEASK
  D MES^XPDUTL("HOWEVER you may change your SUBSCRIPTION now.")
  D BMES^XPDUTL(1)
  D MES^XPDUTL("Would you like to change your SUBSCRIPTION now?")
- N DIR
+ N DIR,Y
  S DIR("A")="    ? ",DIR(0)="Y",DIR("B")="NO"
  D ^DIR
  I 'Y D  G A1AEEXPS
@@ -122,7 +192,7 @@ A1AEP1D ; WAS A1AEASK
  ;
  ; OK Y=DA for entry allow them to edit.  How to use DIE
  ;   call and A1AE CHANGE SITE SUBSCRIPTION?
- N DIE
+ N DIE,DR
  S DA=+Y
  S DIE="^A1AE(11007.1,",DR="[A1AE CHANGE SITE SUBSCRIPTION]"
  D ^DIE
@@ -146,7 +216,7 @@ A1AEEXPS Q
  ;   Update the BUILD PAT multiple with any DHCP PATCHES
  ;     entries found matching
  ;  
-A1AEP2 N KIEN,MIEN,PM S KIEN=0
+A1AEP2 N BN,KIEN,MIEN,PM S KIEN=0
  K BMARR
  F  S KIEN=$O(^XPD(9.6,KIEN)) Q:'KIEN  D
  .  S BN=$P($G(^XPD(9.6,KIEN,0)),"^")
@@ -211,5 +281,28 @@ SETPLUS  ; sets up pre-lookup transforms for existing files that need it
  S ^DD(9.6,.01,7.5)="D PLU96^A1AEDD1"
  S ^DD(9.7,.01,7.5)="D PLU97^A1AEDD1"
  Q
+ ;
+ ;
+CLRFILE() N STRM,DA,DIERR,DIK S STRM=""
+ F  S STRM=$O(^A1AE(11007.1,"B",STRM)) Q:STRM=""  D  Q:$D(DIERR)
+ . S DA=$O(^A1AE(11007.1,"B",STRM,0)) Q:'DA
+ . S DIK="^A1AE(11007.1," D ^DIK
+ Q '$D(DIERR)
+ ;
+ ;
+LOADFILE() N DIERR,FDA,FDAIEN
+ S FDA(3,11007.1,"?+1,",.001)=1
+ S FDA(3,11007.1,"?+1,",.01)="FOIA VISTA"
+ S FDA(3,11007.1,"?+1,",.05)="FV"
+ D UPDATE^DIE("","FDA(3)","FDAIEN")
+ K FDAIEN
+ Q:$D(DIERR) 0
+ K FDA,DIERR
+ S FDA(3,11007.1,"?+1,",.001)=10001
+ S FDA(3,11007.1,"?+1,",.01)="OSEHRA VISTA"
+ S FDA(3,11007.1,"?+1,",.05)="OV"
+ D UPDATE^DIE("","FDA(3)","FDAIEN")
+ Q:$D(DIERR) 0
+ Q 1
  ;
 EOR ; end of routine A1AE2POS
