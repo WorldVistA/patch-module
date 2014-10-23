@@ -1,4 +1,4 @@
-A1AEUPS2 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE ; 10/20/14 5:58am
+A1AEUPS2 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE ; 10/23/14 8:08am
  ;;2.4;PATCH MODULE;;AUG 26, 2014
  ;
  ; CHANGE: (VEN/LGC) 10/14/2014
@@ -65,12 +65,31 @@ STARTUP ;
  . S A1AEFAIL=1
  . W !,"Unable to clear special 9.6,9.7 entries before test"
  . W !," Unable to perform testing."
+ ;
+ S X=$$DELPAT I 'X D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to clear test patches from DHCP PATCHES [#11005]"
+ . W !," Unable to perform testing."
+ ;
+ S X=$$NEWPAT I 'X D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to add test patches to DHCP PATCHES [#11005]"
+ . W !," Unable to perform testing."
  Q
+ ;
+ ;
  ;
 SHUTDOWN L -^XPD(9.6)
  L -^XPD(9.7)
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP
  K A1AEFAIL
+ S X=$$DELPAT I 'X D  Q
+ . S A1AEFAIL=1
+ . W !,"Unable to clear test patches from DHCP PATCHES [#11005]"
+ . W !," A1AE*2.4*900 through A1AE*2.4*915 and."
+ . W !," A1AE*2.4*19900 through A1AE*2.4*19915"
+ . W !," may need to be deleted manually"
+ ;
  D ENTDEL I ERRMSG'["OK" D  Q
  . W !,"***** WARNING *****"
  . W !,"Unable to clear special 9.6,9.7 entries after test"
@@ -82,7 +101,8 @@ UTP4 I $G(A1AEFAIL) D  Q
  . D FAIL^%ut("Unable to perform test.")
  ;
  N ERRMSG S ERRMSG="OK"
- D SEL10(.A1AEP)
+ I '$$SEL10(.A1AEP) D  Q
+ .  D FAIL^%ut("Unable to select 10 test patches")
  D LOADBLDS I ERRMSG'["OK" D  Q
  .  D FAIL^%ut(ERRMSG)
  D LOADINST I ERRMSG'["OK" D  Q
@@ -96,21 +116,19 @@ UTP4 I $G(A1AEFAIL) D  Q
  D CHKEQ^%ut(0,OK,"Setting PAT multiple in 9.6 and 9.7 FAILED")
  Q
  ;
- ; Build an array of entries in DHCP PATCHES [#11005]
+ ; Build an array of TEST entries in DHCP PATCHES [#11005]
+ ; ENTER
+ ;   A1AEP  passed by reference
+ ; RETURN
+ ;   A1AEP(n) array of entries in 11005
+ ;   0 = error ,  1 = selection complete
 SEL10(A1AEP) K A1AEP
- N A1AEPI,A1AEPM,ACNT S ACNT=0,A1AEPM="DG"
- F  S A1AEPM=$O(^A1AE(11005,"B",A1AEPM)) Q:'$L(A1AEPM)  D  Q:ACNT>9
- .  S A1AEPI=$O(^A1AE(11005,"B",A1AEPM,0))
- .  Q:'A1AEPI
- .  S ACNT=$G(ACNT)+1,A1AEP(ACNT)=A1AEPM_"^"_A1AEPI
- .  Q:ACNT>9
- S A1AEPI=0,A1AEPM=""
- F  S A1AEPM=$O(^A1AE(11005,"B",A1AEPM)) Q:A1AEPM=""  D  Q:A1AEPI
- . I $P(A1AEPM,"*",2)="1" S A1AEPI=$O(^A1AE(11005,"B",A1AEPM,0))
- I A1AEPI S $P(A1AEPM,"*",2)="1.0" D
- .  S A1AEP(3)=A1AEPM_"^"_A1AEPI
+ N X S X=1
+ N I F I=1:1:9 S A1AEP(I)="A1AE*2.4*"_(900+I) D  Q:'X
+ . S X=$O(^A1AE(11005,"B",A1AEP(I),0))
+ Q:'X X
  S A1AEP(10)="A1AE*999.1*12345"
- Q
+ Q 1
  ;
  ;
  ;
@@ -119,6 +137,10 @@ ENTDEL N PM
  D RMVENT(9.6,"A1AE MUNITPOO 1.0",.ERRMSG) Q:$G(ERRMSG)'["OK"
  D RMVENT(9.6,"A1AE*1.0*9999981",.ERRMSG) Q:$G(ERRMSG)'["OK"
  D RMVENT(9.7,"A1AE*1.0*9999980",.ERRMSG) Q:$G(ERRMSG)'["OK"
+ N I F I=1:1:10 D  Q:$G(ERRMSG)'["OK"
+ . Q:$G(A1AEP(I))=""
+ . I $O(^XPD(9.6,"B",A1AEP(I),0)) D
+ .. D RMVENT(9.6,$G(A1AEP(I)),.ERRMSG)
  Q
  ;
  ; Remove all entries with this PATCH DESIGNATION
@@ -147,6 +169,11 @@ LOADBLDS N PTCHARR,PM
  S PM="A1AE*1.0*9999981"
  F I=9:1:10 S PTCHARR(I)=$P(A1AEP(I),"^")
  D LDBLDS(9.6,PM,.PTCHARR) Q:ERRMSG'["OK"
+ ;
+ ; Load patches selected from 11005 into 9.6
+ ;   as builds
+ K PTCHARR
+ F I=1:1:10 S PM=A1AEP(I) D LDBLDS(9.6,PM,.PTCHARR)
  Q
  ;
  ;
@@ -213,7 +240,7 @@ RUNPOST ;
 CHKIBENT() N BLDNM,MB,OK
  S BLDNM="A1AE*1.0*9999980"
  S MB(1)=$P(A1AEP(1),"^")
- S MB(1)="A1AE MUNITPOO 1.0"
+ S MB(2)="A1AE MUNITPOO 1.0"
  S OK=$$CHKB0(BLDNM,.MB)
  ;W !,"A1AE*1.0*9999980"," OK=",OK
  Q:OK
@@ -327,6 +354,54 @@ CHKIBP(FILENBR,BINAME,PTCHS) N A1AEI,BIEN,OK S OK=0
  Q:'OK 1  Q:'BIEN 0
  ; **************** CHK BLD/INS FOR PAT END
  ;
+ ; Load new test patches into DHCP PATCHES [#11005]
+ ; Enter 15 for stream 1 and 15 for stream 10001
+NEWPAT() N I,PAT,DERFRM
+ S DERFRM=0
+ F I=900:1:915 S PAT="A1AE*2.4*"_I_"^1^"_DERFRM D  Q:'X
+  . S X=$$LDPAT(PAT) Q:'X
+ . S DERFRM=X
+ . S PAT="A1AE*2.4*19"_I_"^10001^"_DERFRM D  Q:'X
+ .. S X=$$LDPAT(PAT) Q:'X
+ .. S DERFRM=X
+ Q:'X X  Q 1
+ ;
+ ; Loads a new patch into 11005.
+ ; ENTER
+ ;   PAT           =  Patch name^Patch Stream^Derived from
+ ;   Patch Name    =  A1AE*2.4*nnnn
+ ;   Patch Stream  =  1 or 10001 (get from 11007.1)
+ ;   Derived from  =  IEN of entry in 11005 from which
+ ;                    this patch derived
+ ; RETURN
+ ;   0  = error,  +n = IEN of new entry
+LDPAT(PAT) ;
+ N PN S PN=$P(PAT,"^") I $L(PAT,"*")'=3 Q 0
+ N PTCHSTRM S PTCHSTRM=+$P(PAT,"^",2)
+ Q:'$D(^A1AE(11007.1,PTCHSTRM,0)) 0
+ N DERFRM S DERFRM=+$P(PAT,"^",3)
+ N PKGIEN S PKGIEN=$O(^DIC(9.4,"B","PATCH MODULE",0))
+ N DIERR,FDA,FDAIEN
+ S FDA(3,11005,"?+1,",.01)=PN
+ S FDA(3,11005,"?+1,",.2)=PTCHSTRM
+ S FDA(3,11005,"?+1,",2)=PKGIEN
+ S FDA(3,11005,"?+1,",3)=2.4
+ S FDA(3,11005,"?+1,",4)=$P(PN,"*",3)
+ S FDA(3,11005,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
+ I $G(DERFRM),$D(^A1AE(11005,DERFRM)) D
+ . S FDA(3,11005,"?+1,",5.2)=DERFRM
+ D UPDATE^DIE("","FDA(3)","FDAIEN")
+ Q:+FDAIEN(1) +FDAIEN(1)
+ Q 0
+ ;
+ ; RETURNS
+ ;   0  = error, 1 = deletions completed
+DELPAT() N DA,DIK,PAT S PAT=0
+ F  S PAT=$O(^A1AE(11005,PAT)) Q:'PAT  D
+ . I $P(^A1AE(11005,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
+ .. S DIK="^A1AE(11005," S DA=+PAT D ^DIK
+ Q:$O(^A1AE(11005,"B","A1AE*2.4*899"))["A1AE*2.4" 0
+ Q 1
  ;
 XTENT ;
  ;;UTP4;Testing post install setting 9.6, 9.7 PAT multiple

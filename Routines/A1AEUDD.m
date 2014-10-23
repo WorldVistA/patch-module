@@ -1,5 +1,5 @@
-A1AEUDD ;JLI - Unit tests for Data Dictionary Code ;2014-09-30  1:59 AM
- ;;2.4;PATCH MODULE
+A1AEUDD ;VEN/JLI - Unit tests for Data Dictionary Code ;2014-10-03  4:14 PM
+ ;;2.4;PATCH MODULE;
  D EN^%ut($T(+0))
  Q
  ;
@@ -51,4 +51,3 @@ PLU11005 ; @TEST prelookup transform for file 11005
  S X="PK*1.0*2T3" D PLU11005^A1AEDD1
  D CHKTF^%ut(X="PK*1*2T3","Didn't remove .0 from full * format, returned X="_X)
  Q
-

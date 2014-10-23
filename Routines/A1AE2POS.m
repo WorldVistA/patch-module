@@ -1,4 +1,4 @@
-A1AE2POS ;VEN/LGC - POST INSTALLS FOR A1AE PKG ; 10/16/14 5:54pm
+A1AE2POS ;VEN/LGC - POST INSTALLS FOR A1AE PKG ; 10/23/14 3:10am
  ;;2.4;PATCH MODULE;;AUG 26, 2014
  ;
  ; CHANGE: (VEN/LGC) 8/27/2014
@@ -99,6 +99,11 @@ A1AEP1R ;
  I $G(^DD(9.7,19,0))'["PATCH^9.719PA^^PAT;0" D  Q
  . D BMES^XPDUTL(2)
  . D MES^XPDUTL("PATCH multiple [#19] not found in INSTALL file")
+ . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ I '$D(^DD(11005,0)) D  Q
+ . D BMES^XPDUTL(2)
+ . D MES^XPDUTL("Do not find DD for DHCP PATCHES [#11005] file")
  . D MES^XPDUTL(" Post Install cannot continue.")
  ;
  ; Set all PRIMARY? [#.02] in 11007.1 to 0 [NO]
@@ -294,6 +299,7 @@ LOADFILE() N DIERR,FDA,FDAIEN
  S FDA(3,11007.1,"?+1,",.001)=1
  S FDA(3,11007.1,"?+1,",.01)="FOIA VISTA"
  S FDA(3,11007.1,"?+1,",.05)="FV"
+ S FDA(3,11007.1,"?+1,",.07)="FORUM.VA.GOV"
  D UPDATE^DIE("","FDA(3)","FDAIEN")
  K FDAIEN
  Q:$D(DIERR) 0
@@ -301,6 +307,7 @@ LOADFILE() N DIERR,FDA,FDAIEN
  S FDA(3,11007.1,"?+1,",.001)=10001
  S FDA(3,11007.1,"?+1,",.01)="OSEHRA VISTA"
  S FDA(3,11007.1,"?+1,",.05)="OV"
+ S FDA(3,11007.1,"?+1,",.07)="FORUM.OSEHRA.ORG"
  D UPDATE^DIE("","FDA(3)","FDAIEN")
  Q:$D(DIERR) 0
  Q 1
