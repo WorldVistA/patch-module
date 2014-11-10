@@ -1,4 +1,4 @@
-A1AEUF1C ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 CONT ; 10/20/14 7:40am
+A1AEUF1C ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 CONT ; 11/6/14 10:35pm
  ;;2.4;PATCH MODULE;; SEP 24, 2014
  ;
  ;
@@ -30,9 +30,45 @@ SHUTDOWN I '$G(A1AEFAIL) S X=$$PTC4KID5^A1AEUF1B I 'X D
  K A1AEFAIL
  Q
  ;
- ; Testing 
- ;   PTCSTRM^A1AEF1(.BARR)
-UTP8 I '$G(A1AEFAIL) D
+ ;    Testing
+ ;      UTP10 UPDPAT^A1AEF1(BUILD,.BARR)
+ ;      UTP11 UPDPAT1^A1AEF1(PD,KIEN)
+ ;      UTP12 UPDPAT2^A1AEF1(A1AEKI,A1AEPI,KFILE)
+ ;      UTP13 UP^A1AEF1(STR)
+ ;      UTP14 REMOB^A1AEF1(.BARR)
+ ;      UTP15 BACTV^A1AEF1(BUILD)
+ ;
+ ; Update PAT multiple of the BUILD and all coresponding
+ ;   Installs  UPDPAT^A1AEF1(BUILD,.BARR)
+ ;   NOTE: Must add one more BUILD entry
+ ;      S PKGIEN=$O(^DIC(9.4,"C","A1AE",0))
+ ;      S ACTVER=$$GET1^DIQ(9.4,PKGIEN_",",13)
+ ;      S BUILD="A1AE*"_ACTVER_"*911"
+ ;         Must also add an INSTALL entry
+UTP10 ;
+ ;
+ ; Update the PAT muliple of this BUILD and its corresponding
+ ;   Installs UTP11 UPDPAT1^A1AEF1(PD,KIEN)
+UTP11 ;
+ ;
+ ; Update the PAT mulitiple in the given BUILD or
+ ;   Install entry UPDPAT2^A1AEF1(A1AEKI,A1AEPI,KFILE)
+UTP12 ;
+ ;
+ ; UPPER CASE function
+ ;  UP^A1AEF1(STR)
+UTP13 ;
+ ;
+ ; Remove BUILDS from array that represent earlier versions
+ ;  of a package REMOB^A1AEF1(BARR)
+UTP14 ;
+ ;
+ ; Check BUILD to see if it represents current or earlier
+ ;  version of a package
+UTP15 ;
+ ;
+ ;
+ ;
  .S X=$$SETUP1 I 'X D  Q
  .. D FAIL^%ut("Unable to build array of BUILD names")
  .S X=$$SETUP2 I 'X D  Q
@@ -96,11 +132,12 @@ PTC4KID2() S SEQ=0 F  S SEQ=$O(SEQ1(SEQ)) Q:'SEQ  D
  ..  I X S X=$$LDRBLD^A1AEUF1(X,BUILD(1))
  Q X
  ; 
- ; Now add all builds as REQB of BUILD(29)=A1AEXTST*1*29
- ; Run through SEQ1 and SEQ2, get name of patch from 11005
- ;   and with each one add the corresponding entry in 9.6
- ;   as a REQB for BUILD(29)
-PTC4KID3() N B29IEN S B29IEN=$O(^XPD(9.6,"B",BUILD(29),0)) Q:'B29IEN
+ ; Add to A1AE*999*900 the REQB multiple A1AE*999*901 - 910
+ ; Remeber that none of these represent current package
+ ;   so all will be cleared
+ ; Find current version of A1AE and add one BUILD of this
+ ;   version A1AE*vrn*9
+ADDRBLD() N B29IEN S B29IEN=$O(^XPD(9.6,"B",BUILD(29),0)) Q:'B29IEN
  S SEQ=0 F  S SEQ=$O(SEQ1(SEQ)) Q:'SEQ  D
  . S PD=$P($G(^A1AE(11005,SEQ1(SEQ),0)),"^") Q:PD=""
  . S X=$$LDRBLD(B29IEN,PD)
@@ -300,7 +337,12 @@ UTPRIEN() ;
  Q UTPRIM
  ;
 XTENT ;
- ;;UTP8;Testing filtering BUILDS, INSTALLS, PATCHES for stream
+ ;;UTP10;Testing updating PAT multiple for BUILD/INSTALLS
+ ;;UTP11;Testing updating PAT multiple for single BUILD/INSTALLS
+ ;;UTP12;Testing updating PAT multiple for a BUILD or INSTALL
+ ;;UTP13;Testing UPPER CASE function
+ ;;UTP14;Testing removing BUILDS representing outdated packages
+ ;;UTP15;Testing a single BUILD for outdated package
  Q
  ;
  ;

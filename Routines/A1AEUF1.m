@@ -1,4 +1,4 @@
-A1AEUF1 ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 ; 10/20/14 6:53am
+A1AEUF1 ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 ; 11/5/14 8:44pm
  ;;2.4;PATCH MODULE;; SEP 24, 2014
  ;
  ;
@@ -75,6 +75,34 @@ UTP4 I '$G(A1AEFAIL) S X=$$GETARR("M",.RMA) I 'X D  Q
  I '$G(A1AEFAIL) S X=$$LOADSCD(BUILD(29),"M") D
  . D CHKEQ^%ut(0,X,"Testing LOADING MULB dependencies FAILED!")
  Q
+ ;
+ ;
+UTP5 I '$G(A1AEFAIL) D
+ . N BIEN,REQBIEN,MULBIEN
+ . S BIEN=$O(^XPD(9.6,"B","A1AEXTST*1*1",0)) I 'BIEN D  Q
+ .. D FAIL^%ut("Unable to find BUILD A1AEXTST*1*1 in 9.6")
+ .;
+ . S REQBIEN=$O(^XPD(9.6,BIEN,"REQB","B","A1AEXTST*1*2",0))
+ . I REQBIEN D
+ ..  K ^XPD(9.6,BIEN,"REQB",REQBIEN)
+ ..  K ^XPD(9.6,BIEN,"REQB","B","A1AEXTST*1*2")
+ . S REQBIEN=$O(^XPD(9.6,BIEN,"REQB","B","A1AEXTST*1*2",0))
+ . I REQBIEN D  Q
+ .. D FAIL^%ut("Unable to clear REQB A1AEXTST*1*2")
+ .;
+ . S MULBIEN=$O(^XPD(9.6,BIEN,10,"B","A1AEXTST*1*2",0))
+ . I MULBIEN D
+ ..  K ^XPD(9.6,BIEN,10,MULBIEN)
+ ..  K ^XPD(9.6,BIEN,10,"B","A1AEXTST*1*2")
+ . S MULBIEN=$O(^XPD(9.6,BIEN,10,"B","A1AEXTST*1*2",0))
+ . I MULBIEN D  Q
+ .. D FAIL^%ut("Unable to clear MULB A1AEXTST*1*2")
+ .;
+ . S X='$$ADBTORM^A1AEF1(BIEN,"A1AEXTST*1*2","R")
+ . S Y='$$ADBTORM^A1AEF1(BIEN,"A1AEXTST*1*2","M")
+ . D CHKEQ^%ut(0,X+Y,"Testing LOADING new REQB and MULB FAILED!")
+ Q
+ ;
  ;
  ;
  ; Check RMA array gleaned from $T data in this routine
@@ -316,6 +344,7 @@ XTENT ;
  ;;UTP2;Testing gathering of all MULB descendants
  ;;UTP3;Testing gathering and loading REQB descendants
  ;;UTP4;Testing gathering and loading MULB descendants
+ ;;UTP5;Testing adding new MULB and REQB to a build
  Q
  ;
  ;

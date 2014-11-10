@@ -1,4 +1,4 @@
-A1AEF1 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 10/20/14 6:15am
+A1AEF1 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 11/4/14 5:23pm
  ;;2.4;PATCH MODULE;;SEP 11, 2014
  ;
  ; CHANGE LGC - 9/18/2014
@@ -204,6 +204,13 @@ PTC4RTN(A1AERTNM,PTCHARR) ;
  ;       Run the above
  ;    Get the second line from the active routine
  ;       Run the above
+ ; ENTER
+ ;    A1AEPIEN   =  IEN in 11005 of patch under scrutiny
+ ;    PTCHARR    =  Array passed by reference
+ ; RETURN
+ ;    PTCHARR    =  Array of all patches needed to build
+ ;                  every routine in the patch under
+ ;                  scrutiny
 PTCRTNS(A1AEPIEN,PTCHARR) ;
  K PTCHARR
  Q:'$G(A1AEPIEN)
@@ -266,12 +273,17 @@ P2 F  S RTN=$O(PTCHARR(RTN)) Q:RTN=""  D
  ; ENTER
  ;    BUILD   =  Parent build
  ;    BARR    =  Array of builds under consideration
- ;               This array may be from REQB or MULB or both
- ;    MR      =  R for REQB, M for MULB, "" ignore BUILD
+ ;    MR      =  Indicator for whether the array of builds
+ ;               represents
+ ;                 "R" builds from the parents REQB multiple
+ ;                 "M" builds from the parents MULB multiple
+ ;                 "" unknown
  ; EXIT
- ;    BARR    =  Array of builds after those already in
- ;               REQB or MULB (depending on MR) removed
- ;               Array entry same as BUILD if MR = "R" or "M"
+ ;    BARR    =  Array of builds belonging to user's site's
+ ;               patch stream.  
+ ;               MR = "" all builds filtered for stream
+ ;               MR = "R" filtered list minus REQB entries
+ ;               MR = "M" filtered list minus MULB entries
 PTC4KIDS(BUILD,BARR,MR) ;
  ; PTSTRM will be 0,1,or 10001
  N PTSTRM S PTSTRM=$O(^A1AE(11007.1,"APRIM",1,0))
@@ -304,6 +316,11 @@ PTC4KIDS(BUILD,BARR,MR) ;
  ;  in the DHCP PATCHES file AND which are assigned
  ;  the same stream as in use at this site.
  ; May be used to filter BUILD, INSTALL, or PATCH names
+ ; ENTER
+ ;   BARR  =  array by reference. BUILDS, INSTALLS, or PATCHES
+ ; RETURN
+ ;   BARR  =  array filtered for names found in 
+ ;            DHCP PATCHES [#11005] and correct patch stream
 PTCSTRM(BARR) ;
  ; PTSTRM will be 0,1,or 10001
  N PTSTRM S PTSTRM=$O(^A1AE(11007.1,"APRIM",1,0))
@@ -318,24 +335,34 @@ PTCSTRM(BARR) ;
  . I $$GET1^DIQ(11005,PDIEN_",",.2,"I")'=PTSTRM K @NODE
  Q
  ;
- ; Given a parent BUILD, and an array of build descendants,
- ;   Update the PAT multiple of the parent BUILD
- ;   and any corresponding INSTALLs
+ ; Given a parent BUILD, and an array of other BUILD names,
+ ;   Update the PAT multiple of the parent BUILD [#9.6]
+ ;   and any corresponding INSTALLs [#9.7]
+ ; ENTER
+ ;    BUILD  =  parent build under scrutiny
+ ;    BARR   =  array of BUILD NAMES passed by reference
+ ; RETURN
+ ;    BUILD's PAT multiple updated
 UPDPAT(BUILD,BARR) ;
  S KIEN=$O(^XPD(9.6,"B",BUILD,0)) Q:'KIEN
  S NODE=$NA(BARR(" ")) F  S NODE=$Q(@NODE) Q:NODE'["BARR"  D
  . S PD=$QS(NODE,1)
+ .; Update BUILDS (and any corresponding INSTALL) PAT multiple
  . D UPDPAT1(PD,KIEN)
  Q
  ; Load PAT multiples
  ; Looks in DHCP PATCHES [#11005] for Patch Designation
  ;   matching the BUILD name (PD)
  ;   If found, the patch is entered in the primary BUILD
- ;     PAT multiple, and in PAT of all matching INSTALLS
- ; Enter
+ ;             primary BUILD's PAT [#19] multiple 
+ ;               and into
+ ;             all corresponding INSTALLS' PAT [#19] multiple
+ ; ENTER
  ;   PD    =  Patch Designation to lookup in 11005
  ;              (same name as build now under review)
  ;   KIEN  =  IEN of primary Build in which PAT is being built
+ ; RETURN
+ ;   BUILD (and INSTALLS) updated
  ; Variables
  ;   A1AEPI  =  IEN of Patch matching name of PD
  ;   IIEN    =  IEN of INSTALLS(s) matching KIEN entry
@@ -357,17 +384,44 @@ UPDPAT1(PD,KIEN) ;
  .. S IIEN=$QS(INODE,4) D UPDPAT2(IIEN,A1AEPI,9.719)
  Q
  ; Update PAT multiple in BUILD/INSTALL entry
+ ; ENTER
+ ;     A1AEKI  =  IEN of BUILD [#9.6] or INSTALL [#9.7]
+ ;     A1AEPI  =  IEN of PATCH into 11005
+ ;     KFILE   =  file to update
+ ;                9.619 for BUILDs, 9.719 for INSTALLs
+ ; RETURN
+ ;     BUILD / INSTALL entry PAT multiple updated
 UPDPAT2(A1AEKI,A1AEPI,KFILE) ;
+ ;W !,"A1AEKI=",A1AEKI," A1AEPI=",A1AEPI," KFILE=",KFILE
  N FDA,DIERR
  S FDA(3,KFILE,"?+1,"_A1AEKI_",",.01)=A1AEPI
  N NODE S NODE=$NA(FDA),NODE=$Q(@NODE) ;W !,NODE,"=",@NODE
  D UPDATE^DIE("","FDA(3)","")
  Q
  ;
+ ; ENTER
+ ;    STR   =  String to set to upper case
+ ; RETURN
+ ;    STR   =  all uppercase
 UP(STR) Q $TR(STR,"abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ")
  ;
- ; Filter out builds belonging to earlier versions
- ;  of their associated package
+ ;
+ ; Remove old versions
+ ; ENTER
+ ;     BARR  =  array of BUILD names passed by reference
+ ; RETURN
+ ;     BARR  =  array with BUILDS after removing those
+ ;              not representing current package versions.
+REMOB(BARR) ;
+ Q:'$D(BARR)
+ N TMP
+ S NODE=$NA(BARR(" "))
+ F  S NODE=$Q(@NODE) Q:NODE'["BARR("  D
+ . I $$BACTV($QS(NODE,1)) S TMP($QS(NODE,1))=""
+ K BARR M BARR=TMP
+ Q
+ ; Check BUILD for its association with a current
+ ;   package version
  ; Note PACKAGE [#9.4] and BUILD [#9.6] maintain the
  ;  decimal node of a version even when 0
  ; ENTER
@@ -385,14 +439,5 @@ BACTV(BUILD) ;
  I +$P(BUILD," ",$L(BUILD," "))=+ACTVER Q 1
  Q 0
  ;
- ; Remove old versions
-REMOB(BARR) ;
- Q:'$D(BARR)
- N TMP
- S NODE=$NA(BARR(" "))
- F  S NODE=$Q(@NODE) Q:NODE'["BARR("  D
- . I $$BACTV($QS(NODE,1)) S TMP($QS(NODE,1))=""
- K BARR M BARR=TMP
- Q
  ;
 EOR ; end of routine A1AEF1

@@ -1,4 +1,4 @@
-A1AEF2 ;VEN/LGC - FUNCTIONS MINIMUM SET ; 11/9/14 11:56pm
+A1AEFV2 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 9/19/14 8:55am
  ;;2.4;PATCH MODULE;;SEP 17, 2014
  ;
  ;
@@ -11,24 +11,19 @@ A1AEF2 ;VEN/LGC - FUNCTIONS MINIMUM SET ; 11/9/14 11:56pm
  ;
  ; Temporary entry point to build REQB array
 EN K POO
- D REQB^A1AEF1("COMPARE SCHEDULING V 5.3",.POO)
- ;W !,$J,!
+ D REQB^KBAPTMP("SD*5.3*70",.POO)
  D MINSET(.POO)
+ W !,$J
  Q
  ;
  ;ENTER
  ;   BARR    = Array of BUILDS
  ;EXIT
- ;   MINSET  = Array of BUILDS representing a
- ;             minimum set from BARR
+ ;   MINSET  = MINIMUM SET of BARR
  ;NOTE: Assume we will keep all BUILDS with
  ;          New or modified files
  ;          Unique Components
  ;          Most recently installed of duplicates
- ;NOTE: Removing 
- ;          BUILDS not belonging to the user's site's stream
- ;            determined by checking corresponding PATCHES[#11005]
- ;          BUILDS not representing current package versions
  ;   
  ;^XPD(9.6,BIEN,4,FILE#)=FILE#           FILES
  ;^XPD(9.6,BIEN,"KRN","B",.4,CI) =       PRINT TEMPLATES
@@ -62,46 +57,31 @@ MINSET(BARR) ;
  D BLDMS ; Builds new MINSET array
  ;
  ; Display array size reduction
- N BLD,CNT S CNT=0,BUILD=" "
+ N CNT S CNT=0,BUILD=""
  F  S BUILD=$O(BARR(BUILD)) Q:BUILD=""  S CNT=CNT+1
- W:$G(CNT) !,"Original REQB array CNT=",CNT
- S CNT=0,BLD=" "
+ W !,"Original REQB array CNT=",CNT
+ S CNT=0,BLD=""
  F  S BLD=$O(MINSET(BLD)) Q:BLD=""  S CNT=CNT+1
- W:$G(CNT) !,"Minimum Set of necessary BUILDS=",CNT,!
+ W !,"Minimum Set of necessary BUILDS=",CNT,!
  ;K ^XTMP($J)
  Q
  ;
  ; Load ^XTMP($J nodes with all components found 
  ;   in this build
- ; ENTER
- ;    BUILD   =  BUILD name (used to identify ^XTMP node)
- ;    BIEN    =  BUILD IEN into 9.6
- ;    DTINS   =  Inverse Date build install completed
- ; RETURN
- ;    ^XTMP($J with all components/files in BUILD
 LOADXTMP(BUILD,BIEN,DTINS) ;
- ;W !,"BUILD=",$G(BUILD)," BIEN=",$G(BIEN)," DTINS=",$G(DTINS)
- N NODE,STOPNODE
- S NODE=$NA(^XPD(9.6,BIEN)),STOPNODE=$P(NODE,")")
+ N NODE S NODE=$NA(^XPD(9.6,BIEN)),STOPNODE=$P(NODE,")")
  F  S NODE=$Q(@NODE) Q:NODE'[STOPNODE  D
- .; If a file
  . I $QS(NODE,3)=4,$QS(NODE,4)>0,$QS(NODE,4)=+@NODE D  Q
  .. S ^XTMP($J,$QS(NODE,3),$QS(NODE,4),DTINS,BUILD,BIEN)=""
- .; If not a file, but another component
  . I $QS(NODE,3)="KRN",$QS(NODE,5)="NM",$QS(NODE,6)="B" D
  .. S ^XTMP($J,$QS(NODE,4),$QS(NODE,7),DTINS,BUILD,BIEN)=""
  Q
  ;
  ; Returns INVERSE Date/Time the build last installed
  ;   remembering there may be multiple installs
- ; ENTER
- ;    BUILD  =  BUILD name
- ; RETURNS
- ;    INVERSE Date/Time of most recent install
 DTINS(BUILD) ;
- N NODE,IIEN
- S IIEN=$O(^XPD(9.7,"B",BUILD,0)) Q:'IIEN 0 D
- . S NODE=$NA(^XPD(9.7,"B",BUILD))
+ N IIEN S IIEN=$O(^XPD(9.7,"B",BUILD,0)) Q:'IIEN 0 D
+ N NODE S NODE=$NA(^XPD(9.7,"B",BUILD))
  N DTINS S DTINS=0
  F  S NODE=$Q(@NODE) Q:($QS(NODE,3)'=BUILD)  D
  . I $$GET1^DIQ(9.7,$QS(NODE,4)_",",17,"I")>DTINS D
@@ -122,25 +102,16 @@ DTINS(BUILD) ;
  ;       4            INVERSE install date/time
  ;       5            BUILD
  ;       6            BUILD IEN in file 9.6
- ; Could right out file 
- ; Type of Component ,Component ID, ISTALL DATE, BUILD
- ; ENTER
- ;   ^XTMP($J nodes set
- ; RETURNS
- ;   MINSET array 
-BLDMS K MINSET
- N NODE S NODE=$NA(^XTMP($J))
- N CMP,CID S (CMP,CID)=""
- F  S NODE=$Q(@NODE) Q:NODE=""  Q:($QS(NODE,1)'[$J)  D
+BLDMS N NODE S NODE=$NA(^XTMP($J)) S (CMP,CID)="" 
+ F  S NODE=$Q(@NODE) Q:($QS(NODE,1)'[$J)  D
  .; Keep every build with file components
- . I $QS(NODE,2)=4 S MINSET($QS(NODE,5))="" Q
+ . I $QS(NODE,2)=4 S MINISET($QS(NODE,5))="" Q
  .; Quit if this is the same component and 
  .;   component description we have seen before
  .;   INVERSE DT (like lab) puts recent on top
  . I $QS(NODE,2)=CMP,$QS(NODE,3)=CID Q
  . S CMP=$QS(NODE,2),CID=$QS(NODE,3)
  . S MINSET($QS(NODE,5))=""
- ;W !,"$J = ",$J,!
  Q
  ;  
  ;
@@ -222,4 +193,4 @@ BLDMS K MINSET
  ;^XPD(9.6,42,"KRN",8994,"NM",0) = ^9.68A^^
  ;
  ;
-EOR ; end of routine A1AEF2
+EOR ; end of routine A1AEFV2
