@@ -1,0 +1,8 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^6"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE PATCH OPTS DOC^2981106^^19^^^3140325"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS",1,9.2)="S I(0,0)=$S($D(D0):D0,1:""""),DIP(1)=$S($D(^DIC(19,D0,10,D1,0)):^(0),1:""""),D0=$P(DIP(1),U,1) S:'$D(^DIC(19,+D0,0)) D0=-1 S DIP(101)=$S($D(^DIC(19,D0,0)):^(0),1:"""")"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="""Option Name:"";C1~.01;""""~""Menu Text:"";C1;S1~1;""""~"":"";C1;S1~3.5,.01;C3;S1;""""~"" "";C1;S1~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="I $P(^DIC(19,D0,0),U,4)=""M"" W ""Menu Options:"";X;Z;""I $P(19,D0,0),U,4)=""M"" W ""Menu Options:""""~"" "";C1;S1~10,.01;C5;L15;""""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",3)="10,X DXS(1,9.2) S X=$P(DIP(101),U,2) S D0=I(0,0) W X K DIP;5"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",4)="""-------------------------------------------------------------------------------"";C1~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="National Patch Module Options"

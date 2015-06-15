@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^10"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE RTN CHECKSUM^3070612.1121^^9.8^^@^3150507"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)=".01;""Routine Name"";L13~""Current Checksum: "";C2~7.2;X~"" Date: "";C35~7.1;X~""Patch List: "";C8~7.3;X~""---Patch-----------Checksum----"";C1~8,.01;C4;L15;X~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="8,2;X;C20~8,3;C4;X~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="Routine Checksum List"

@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,-1)="0^6"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,0)="A1AE SCAN MESSAGE^Enables option to A1AECOM"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,0)="^^2^2^2981021^"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,1,0)="This key is for those testing the A1AE*2.2*7 patch's inventorier and"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,2,0)="checksum verifier."

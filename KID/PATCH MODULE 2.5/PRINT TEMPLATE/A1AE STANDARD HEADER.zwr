@@ -1,0 +1,9 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^12"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE STANDARD HEADER^2920929.1322^^11005^^^^"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="W !,$S($D(A1AEHD):A1AEHD,1:""Patch Details"");"""";X;Z;""W !,$S($D(A1AEHD):A1AEHD,1:""Patch Details"")""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="S:'$D(A1AEPGE) A1AEPGE=0 S A1AEPGE=A1AEPGE+1 W ?70,""Page: "",A1AEPGE;"""";X;Z;""S:'$D(A1AEPGE) A1AEPGE=0 S A1AEPGE=A1AEPGE+1 W ?70,""Page: "",A1AEPGE""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",3)="""============================================================================="";C1~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",4)="W !,""Run Date:  "" S Y=DT D DT^DIQ;"""";X;Z;""W !,""Run Date:  "" S Y=DT D DT^DIQ""~""Designation:"";C44~.01;""""~""Package :"";C1~2;""""~""Status     :"";C44~8;""""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",5)="""============================================================================="";C1~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="@"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"SUB")=1

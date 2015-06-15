@@ -1,0 +1,7 @@
+^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^10"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE FORWARD^Forward a Released Patch message^^R^^^A1AE HELP OPTION FWD RELEASED^^^^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^1^1^3100521^^^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This option allows a user to forward a verified patch message."
+^XTMP("K2VC","EXPORT","KRN",19,IEN,20)=""
+^XTMP("K2VC","EXPORT","KRN",19,IEN,25)="8^A1AEPH1"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="FORWARD A RELEASED PATCH MESSA"

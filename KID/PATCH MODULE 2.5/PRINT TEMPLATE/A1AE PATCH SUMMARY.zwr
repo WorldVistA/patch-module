@@ -1,0 +1,7 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^7"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE PATCH SUMMARY^2920929.1347^^11005^^^3060223^"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS",1,9)="S YY=^(0),YZ=$P(YY,U,8),Y=$S(YZ=""v"":$P(YY,U,11),YZ=""c"":$P(YY,U,10),YZ=""u"":$P(YY,U,12),1:"""") I Y]"""" D TM^A1AEUTL1 W ?50,Y K YY,YZ"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)=".01;""Designation"";L13;C1~5;""Subject"";L30;C15~8;L1;C48;X~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="X DXS(1,9);""Status"";Z;""S YY=^(0),YZ=$P(YY,U,8),Y=$S(YZ=""v"":$P(YY,U,11),YZ=""c"":$P(YY,U,10),YZ=""u"":$P(YY,U,12),1:"""") I Y]"""" D TM^A1AEUTL1 W ?50,Y K YY,YZ""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",3)="100,.01;""Routine"";C64;L8~""-----------------------------------------------------------------------------"";C1~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="DHCP Patch Summary Report"

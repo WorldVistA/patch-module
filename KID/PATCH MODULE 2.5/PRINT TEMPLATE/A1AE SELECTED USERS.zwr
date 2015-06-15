@@ -1,0 +1,7 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^11"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE SELECTED USERS^2860328^@^11007^^@"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS",1,9.2)="S I(0,0)=$S($D(D0):D0,1:""""),DIP(1)=$S($D(^A1AE(11007,D0,0)):^(0),1:""""),D0=$P(DIP(1),U,1) S:'$D(^DIC(9.4,+D0,0)) D0=-1 S DIP(101)=$S($D(^DIC(9.4,D0,0)):^(0),1:"""")"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS",2,9.2)="S I(0,0)=$S($D(D0):D0,1:""""),DIP(1)=$S($D(^A1AE(11007,D0,1,D1,0)):^(0),1:""""),D0=$P(DIP(1),U,1) S:'$D(^DIC(3,+D0,0)) D0=-1 S DIP(101)=$S($D(^DIC(3,D0,6000)):^(6000),1:"""")"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="X DXS(1,9.2) S X=$P(DIP(101),U,2) S D0=I(0,0) W X K DIP;""Package"";Z;"".01:PREFIX""~50,.01;""User""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="50,X DXS(2,9.2) S X=$P(DIP(101),U,1) S D0=I(0,0) W X K DIP;"""";Z;"".01:INSTITUTION""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="Selected Users"
