@@ -1,5 +1,11 @@
-A1AEF2 ;VEN/LGC - FUNCTIONS MINIMUM SET ; 11/9/14 11:56pm
- ;;2.4;PATCH MODULE;;SEP 17, 2014
+A1AEF2 ;ven/lgc-functions minimum set ;2015-05-24T00:25
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-09-17: version 2.4 released
  ;
  ;
  ; CHANGE 9/18/2014 BUILD=" " rather than BUILD=""
@@ -9,12 +15,6 @@ A1AEF2 ;VEN/LGC - FUNCTIONS MINIMUM SET ; 11/9/14 11:56pm
  ;   have more recent duplicates of all their
  ;   contained components
  ;
- ; Temporary entry point to build REQB array
-EN K POO
- D REQB^A1AEF1("COMPARE SCHEDULING V 5.3",.POO)
- ;W !,$J,!
- D MINSET(.POO)
- Q
  ;
  ;ENTER
  ;   BARR    = Array of BUILDS
@@ -46,7 +46,7 @@ EN K POO
  ;^XPD(9.6,BIEN,"KRN","B",409.61,CI) =   LIST TEMPLATE
  ;^XPD(9.6,BIEN,"KRN","B",8994,CI) =     REMOTE PROCEDURE
  ;
-MINSET(BARR) ;
+MINSET(BARR) ; Reduce array of builds to minimum set
  ; Build ^XTMP(COMPONENT,DTINSTALLED,BUILD)
  K ^XTMP($J)
  N BUILD,BIEN,DTINS
@@ -79,7 +79,7 @@ MINSET(BARR) ;
  ;    DTINS   =  Inverse Date build install completed
  ; RETURN
  ;    ^XTMP($J with all components/files in BUILD
-LOADXTMP(BUILD,BIEN,DTINS) ;
+LOADXTMP(BUILD,BIEN,DTINS) ; Load ^XTMP with all build components
  ;W !,"BUILD=",$G(BUILD)," BIEN=",$G(BIEN)," DTINS=",$G(DTINS)
  N NODE,STOPNODE
  S NODE=$NA(^XPD(9.6,BIEN)),STOPNODE=$P(NODE,")")
@@ -98,7 +98,7 @@ LOADXTMP(BUILD,BIEN,DTINS) ;
  ;    BUILD  =  BUILD name
  ; RETURNS
  ;    INVERSE Date/Time of most recent install
-DTINS(BUILD) ;
+DTINS(BUILD) ; Return inverse date/time of build's most recent install
  N NODE,IIEN
  S IIEN=$O(^XPD(9.7,"B",BUILD,0)) Q:'IIEN 0 D
  . S NODE=$NA(^XPD(9.7,"B",BUILD))
@@ -128,7 +128,8 @@ DTINS(BUILD) ;
  ;   ^XTMP($J nodes set
  ; RETURNS
  ;   MINSET array 
-BLDMS K MINSET
+BLDMS ; Reduce component array in ^XTMP to minimal set
+ K MINSET
  N NODE S NODE=$NA(^XTMP($J))
  N CMP,CID S (CMP,CID)=""
  F  S NODE=$Q(@NODE) Q:NODE=""  Q:($QS(NODE,1)'[$J)  D

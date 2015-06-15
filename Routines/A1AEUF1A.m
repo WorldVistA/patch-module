@@ -1,5 +1,11 @@
-A1AEUF1A ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 CONT ; 11/10/14 9:41am
- ;;2.4;PATCH MODULE;; SEP 24, 2014
+A1AEUF1A ;ven/lgc,jli-unit tests for A1AEF1 cont ;2015-05-26T15:56
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
@@ -7,21 +13,23 @@ START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  Q
  ;
 STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  L +^XPD(9.6):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
  . W !," Unable to perform testing."
  ;
- L +^A1AE(11005):1 I '$T D  Q
+ L +^A1AE(A1AEFILE):1 I '$T D  Q  ; JLI 150525
  . S A1AEFAIL=1
- . W !,"Unable to obtain lock on PATCHES [#11005] file"
+ . W !,"Unable to obtain lock on PATCHES [#"_A1AEFILE_"] file" ; JLI 150525
  . W !," Unable to perform testing."
  Q
  ;
 SHUTDOWN L -^XPD(9.6):1
- L -^A1AE(11005):1
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ L -^A1AE(A1AEFILE):1 ; JLI 150525
  I '$$DELPAT D
- . W !,"Unable to delete test entries in 11005",!
+ . W !,"Unable to delete test entries in "_A1AEFILE,!
  ;
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP
  K A1AEFAIL
@@ -73,8 +81,9 @@ P1 N A1AE2LN S A1AE2LN=$T(+2^@RTN)
  F CNT=1:1:$L(A1AE2LN,",") S PNMB=$P(A1AE2LN,",",CNT) D  Q:'X
  . S PNM=A1AESABB_"*"_A1AEVR_"*"_PNMB
  . I '$D(POO(PNM)) S X=0 Q
- . I +POO(PNM),'$D(^A1AE(11005,+POO(PNM))) S X=0 Q
- . I +POO(PNM),'$O(^A1AE(11005,+POO(PNM),"P","B",RTN,0)) S X=0
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ . I +POO(PNM),'$D(^A1AE(A1AEFILE,+POO(PNM))) S X=0 Q
+ . I +POO(PNM),'$O(^A1AE(A1AEFILE,+POO(PNM),"P","B",RTN,0)) S X=0
  . K POO(PNM)
  Q:$O(POO(""))="" 1
  Q X
@@ -102,6 +111,7 @@ PTCRTNS() N X S X=0
  N PD,A5IEN S PD=$O(POO("")),A5IEN=$G(POO(PD))
  N PPP D PTCRTNS^A1AEF1(A5IEN,.PPP)
  N LN2,RTN,PCH,A1AEIEN
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  N NODE S NODE=$NA(PPP(" "))
  F  S NODE=$Q(@NODE) Q:NODE'["PPP("  D  Q:X
  .; Pull out RTN name, PATCH name, and 11005
@@ -113,7 +123,7 @@ PTCRTNS() N X S X=0
  .; Check patch number on line 2
  .  I LN2'[PCH S X=1 Q
  .; If indication patch is in 11005, check routine part of patch
- .  I A1AEIEN,'$O(^A1AE(11005,A1AEIEN,"P","B",RTN,0)) S X=1
+ .  I A1AEIEN,'$O(^A1AE(A1AEFILE,A1AEIEN,"P","B",RTN,0)) S X=1 ; JLI 150525
  Q X
  ;
  ;
@@ -190,12 +200,13 @@ CONFRM(POO) N PNM,X,Y S PNM="",Y=0,X=1
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N DA,DIK,PAT,NOERR S PAT=0,NOERR=1
- F  S PAT=$O(^A1AE(11005,PAT)) Q:'PAT  D  Q:'NOERR
- . I $P(^A1AE(11005,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
- .. S DIK="^A1AE(11005," S DA=+PAT D ^DIK S:$D(DIERR) NOERR=0
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D  Q:'NOERR
+ . I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
+ .. S DIK="^A1AE(A1AEFILE," S DA=+PAT D ^DIK S:$D(DIERR) NOERR=0
  I NOERR S PAT=0 D
- . F  S PAT=$O(^A1AE(11005,PAT)) Q:'PAT  D  Q:'NOERR
- .. I $P(^A1AE(11005,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
+ . F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D  Q:'NOERR
+ .. I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
  ... S NOERR=0
  Q NOERR
  ;
@@ -211,25 +222,26 @@ MKPATCH(PD,RTN) Q:PD="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
  N PTSTRM S PTSTRM=$S(PTCHNB>10001:10001,1:1)
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  N FDAIEN
  ; If already entry in 11005, move on to adding RTN
- I +$O(^A1AE(11005,"B",PD,0)) D
- . S FDAIEN(1)=+$O(^A1AE(11005,"B",PD,0))
+ I +$O(^A1AE(A1AEFILE,"B",PD,0)) D
+ . S FDAIEN(1)=+$O(^A1AE(A1AEFILE,"B",PD,0))
  E  D
  . N DIERR
- . S FDA(3,11005,"?+1,",.01)=PD
- . S FDA(3,11005,"?+1,",.2)=PTSTRM
- . S FDA(3,11005,"?+1,",2)=PKGIEN
- . S FDA(3,11005,"?+1,",3)=PKGAV
- . S FDA(3,11005,"?+1,",4)=PTCHNB
- . S FDA(3,11005,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
+ . S FDA(3,A1AEFILE,"?+1,",.01)=PD
+ . S FDA(3,A1AEFILE,"?+1,",.2)=PTSTRM
+ . S FDA(3,A1AEFILE,"?+1,",2)=PKGIEN
+ . S FDA(3,A1AEFILE,"?+1,",3)=PKGAV
+ . S FDA(3,A1AEFILE,"?+1,",4)=PTCHNB
+ . S FDA(3,A1AEFILE,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
  . D UPDATE^DIE("","FDA(3)","FDAIEN")
  ;W "NEW ENTRY=",+$G(FDAIEN(1))
  Q:$D(DIERR) 0
  K DIERR,FDA
  N FDARIEN S FDARIEN=+$G(FDAIEN(1)) Q:'FDARIEN 0
  K FDAIEN
- S FDA(3,11005.03,"?+1,"_FDARIEN_",",.01)=RTN
+ S FDA(3,+(A1AEFILE_".03"),"?+1,"_FDARIEN_",",.01)=RTN
  D UPDATE^DIE("","FDA(3)","FDAIEN")
  Q:$D(DIERR) 0
  Q FDARIEN

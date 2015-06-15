@@ -1,7 +1,9 @@
-A1AEK2MT ; VEN/SMH - KIDS HFS files to Patch Module testing code;2014-03-28  6:41 PM ; 3/31/14 5:44pm
- ;;2.4;PATCH MODULE;;Mar 28, 2014
+A1AEK2MT ;ven/smh-kids hfs files to Patch Module testing code;2015-06-14  2:02 AM
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
  ;
-TEST D EN^XTMUNIT($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
+TEST D EN^%ut($T(+0),1,1) QUIT  ; 1/1 means be verbose and break upon errors.
 STARTUP ; M-Unit Start-up
  ; ZEXCEPT: OLDPWD,A1AEK2MTIEN
  I $D(DUZ)[0 D ^XUP ; X-New. Protect our variables from XUP's global kill.
@@ -11,6 +13,8 @@ STARTUP ; M-Unit Start-up
  S FDA(3.703,"?+1,.5,",1)="y" ; Read Priv
  S FDA(3.703,"?+1,.5,",2)="y" ; Send Priv
  D UPDATE^DIE("E",$NA(FDA),$NA(A1AEK2MTIEN))
+ ;
+ ; --- CAREFUL ---
  ; Delete all the old data, ONLY IF WE ARE ON TEST
  I '$$PROD^XUPROD() D
  . D EN^DDIOL("Deleting all imported users.")
@@ -32,12 +36,12 @@ STARTUP ; M-Unit Start-up
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  S OLDPWD=$$PWD^A1AEOS()
  D EN^DDIOL("Cloning the OSEHRA repository. This will take some time.")
-        N % S %=$$MKDIR^A1AEOS("osehra-repo")
-        I % S $EC=",U-MKDIR-FAILED,"
-        N D S D=$$D^A1AEOS()
-        N % S %=$$CD^A1AEOS(OLDPWD_D_"osehra-repo")
-        I %'["osehra" S $EC=",U-CD-FAILED,"
-        N % S %=$$RDPIPE^A1AEOS(,"git clone --depth=0 https://github.com/OSEHRA/VistA")
+ N % S %=$$MKDIR^A1AEOS("osehra-repo")
+ I % S $EC=",U-MKDIR-FAILED,"
+ N D S D=$$D^A1AEOS()
+ N % S %=$$CD^A1AEOS(OLDPWD_D_"osehra-repo")
+ I %'["osehra" S $EC=",U-CD-FAILED,"
+ N % S %=$$RDPIPE^A1AEOS(,"git clone --depth=0 https://github.com/OSEHRA/VistA")
  QUIT
  ;
 SHUTDOWN ; M-Unit Shutdown
@@ -47,7 +51,7 @@ SHUTDOWN ; M-Unit Shutdown
  N FDA S FDA(3.703,A1AEK2MTIEN(1)_C_.5_C,.01)="@" D FILE^DIE("E",$NA(FDA))
  ;
  N P S P="cmdpipe"
-        N % S %=$$CD^A1AEOS(OLDPWD)
+ N % S %=$$CD^A1AEOS(OLDPWD)
  K OLDPWD,A1AEK2MTIEN
  ; Don't delete. Takes forever to clone again.
  ; O P:(shell="/bin/sh":command="rm -rf osehra-repo")::"pipe"
@@ -70,9 +74,9 @@ CLEANQP ; @TEST Clean Q-Patch Queue (Temporary until we make the code file into 
  QUIT
  ;
 GETSTRM ; @TEST Test GETSTRM^A1AEK2M
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*55"),1)
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*0"),1)
- D CHKEQ^XTMUNIT($$GETSTRM^A1AEK2M0("AAA*2.0*10035"),10001)
+ D CHKEQ^%ut($$GETSTRM^A1AEK2M0("AAA*2.0*55"),1)
+ D CHKEQ^%ut($$GETSTRM^A1AEK2M0("AAA*2.0*0"),1)
+ D CHKEQ^%ut($$GETSTRM^A1AEK2M0("AAA*2.0*10035"),10001)
  QUIT
  ;
 SELFILT ; ##TEST Test file selector - Can't use M-Unit... this is interactive.
@@ -104,8 +108,8 @@ ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  QUIT
  ;
 ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
-        N FILES N % S %=$$RDPIPE^A1AEOS(.FILES,"find . -name '*.TXT'")
-        N I F I=0:0 S I=$O(FILES(I)) Q:'I  D 
+ N FILES N % S %=$$RDPIPE^A1AEOS(.FILES,"find . -name '*.TXT'")
+ N I F I=0:0 S I=$O(FILES(I)) Q:'I  D 
  . K ^TMP($J,"TXT")
  . N Y S Y=$$FTG^%ZISH($$PWD^A1AEOS(),FILES(I),$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
  . D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT"))) ; Clean header and footer.
@@ -125,10 +129,10 @@ SB ; @TEST Analyze Single build KIDS file
  K ^TMP($J,"KID"),^("ANKID")
  ;
  N % S %=$$FTG^%ZISH(PATH,FILE,$NA(^TMP($J,"KID",1,0)),3)
- I '% D FAIL^XTMUNIT("Can't open file") QUIT
+ I '% D FAIL^%ut("Can't open file") QUIT
  ;
  D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"KID")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","TIU*1.0*239")),"KIDS file not loaded")
+ D CHKTF^%ut($D(^TMP($J,"ANKID","TIU*1.0*239")),"KIDS file not loaded")
  QUIT
  ;
 MB ; @TEST Analyze Multibuild KIDS file
@@ -139,12 +143,12 @@ MB ; @TEST Analyze Multibuild KIDS file
  K ^TMP($J,"KID"),^("ANKID")
  ;
  N % S %=$$FTG^%ZISH(PATH,FILE,$NA(^TMP($J,"KID",1,0)),3)
- I '% D FAIL^XTMUNIT("Can't open file") QUIT
+ I '% D FAIL^%ut("Can't open file") QUIT
  ;
  D ANALYZE^A1AEK2M1($NA(^TMP($J,"ANKID")),$NA(^TMP($J,"KID")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","OR*3.0*357")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","PXRM*2.0*22")))
- D CHKTF^XTMUNIT($D(^TMP($J,"ANKID","TERATOGENIC MEDICATIONS ORDER CHECKS 1.0")))
+ D CHKTF^%ut($D(^TMP($J,"ANKID","OR*3.0*357")))
+ D CHKTF^%ut($D(^TMP($J,"ANKID","PXRM*2.0*22")))
+ D CHKTF^%ut($D(^TMP($J,"ANKID","TERATOGENIC MEDICATIONS ORDER CHECKS 1.0")))
  QUIT
  ;
 LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
@@ -191,5 +195,5 @@ LOADDUP ; @TEST - Try to duplicate the loaded patches
  QUIT
  ;
  ; Convenience methods for M-Unit.
-ASSERT(A,B) D CHKTF^XTMUNIT(A,$G(B)) QUIT
-CHKEQ(A,B,C) D CHKEQ^XTMUNIT(A,B,$G(C)) QUIT
+ASSERT(A,B) D CHKTF^%ut(A,$G(B)) QUIT
+CHKEQ(A,B,C) D CHKEQ^%ut(A,B,$G(C)) QUIT

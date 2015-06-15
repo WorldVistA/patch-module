@@ -1,5 +1,11 @@
-A1AEPHS ; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-04-18  12:56 AM
- ;;2.4;PATCH MODULE;;APR 17, 2007;Build 8
+A1AEPHS ;isa/rmo,mjk-logic from DD, U triggers test message ;2015-06-14  3:28 AM
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ; Input Transform of field Status (8) of file DHCP Patches (11005)
  ;
@@ -47,7 +53,7 @@ A1AEPHS ; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-04-18  1
  ; review or either kind of development
  I TESTMES D  ; if same status entered to generate test message
  . S X=A1AENEW ; reduce user input to the status code
- E  I A1AEOLD=A1AENEW Q  ; otherwise, new status must be different
+ E  I A1AEOLD=A1AENEW Q  ; don't proceed if it is the same status.
  S A1AEOLD=$$UP^XLFSTR(A1AEOLD)
  N A1AEOLDC S A1AEOLDC=U_A1AEOLD_U ; to test if lists contain old code
  ;
@@ -60,6 +66,8 @@ A1AEPHS ; RMO,MJK/ALBANY - Logic from DD, U triggers test Message ;2014-04-18  1
  . D @A1AEOLD ; process main-status patches
  E  D
  . D NEW ; process new patch (& unfortunately x = cancel)
+ ;
+ S X=A1AEX ; restore user input
  ;
  QUIT  ; end of A1AEPHS
  ;
@@ -178,6 +186,9 @@ C ; c = COMPLETED/UNVERIFIED
  . K X
  Q:'$D(X)
  ;
+ ; VEN/JLI 150413 - add info from DHCP PATCHES file to message data in DHCP PATCH MESSAGE file entry
+ D BUILDIT^A1AEBLD(DA)
+ ; VEN/JLI - end of insertion
  ;Build Mail Message
  D MES^A1AEMAL
  ;

@@ -1,9 +1,14 @@
-A1AEM ;ISC-Albany/pke-called entries for mailing patches ; 3/31/14 1:00pm
- ;;2.4;PATCH MODULE;;Mar 28, 2014;Build 8
+A1AEM ;isa/pke-called entries for mailing patches ;2014-03-31T13:00
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
  ;
  ; change history
  ;
  ; 2007 01 10 (??/??): last change prior to v2.4
+ ;
+ ;2014-03-28: version 2.4 released
  ;
  ; 2014 03 31 (ven/toad): Rick Marshall of the VISTA Expertise Network
  ; added subroutine CONTS2 to handle input template A1AE AD/EDIT

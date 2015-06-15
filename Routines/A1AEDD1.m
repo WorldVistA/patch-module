@@ -1,6 +1,13 @@
-A1AEDD1 ;VEN/JLI - Data Dictionary related code ;2014-10-20  11:07 PM
- ;;2.4;PATCH MODULE;
- D EN^%ut("A1AEUDD")
+A1AEDD1 ;ven/jli-data dictionary related code ;2015-05-20T18:23
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
+ ;
+ ;
  Q
  ;
 PLU949 ; pre-lookup transform for version field of file 9.4 add .0 to integer if exists
@@ -36,3 +43,34 @@ PLU11005 ; pre-lookup transform for DHCP PATCHES file (#11005)
  I X?1A1.APN1"*"1.N1"."1"0"1"*"1.N.1A.2N S X=$P(X,".0")_$P(X,".0",2)
  Q
  ;
+PLU11004 ; pre-lookup transform for PATCH file (#11004)
+ ; ZEXCEPT: X defined before entry is made
+ N VAL
+ S VAL=$L(X)
+ I X[".0",$E(X,VAL-1,VAL)=".0" S X=$P(X,".0")
+ I X?1A1.APN1"*"1.N1"."1"0"1"*"1.N.1A.2N S X=$P(X,".0")_$P(X,".0",2)
+ Q
+ ;
+A1AESEQ ; called as SET cross-reference on NAME entry for PATCH APPLICATION HISTORY sub-file
+ ; ZEXCEPT: DA,X - defined prior to entry
+ N SEQ,PAT,PKG,VER,I,STRM,PATCH,PATNUM
+ S SEQ=+$P(X,"#",2)
+ I SEQ>0 S PKG=$P(^DIC(9.4,DA(2),0),U,2),VER=+^DIC(9.4,DA(2),22,DA(1),0),PATNUM=+X D
+ . S STRM=0 F I=0:0 S I=$O(^A1AE(11007.1,I)) Q:I'>0  I PATNUM>(I-1) S STRM=I
+ . I STRM=0 S STRM=1
+ . S PATCH=PKG_"*"_VER_"*"_PATNUM
+ . S ^DIC(9.4,"A1AESEQ",PKG,VER,STRM,SEQ,PATCH)=""
+ . Q
+ Q
+ ;
+KA1AESEQ ; called as KILL cross-reference on NAME entry for PATCH APPLICATION HISTORY sub-file
+ ; ZEXCEPT: DA,X - defined prior to entry
+ N SEQ,PAT,PKG,VER,I,STRM,PATCH,PATNUM
+ S SEQ=+$P(X,"#",2)
+ I SEQ>0 S PAT=$P(^(0),U),PKG=$P(^DIC(9.4,DA(2),0),U,2),VER=+^DIC(9.4,DA(2),22,DA(1),0),PATNUM=+X D
+ . S STRM=0 F I=0:0 S I=$O(^A1AE(11007.1,I)) Q:I'>0  I PATNUM>(I-1) S STRM=I
+ . I STRM=0 S STRM=1
+ . S PATCH=PKG_"*"_VER_"*"_PATNUM
+ . K ^DIC(9.4,"A1AESEQ",PKG,VER,STRM,SEQ,PATCH)
+ . Q
+ Q

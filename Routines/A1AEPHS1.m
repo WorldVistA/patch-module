@@ -1,5 +1,11 @@
-A1AEPHS1 ; VEN/TOAD - Continuation of A1AEPHS;2014-04-18  12:56 AM
- ;;2.4;PATCH MODULE;;APR 17, 2007;Build 8
+A1AEPHS1 ;ven/toad-continuation of A1AEPHS ;2014-04-18T00:56
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
 ESSMSG ;
  ; released or entered-in-error

@@ -1,5 +1,11 @@
-A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-17  10:21 PM; 8/20/14 11:07pm ; 10/20/14 5:52am
- ;;2.4;PATCH MODULE;;AUG 20, 2014
+A1AEUPS1 ;ven/lgc,jli-unit tests for the patch module ;2015-01-06T23:29
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ; CHANGE: (VEN/LGC) Corrected calls to Post Install
  ;        The Post install was moved out of the A1AEUTL
@@ -14,6 +20,11 @@ A1AEUPS1 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE;2014-10-17  10:21 PM; 8/
  ;        of files before continuing with testing
  ;        Added A1AEFAIL to indicate when testing
  ;        should not continue.
+ ; CHANGE: (JLI/LGC) 01/06/2015
+ ;        Added code to check setting of A1AESEQ
+ ;        cross-reference on NAME field of PATCH
+ ;        APPLICATION HISTORY subfile of VERSION
+ ;        subfile of PACKAGE file
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  ; N A1AEFAIL S A1AEFAIL=0 ; JLI 141017 moved to STARTUP
@@ -75,7 +86,7 @@ UTP1 ;
  N A1AEI,UTOIEN,UTPOST
  ; Save IEN of entry now set as PRIMARY?
  S UTOIEN=$$UTPRIEN
- ; If no Stream was set to PRIMARY, we must set one 
+ ; If no Stream was set to PRIMARY, we must set one
  ;  or we are unable to check that clearing all PRIMARY works
  S:'UTOIEN $P(^A1AE(11007.1,1,0),U,2)=1
  ; Call should set all PRIMARY to 0
@@ -129,7 +140,7 @@ UTP2 ;
  S UTPOST=$$UTPRIEN
  S X=1
  ; If all PRIMARY are 0, and
- ;    a) and MAIL DOMAIN not contain "FORUM" --- correct 
+ ;    a) and MAIL DOMAIN not contain "FORUM" --- correct
  ;    b) and no FORUM DOMAIN fields set in 11007.1 --- correct
  ; If there is a PRIMARY set then correct if,
  ;    a) the mail domain (UTDOM) contains "FORUM"
@@ -156,7 +167,7 @@ UTP2 ;
  ;   Stream.
  ; Rather than correct a site's entries if they are set wrong
  ;   we will first save off their present SUBSCRIPTION entry
- ;   in the DHCP PATCH STREAM [#11007.1] file so we might 
+ ;   in the DHCP PATCH STREAM [#11007.1] file so we might
  ;   set it back after our test.
  ; Logic for test
  ;   1. Save off IEN for entry in DHCP PATCH STREAM [#11007.1]
@@ -165,7 +176,7 @@ UTP2 ;
  ;      which should set SUBSCRIPTION to 0, then set
  ;      the FOIA VISTA site to SUBSCRIPTION
  ;   3. Set the IEN for Stream SUBSCRIPTION back to original
- ;   4. Run Unit Test code 
+ ;   4. Run Unit Test code
  ;
 UTP3 ;
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP, killed in SHUTDOWN
@@ -224,6 +235,19 @@ CHKPLUS  ; @TEST check setting of Pre-LookUp Transforms
  D CHKTF^%ut($D(^DD(9.49,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for subfile 9.49")
  D CHKTF^%ut($D(^DD(9.6,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for file 9.6")
  D CHKTF^%ut($D(^DD(9.7,.01,7.5)),"Failed to set Pre-Lookup Transform (node 7.5) for file 9.7")
+ Q
+ ;
+CHECKSEQ ; @TEST check setting of sequence cross-reference
+ F NODE=0:0 S NODE=$O(^DD(9.4901,.01,1,NODE)) Q:NODE'>0  I $G(^(NODE,0))="9.4^A1AESEQ^MUMPS" Q
+ I NODE>0 K ^DD(9.4901,.01,1,NODE),^DD(9.4,0,"IX","A1AESEQ",9.4901,.01) ; remove current entries
+ ;
+ D SETSEQ^A1AE2POS
+ ;
+ D CHKTF^%ut($D(^DD(9.4,0,"IX","A1AESEQ",9.4901,.01)),"Did not create main node under ^DD(9.4,0,")
+ F NODE=0:0 S NODE=$O(^DD(9.4901,.01,1,NODE)) Q:NODE'>0  I $G(^(NODE,0))="9.4^A1AESEQ^MUMPS" Q
+ D CHKTF^%ut(NODE,"Did not create cross-reference for NAME in PATCH APPLICATION HISTORY")
+ N VALUE S VALUE=$O(^DIC(9.4,"A1AESEQ",""))
+ D CHKTF^%ut(VALUE'="","A1AESEQ cross-reference not built for data in file 9.4")
  Q
  ;
 XTENT ;

@@ -1,5 +1,12 @@
-A1AEF1 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 11/4/14 5:23pm
- ;;2.4;PATCH MODULE;;SEP 11, 2014
+A1AEF1 ;ven/lgc-functions builds and installs ;2015-02-15T17:37
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-09-11: version 2.4 released
+ ;
  ;
  ; CHANGE LGC - 9/18/2014
  ;    Modified REQB to build double array
@@ -13,6 +20,11 @@ A1AEF1 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 11/4/14 5:23pm
  ;    A1AEFRQB edited to N BMARR
  ;    A1AEFMUB edited to N BMARR
  ;
+ ; CHANGE LGC - 12/1/2014
+ ;    Modified BACTV to find PACKAGE IEN by either
+ ;    direct lookup into entry in 9.6 OR by
+ ;    looking up package abb in the "C" cross
+ ;
  ; Return in BMARR array all REQUIRED BUILDS for
  ;  a the BUILD entry in BUILDS [#9.6]
  ; Code by Rick Marshall and Joel Ivey during dev conference call
@@ -23,7 +35,7 @@ A1AEF1 ;VEN/LGC - VEN FUNCTIONS BUILDS AND INSTALLS ; 11/4/14 5:23pm
  ;              *** Array must be empty
  ; EXIT
  ;   BMARR   =  array of names of all REQUIRED BUILDS
-REQB(BUILD,BMARR) ;
+REQB(BUILD,BMARR) ; Return array of all REQ builds
  S:'$D(BMARR(0)) BMARR(0)=0,BMARR(0,0)=1
  N BIEN S BIEN=$O(^XPD(9.6,"B",BUILD,0)) ; do we have an IEN?
  Q:'BIEN  ; skip if no record
@@ -44,7 +56,7 @@ REQB(BUILD,BMARR) ;
  ;              *** array must be empty
  ; EXIT
  ;   BMARR   =  array of names of all Multiple Builds
-MULB(BUILD,BMARR) ;
+MULB(BUILD,BMARR) ; Return array of all MULB builds
  S:'$D(BMARR(0)) BMARR(0)=0,BMARR(0,0)=1
  N BIEN S BIEN=$O(^XPD(9.6,"B",BUILD,0)) ; do we have an IEN?
  Q:'BIEN  ; skip if no record
@@ -111,7 +123,7 @@ A1AEFMUB(BUILD) ; File MULTIPLE BUILDS
  ; RETURN
  ;    1        =  new entry added
  ;    0        =  error
-ADBTORM(BIEN,BLDNM,RM) ;
+ADBTORM(BIEN,BLDNM,RM) ; Add build to either REQB or MULB
  I RM'?1"R",RM'?1"M" Q 0
  I 'BIEN Q 0
  I '$D(^XPD(9.6,BIEN)) Q 0
@@ -148,7 +160,7 @@ ADBTORM(BIEN,BLDNM,RM) ;
  ;   A1AEVR     =  Version from second line
  ;   A1AEPNM    =  Patch Name built from routine second line
  ;
-PTC4RTN(A1AERTNM,PTCHARR) ;
+PTC4RTN(A1AERTNM,PTCHARR) ; Find all patches touching Routine
  K PTCHARR Q:A1AERTNM=""
  ; Get 2nd line of routine
  N A1AE2LN S A1AE2LN=$T(+2^@A1AERTNM)
@@ -174,11 +186,12 @@ PTC4RTN(A1AERTNM,PTCHARR) ;
  ; Save necessary patches in array with IEN of patch
  ;   in file 11005 if found
  N A1AE005 ; *** ADDED 10/3/2014
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  F CNT=1:1:$L(A1AEPLST,",") D
  . S A1AEPNM=A1AESABB_"*"_A1AEVR_"*"_$P(A1AEPLST,",",CNT)
  . S PTCHARR(A1AEPNM)=""
  .; Added ^ in below. was $O(A1AE(11005...
- . S A1AE005=$O(^A1AE(11005,"B",A1AEPNM,0))
+ . S A1AE005=$O(^A1AE(A1AEFILE,"B",A1AEPNM,0)) ; JLI 150525 replaced 11005 with A1AEFILE
  .; I A1AE005 W "  DHCP PATCH ENTRY:",A1AE005
  . S PTCHARR(A1AEPNM)=A1AE005
  Q
@@ -211,7 +224,7 @@ PTC4RTN(A1AERTNM,PTCHARR) ;
  ;    PTCHARR    =  Array of all patches needed to build
  ;                  every routine in the patch under
  ;                  scrutiny
-PTCRTNS(A1AEPIEN,PTCHARR) ;
+PTCRTNS(A1AEPIEN,PTCHARR) ; Return array of all patches to build Routine
  K PTCHARR
  Q:'$G(A1AEPIEN)
  ; 1. Get routines in the patch
@@ -226,8 +239,9 @@ PTCRTNS(A1AEPIEN,PTCHARR) ;
  ;    Double array   ARR(RTN,"ACTIVE")=LINE2 RTN IN SYSTEM
  ;                   ARR(RTN,P,IEN,SS)=PATCH ENTRY DISP LINE2
  N A1AER,A1AERR,A1AERRS,A1AERSS S A1AERSS=0
- F  S A1AERSS=$O(^A1AE(11005,A1AEPIEN,"P",A1AERSS)) Q:'A1AERSS  D
- .  S A1AER=^A1AE(11005,A1AEPIEN,"P",A1AERSS,0)
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ F  S A1AERSS=$O(^A1AE(A1AEFILE,A1AEPIEN,"P",A1AERSS)) Q:'A1AERSS  D  ; JLI 150525 changed 11005 to A1AEFILE
+ .  S A1AER=^A1AE(A1AEFILE,A1AEPIEN,"P",A1AERSS,0) ; JLI 150525 changed 11005 to A1AEFILE
  .  S A1AERTNM=$P(A1AER,"^"),A1AEPLST=$P(A1AER,"^",3)
  .  S PTCHARR(A1AERTNM,"P",A1AEPIEN,A1AERSS)=A1AEPLST
  .  S PTCHARR(A1AERTNM,"ACTIVE")=$T(+2^@A1AERTNM)
@@ -284,7 +298,7 @@ P2 F  S RTN=$O(PTCHARR(RTN)) Q:RTN=""  D
  ;               MR = "" all builds filtered for stream
  ;               MR = "R" filtered list minus REQB entries
  ;               MR = "M" filtered list minus MULB entries
-PTC4KIDS(BUILD,BARR,MR) ;
+PTC4KIDS(BUILD,BARR,MR) ; Filter build's REQB and MULB for patch stream
  ; PTSTRM will be 0,1,or 10001
  N PTSTRM S PTSTRM=$O(^A1AE(11007.1,"APRIM",1,0))
  ;W !,"PTSTRM=",PTSTRM
@@ -305,10 +319,11 @@ PTC4KIDS(BUILD,BARR,MR) ;
  .. S PD=$P(PD,"*")_"*"_$P($P(PD,"*",2),".")_"*"_$P(PD,"*",3)
  .; If BUILD does not have corresponding entryDHCP PATCHES file,
  .;   then delete this node from incoming array
- . S PDIEN=$O(^A1AE(11005,"B",PD,0))
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ . S PDIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) ; JLI 150525
  .; Local change to increase returned list size
  . I 'PDIEN K @NODE Q
- . I $$GET1^DIQ(11005,PDIEN_",",.2,"I")'=PTSTRM K @NODE
+ . I $$GET1^DIQ(A1AEFILE,PDIEN_",",.2,"I")'=PTSTRM K @NODE ; JLI 150525
  Q
  ;
  ;
@@ -321,7 +336,7 @@ PTC4KIDS(BUILD,BARR,MR) ;
  ; RETURN
  ;   BARR  =  array filtered for names found in 
  ;            DHCP PATCHES [#11005] and correct patch stream
-PTCSTRM(BARR) ;
+PTCSTRM(BARR) ; Filter build array to match site's patch stream
  ; PTSTRM will be 0,1,or 10001
  N PTSTRM S PTSTRM=$O(^A1AE(11007.1,"APRIM",1,0))
  S NODE=$NA(BARR(" ")) F  S NODE=$Q(@NODE) Q:NODE'["BARR"  D
@@ -329,10 +344,11 @@ PTCSTRM(BARR) ;
  .; correct for builds with ".0" in version
  . I $P(PD,"*",2)?.NP1"0" D
  .. S PD=$P(PD,"*")_"*"_$P($P(PD,"*",2),".")_"*"_$P(PD,"*",3)
- . S PDIEN=$O(^A1AE(11005,"B",PD,0))
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ . S PDIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) ; JLI 150525 changed 11005 to A1AEFILE
  . I 'PDIEN K @NODE Q
  .; Must match patch stream
- . I $$GET1^DIQ(11005,PDIEN_",",.2,"I")'=PTSTRM K @NODE
+ . I $$GET1^DIQ(A1AEFILE,PDIEN_",",.2,"I")'=PTSTRM K @NODE ; JLI 150525 changed 11005 to A1AEFILE
  Q
  ;
  ; Given a parent BUILD, and an array of other BUILD names,
@@ -343,7 +359,7 @@ PTCSTRM(BARR) ;
  ;    BARR   =  array of BUILD NAMES passed by reference
  ; RETURN
  ;    BUILD's PAT multiple updated
-UPDPAT(BUILD,BARR) ;
+UPDPAT(BUILD,BARR) ; Update PAT multiple of a build
  S KIEN=$O(^XPD(9.6,"B",BUILD,0)) Q:'KIEN
  S NODE=$NA(BARR(" ")) F  S NODE=$Q(@NODE) Q:NODE'["BARR"  D
  . S PD=$QS(NODE,1)
@@ -366,12 +382,13 @@ UPDPAT(BUILD,BARR) ;
  ; Variables
  ;   A1AEPI  =  IEN of Patch matching name of PD
  ;   IIEN    =  IEN of INSTALLS(s) matching KIEN entry
-UPDPAT1(PD,KIEN) ;
- S A1AEPI=$O(^A1AE(11005,"B",PD,0))
+UPDPAT1(PD,KIEN) ; Add a patch entry to the PAT multiple of a build
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ S A1AEPI=$O(^A1AE(A1AEFILE,"B",PD,0))
  ; If no match, try dropping the ".0"
  I 'A1AEPI,$P(PD,"*",2)?.NP1"0" D
  .  N PD0 S PD0=$P(PD,"*")_"*"_$P($P(PD,"*",2),".")_"*"_$P(PD,"*",3)
- .  S A1AEPI=$O(^A1AE(11005,"B",PD0,0))
+ .  S A1AEPI=$O(^A1AE(A1AEFILE,"B",PD0,0)) ; JLI 150525
  Q:'A1AEPI
  ; Update BUILD and entry PAT multiple
  D UPDPAT2(KIEN,A1AEPI,9.619)
@@ -391,7 +408,7 @@ UPDPAT1(PD,KIEN) ;
  ;                9.619 for BUILDs, 9.719 for INSTALLs
  ; RETURN
  ;     BUILD / INSTALL entry PAT multiple updated
-UPDPAT2(A1AEKI,A1AEPI,KFILE) ;
+UPDPAT2(A1AEKI,A1AEPI,KFILE) ; Update a single PAT entry in a build
  ;W !,"A1AEKI=",A1AEKI," A1AEPI=",A1AEPI," KFILE=",KFILE
  N FDA,DIERR
  S FDA(3,KFILE,"?+1,"_A1AEKI_",",.01)=A1AEPI
@@ -403,7 +420,8 @@ UPDPAT2(A1AEKI,A1AEPI,KFILE) ;
  ;    STR   =  String to set to upper case
  ; RETURN
  ;    STR   =  all uppercase
-UP(STR) Q $TR(STR,"abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+UP(STR) ; Return string as all uppercase
+ Q $TR(STR,"abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ")
  ;
  ;
  ; Remove old versions
@@ -412,7 +430,7 @@ UP(STR) Q $TR(STR,"abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ")
  ; RETURN
  ;     BARR  =  array with BUILDS after removing those
  ;              not representing current package versions.
-REMOB(BARR) ;
+REMOB(BARR) ; Remove non-current pkg builds from array
  Q:'$D(BARR)
  N TMP
  S NODE=$NA(BARR(" "))
@@ -428,10 +446,14 @@ REMOB(BARR) ;
  ;  BUILD   =  NAME of BUILD
  ; RETURN
  ;  1 for active version, 0 for older version member
-BACTV(BUILD) ;
+BACTV(BUILD) ; Check build represents current package version
  Q:BUILD="" 0
- N BIEN S BIEN=$O(^XPD(9.6,"B",BUILD,0)) Q:'BIEN 0
- N PKGIEN S PKGIEN=$$GET1^DIQ(9.6,BIEN_",",1,"I") Q:'PKGIEN 0
+ N BIEN S BIEN=$O(^XPD(9.6,"B",BUILD,0))
+ ;N PKGIEN S PKGIEN=$$GET1^DIQ(9.6,BIEN_",",1,"I") Q:'PKGIEN 0
+ N PKGIEN
+ I BIEN S PKGIEN=$$GET1^DIQ(9.6,BIEN_",",1,"I")
+ E  S PKGIEN=$O(^DIC(9.4,"C",$P(BUILD,"*"),0))
+ Q:'PKGIEN 0
  N ACTVER S ACTVER=$$GET1^DIQ(9.4,PKGIEN_",",13)
  ; Regular case where build has x*y*z structure
  I $L(BUILD,"*")=3,+$P(BUILD,"*",2)=+ACTVER Q 1

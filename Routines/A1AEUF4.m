@@ -1,5 +1,11 @@
-A1AEUF4 ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF4 ; 11/8/14 6:04pm
- ;;2.4;PATCH MODULE;; SEP 24, 2014
+A1AEUF4 ;ven/lgc,jli-unit tests for A1AEF4 ; 6/4/15 7:58pm
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
@@ -7,14 +13,15 @@ START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  Q
  ;
 STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  L +^XPD(9.6):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
  . W !," Unable to perform testing."
  ;
- L +^A1AE(11005):1 I '$T D  Q
+ L +^A1AE(A1AEFILE):1 I '$T D  Q
  . S A1AEFAIL=1
- . W !,"Unable to obtain lock on DHCP PATCHES [#11005] file"
+ . W !,"Unable to obtain lock on "_A1AENAME_" [#"_A1AEFILE_"] file"
  . W !," Unable to perform testing."
  ;
  ; X may be 0 if none to delete = normal circumstance
@@ -26,6 +33,7 @@ STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN
  Q
  ;
 SHUTDOWN ;
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  L -^XPD(9.6):1
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP
  K A1AEFAIL
@@ -35,7 +43,7 @@ SHUTDOWN ;
  S X=$$DELTINST I 'X D
  . W !,"Unable to delete test installs from 9.7",!
  S X=$$DELPAT I 'X D
- . W !,"Unable to delete test patches from 11005",!
+ . W !,"Unable to delete test patches from "_A1AEFILE,!
  Q
  ;
  ;  Testing
@@ -47,6 +55,7 @@ SHUTDOWN ;
  ;   Run this to see if adds OSEHRA derived patches
 UTP30 I '$G(A1AEFAIL) D
  .; N BUILD,SAVBLD,X
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  . S X=$$SETUP1 I 'X D  Q
  .. D FAIL^%ut("Unable to build array of BUILD names")
  . S X=$$SETUP2(.BUILD) I 'X D  Q
@@ -68,13 +77,13 @@ UTP30 I '$G(A1AEFAIL) D
  .; Set up DERIVED FROM entries for OSEHRA patches
  . N A1AEIP S A1AEIP=$P(BUILD("A1AE*999*10911"),"^",3)
  . N I F I=A1AEIP:1:A1AEIP+9 D
- .. S $P(^A1AE(11005,I,5),"^",2)=I+10
+ .. S $P(^A1AE(A1AEFILE,I,5),"^",2)=I+10
  .;
  . N NODE S NODE=$NA(BUILD("A1AE*2.4*911"))
  . S I=$P(BUILD("A1AE*999*10920"),"^",3)
  . F  S NODE=$Q(@NODE) Q:NODE["A1AE*999*900"  D
  .. S I=I+1
- .. S ^A1AE(11005,"ADERIVED",$QS(NODE,1),I)=""
+ .. S ^A1AE(A1AEFILE,"ADERIVED",$QS(NODE,1),I)=""
  .;
  . N BIEN,I
  . S BIEN=$P(BUILD("A1AE*999*910"),"^")
@@ -89,7 +98,7 @@ UTP30 I '$G(A1AEFAIL) D
  . I X D  Q:'X
  .. N I F I=900:1:920 D  Q:'X
  ... Q:I=910
- ... S A1AEIP=$P(BUILD(BUILD(I)),"^",3) I 'A1AEIP Q 0
+ ... S (X,A1AEIP)=$P(BUILD(BUILD(I)),"^",3) Q:'X
  ... S X=$O(^XPD(9.6,BIEN,"PAT","B",A1AEIP,0)) Q:'X
  ... S X=$O(^XPD(9.6,BIEN,"REQB","B",BUILD(I),0)) Q:'X
  . S:X X=1
@@ -109,6 +118,7 @@ UTP30 I '$G(A1AEFAIL) D
  ;
  ; Testing $$DERPTC^A1AEF4(PD) to find DERIVED FROM patch
 UTP31 I '$G(A1AEFAIL) D
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  . N BUILD,SAVBLD,X
  . S X=$$SETUP1 I 'X D  Q
  .. D FAIL^%ut("Unable to build array of BUILD names")
@@ -131,13 +141,13 @@ UTP31 I '$G(A1AEFAIL) D
  .; Set up DERIVED FROM entries for OSEHRA patches
  . N A1AEIP S A1AEIP=$P(BUILD("A1AE*999*10911"),"^",3)
  . N I F I=A1AEIP:1:A1AEIP+9 D
- .. S $P(^A1AE(11005,I,5),"^",2)=I+10
+ .. S $P(^A1AE(A1AEFILE,I,5),"^",2)=I+10
  .;
  . N NODE S NODE=$NA(BUILD("A1AE*2.4*911"))
  . S I=$P(BUILD("A1AE*999*10920"),"^",3)
  . F  S NODE=$Q(@NODE) Q:NODE["A1AE*999*900"  D
  .. S I=I+1
- .. S ^A1AE(11005,"ADERIVED",$QS(NODE,1),I)=""
+ .. S ^A1AE(A1AEFILE,"ADERIVED",$QS(NODE,1),I)=""
  .;
  . S X=1
  . S:'$L($$DERPTC^A1AEF4("A1AE*999*10920")) X=0
@@ -281,6 +291,7 @@ LDINST(BUILD) ;
  ;    0 = error,  IEN of patch if successful
 MKPATCH(PD) Q:PD="" 0
  N X,Y,DA,DIC,DIEN
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"C",$P(PD,"*"),0)) Q:PKGIEN="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
@@ -288,16 +299,16 @@ MKPATCH(PD) Q:PD="" 0
  N DERFRM S DERFRM=$S(PTCHNB>10001:PTCHNB-10000,1:0)
  N FDAIEN
  ; If already entry in 11005, move on to adding RTN
- I +$O(^A1AE(11005,"B",PD,0)) D
- . S FDAIEN(1)=+$O(^A1AE(11005,"B",PD,0))
+ I +$O(^A1AE(A1AEFILE,"B",PD,0)) D
+ . S FDAIEN(1)=+$O(^A1AE(A1AEFILE,"B",PD,0))
  E  D
  . N DIERR
- . S FDA(3,11005,"?+1,",.01)=PD
- . S FDA(3,11005,"?+1,",.2)=PTSTRM
- . S FDA(3,11005,"?+1,",2)=PKGIEN
- . S FDA(3,11005,"?+1,",3)=PKGAV
- . S FDA(3,11005,"?+1,",4)=PTCHNB
- . S FDA(3,11005,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
+ . S FDA(3,A1AEFILE,"?+1,",.01)=PD
+ . S FDA(3,A1AEFILE,"?+1,",.2)=PTSTRM
+ . S FDA(3,A1AEFILE,"?+1,",2)=PKGIEN
+ . S FDA(3,A1AEFILE,"?+1,",3)=PKGAV
+ . S FDA(3,A1AEFILE,"?+1,",4)=PTCHNB
+ . S FDA(3,A1AEFILE,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
  . D UPDATE^DIE("","FDA(3)","FDAIEN")
  ;W "NEW ENTRY=",+$G(FDAIEN(1))
  Q:$D(DIERR) 0
@@ -367,15 +378,16 @@ DELTINST() N DA,DIK,X,Y S X=1
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N PD,PIEN,DIK,DA,DIERR,NOERR S PD="A1AE*999*",NOERR=1
- F  S PD=$O(^A1AE(11005,"B",PD)) Q:PD'["A1AE*999"  D  Q:'NOERR
- . S PIEN=$O(^A1AE(11005,"B",PD,0)) I 'PIEN S NOERR=0 Q
- . S DIK="^A1AE(11005," S DA=+PIEN D ^DIK
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ F  S PD=$O(^A1AE(A1AEFILE,"B",PD)) Q:PD'["A1AE*999"  D  Q:'NOERR
+ . S PIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) I 'PIEN S NOERR=0 Q
+ . S DIK="^A1AE(A1AEFILE," S DA=+PIEN D ^DIK
  . S:$D(DIERR) NOERR=0
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"C","A1AE",0))
  N ACTVER S ACTVER=$$GET1^DIQ(9.4,PKGIEN_",",13)
  N PD S PD="A1AE*"_ACTVER_"*911"
- S DA=$O(^A1AE(11005,"B",PD,0)) I DA D
- . S DIK="^A1AE(11005,"
+ S DA=$O(^A1AE(A1AEFILE,"B",PD,0)) I DA D
+ . S DIK="^A1AE(A1AEFILE,"
  . D ^DIK
  . S:$D(DIERR) X=0
  Q NOERR
@@ -397,15 +409,16 @@ XTENT ;
 TEST ; Set up DERIVED FROM entries for OSEHRA patches
  ;
  D TEST^A1AEUF1B
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  N A1AEIP S A1AEIP=$P(BUILD("A1AE*999*10911"),"^",3)
  N I F I=A1AEIP:1:A1AEIP+9 D
- . S $P(^A1AE(11005,I,5),"^",2)=I+10
+ . S $P(^A1AE(A1AEFILE,I,5),"^",2)=I+10
  ;
  N NODE S NODE=$NA(BUILD("A1AE*2.4*911"))
  S I=$P(BUILD("A1AE*999*10920"),"^",3)
  F  S NODE=$Q(@NODE) Q:NODE["A1AE*999*900"  D
  . S I=I+1
- . S ^A1AE(11005,"ADERIVED",$QS(NODE,1),I)=""
+ . S ^A1AE(A1AEFILE,"ADERIVED",$QS(NODE,1),I)=""
  ; Pull this up before test, then check A1AE*999*910
  ;   has all the patches and REQB for 900 and 10900 series
  N BIEN,I

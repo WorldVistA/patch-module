@@ -1,5 +1,11 @@
-A1AEUPS2 ;VEN-LGC/JLI - UNIT TESTS FOR THE PATCH MODULE ; 10/23/14 8:08am
- ;;2.4;PATCH MODULE;;AUG 26, 2014
+A1AEUPS2 ;ven/lgc,jli-unit tests for the patch module ;2014-10-28T22:24
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ; CHANGE: (VEN/LGC) 10/14/2014
  ;     Added code to check for correct PATCH field
@@ -46,9 +52,10 @@ STARTUP ;
  . W !,"Unable to obtain lock on INSTALL [#9.6] file"
  . W !," Unable to perform testing."
  ;
- I '$D(^A1AE(11005)) D  Q
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ I '$D(^A1AE(A1AEFILE)) D  Q
  . S A1AEFAIL=1
- . W !,"DHCP PATCHES [#11005] not in environment"
+ . W !,A1AENAME_" [#"_A1AEFILE_"] not in environment"
  . W !," Unable to perform testing."
  ;
  I $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
@@ -68,12 +75,12 @@ STARTUP ;
  ;
  S X=$$DELPAT I 'X D  Q
  . S A1AEFAIL=1
- . W !,"Unable to clear test patches from DHCP PATCHES [#11005]"
+ . W !,"Unable to clear test patches from "_A1AENAME_" [#"_A1AEFILE_"]"
  . W !," Unable to perform testing."
  ;
  S X=$$NEWPAT I 'X D  Q
  . S A1AEFAIL=1
- . W !,"Unable to add test patches to DHCP PATCHES [#11005]"
+ . W !,"Unable to add test patches to "_A1AENAME_" [#"_A1AEFILE_"]"
  . W !," Unable to perform testing."
  Q
  ;
@@ -83,9 +90,10 @@ SHUTDOWN L -^XPD(9.6)
  L -^XPD(9.7)
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP
  K A1AEFAIL
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  S X=$$DELPAT I 'X D  Q
  . S A1AEFAIL=1
- . W !,"Unable to clear test patches from DHCP PATCHES [#11005]"
+ . W !,"Unable to clear test patches from "_A1AENAME_" [#"_A1AEFILE_"]"
  . W !," A1AE*2.4*900 through A1AE*2.4*915 and."
  . W !," A1AE*2.4*19900 through A1AE*2.4*19915"
  . W !," may need to be deleted manually"
@@ -124,8 +132,9 @@ UTP4 I $G(A1AEFAIL) D  Q
  ;   0 = error ,  1 = selection complete
 SEL10(A1AEP) K A1AEP
  N X S X=1
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  N I F I=1:1:9 S A1AEP(I)="A1AE*2.4*"_(900+I) D  Q:'X
- . S X=$O(^A1AE(11005,"B",A1AEP(I),0))
+ . S X=$O(^A1AE(A1AEFILE,"B",A1AEP(I),0))
  Q:'X X
  S A1AEP(10)="A1AE*999.1*12345"
  Q 1
@@ -382,14 +391,15 @@ LDPAT(PAT) ;
  N DERFRM S DERFRM=+$P(PAT,"^",3)
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"B","PATCH MODULE",0))
  N DIERR,FDA,FDAIEN
- S FDA(3,11005,"?+1,",.01)=PN
- S FDA(3,11005,"?+1,",.2)=PTCHSTRM
- S FDA(3,11005,"?+1,",2)=PKGIEN
- S FDA(3,11005,"?+1,",3)=2.4
- S FDA(3,11005,"?+1,",4)=$P(PN,"*",3)
- S FDA(3,11005,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
- I $G(DERFRM),$D(^A1AE(11005,DERFRM)) D
- . S FDA(3,11005,"?+1,",5.2)=DERFRM
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ S FDA(3,A1AEFILE,"?+1,",.01)=PN
+ S FDA(3,A1AEFILE,"?+1,",.2)=PTCHSTRM
+ S FDA(3,A1AEFILE,"?+1,",2)=PKGIEN
+ S FDA(3,A1AEFILE,"?+1,",3)=2.4
+ S FDA(3,A1AEFILE,"?+1,",4)=$P(PN,"*",3)
+ S FDA(3,A1AEFILE,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
+ I $G(DERFRM),$D(^A1AE(A1AEFILE,DERFRM)) D
+ . S FDA(3,A1AEFILE,"?+1,",5.2)=DERFRM
  D UPDATE^DIE("","FDA(3)","FDAIEN")
  Q:+FDAIEN(1) +FDAIEN(1)
  Q 0
@@ -397,10 +407,11 @@ LDPAT(PAT) ;
  ; RETURNS
  ;   0  = error, 1 = deletions completed
 DELPAT() N DA,DIK,PAT S PAT=0
- F  S PAT=$O(^A1AE(11005,PAT)) Q:'PAT  D
- . I $P(^A1AE(11005,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
- .. S DIK="^A1AE(11005," S DA=+PAT D ^DIK
- Q:$O(^A1AE(11005,"B","A1AE*2.4*899"))["A1AE*2.4" 0
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D
+ . I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
+ .. S DIK="^A1AE(A1AEFILE," S DA=+PAT D ^DIK
+ Q:$O(^A1AE(A1AEFILE,"B","A1AE*2.4*899"))["A1AE*2.4" 0
  Q 1
  ;
 XTENT ;

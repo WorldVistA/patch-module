@@ -1,6 +1,7 @@
-A1AEUF1 ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 ; 11/5/14 8:44pm
- ;;2.4;PATCH MODULE;; SEP 24, 2014
- ;
+A1AEUF1 ;ven/lgc,jli-unit tests for A1AEF1 ;2015-06-13  9:03 PM
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  D EN^%ut($T(+0),1)
@@ -286,7 +287,6 @@ LDRBLD(A1AEKI,RBUILD) ;
  Q:$D(DIERR) 0_"^DIERR"
  Q +FDAIEN(1)
  ;
- ;
  ; ENTER
  ;   RM    = "R" or "M" for REQB or MULB lookup
  ;           "F" for other
@@ -306,23 +306,6 @@ GETARR(RM,RMA) ;
  . S CNT=CNT+1,RMA(CNT)=ARR
  ; if no RMA nodes, then error
  Q:'CNT 0
- Q 1
- ;
- ;
- ; Delete a BUILD
- ;ENTER
- ;   BUILD  =  BUILD TO DELETE
- ;RETURN
- ;   1 if deleted, 0_"^DIERR" if deletion failed
-DELBLD(BUILD) ;
- Q:BUILD="" 0_"^No BUILD Name"
- Q:BUILD'["A1AEXTST*1" 0_"^Deletes Test BLDs only. Not "_BUILD
- N DA,DIERR,DIK
- S DA=$O(^XPD(9.6,"B",BUILD,0))
- Q:'DA 0_"^No BUILD Named :"_BUILD
- S DIK="^XPD(9.6,"
- D ^DIK
- Q:$D(DIERR) 0_"^DIERR"
  Q 1
  ;
  ; Delete all test build entries
@@ -588,6 +571,3 @@ A1AEFMB ;;
  ;;A1AEXTST*1*27
  ;;A1AEXTST*1*28
  ;;/END/
- ;
- ;
-EOR ; end of routine A1AEUF1

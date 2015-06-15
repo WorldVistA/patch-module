@@ -1,6 +1,13 @@
-A1AEK2M3 ; VEN/SMH - Interactive KIDS loading utilities;2014-03-28  4:08 PM
- ;;2.4;PATCH MODULE;;
- ; Called from A1AEM1. No other permitted callers.
+A1AEK2M3 ;ven/smh-Interactive kids loading utilities ;2014-03-28T16:08
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;Called from A1AEM1. No other permitted callers.
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
+ ;
  ;
 SELFILQ(DA) ; Protected; Interactive entry point; Load a Patch from the File System
  ; DA = DHCP PATCH IEN

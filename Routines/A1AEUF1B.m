@@ -1,5 +1,11 @@
-A1AEUF1B ;VEN/LGC/JLI - UNIT TESTS FOR A1AEF1 CONT ; 11/8/14 1:56am
- ;;2.4;PATCH MODULE;; SEP 24, 2014
+A1AEUF1B ;ven/lgc,jli-unit tests for A1AEF1 cont ; 6/4/15 6:49am
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
  ;
  ;
 START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
@@ -8,14 +14,15 @@ START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  Q
  ;
 STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  L +^XPD(9.6):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
  . W !," Unable to perform testing."
  ;
- L +^A1AE(11005):1 I '$T D  Q
+ L +^A1AE(A1AEFILE):1 I '$T D  Q
  . S A1AEFAIL=1
- . W !,"Unable to obtain lock on DHCP PATCHES  [#11005] file"
+ . W !,"Unable to obtain lock on DHCP PATCHES  [#"_A1AEFILE_"] file" ; JLI 150525
  . W !," Unable to perform testing."
  ;
  ; X may be 0 if none to delete = normal circumstance
@@ -36,9 +43,12 @@ SHUTDOWN S X=$$DELTBLDS I 'X D
  S X=$$DELPAT I 'X D
  . W !,"Unable to clear test PATCHES"
  . W !," It may be necessary to delete test"
- . W !," PATHC entries in DHCP PATCHES [#11005] file"
+ . ;W !," PATHC entries in DHCP PATCHES [#11005] file" ; JLI 150525 commented, replaced by following line
+ . W !," PATHC entries in "_A1AENAME_" [#"_A1AEFILE_"] file"
  . W !," manually [A1AE*999*n].",!
  L -^XPD(9.6):1
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ L -^A1AE(A1AEFILE):1
  ; ZEXCEPT: A1AEFAIL - defined in STARTUP
  K A1AEFAIL
  Q
@@ -77,18 +87,9 @@ UTP8 N BUILD,SAVBLD
  . D FAIL^%ut("Unable to complete entry of TEST patches")
  M SAVBLD=BUILD
  I '$G(A1AEFAIL) D
- .; We must have PRIMARY set to continue
- .;  if none is set, temporarily set the 
- .;  site to FOIA VISTA as PRIMARY
- . N UTOPIEN S UTOPIEN=$$UTPRIEN
- . S $P(^A1AE(11007.1,1,0),U,2)=1
- . S $P(^A1AE(11007.1,10001,0),U,2)=0
- . N DIK,DA
- . S DIK(1)=".02",DIK="^A1AE(11007.1,"
- . D ENALL2^DIK
- . D ENALL^DIK
- .;
+ . N UTOPIEN S UTOPIEN=$$UTPRIEN ; Save and set PRIMARY STREAM
  . D PTC4KIDS^A1AEF1("A1AE*999*900",.BUILD,"")
+ . D REPPRIM
  . N PD S PD=" ",X=1
  . F  S PD=$O(BUILD(PD)) Q:PD=""  S:$P(PD,"*",3)>999 X=0
  . D CHKEQ^%ut(1,X,"Testing PTC4KIDS Builds for sequence FAILED!")
@@ -97,27 +98,25 @@ UTP8 N BUILD,SAVBLD
  ; This test entered with all the hard work for previous
  ;  test done and saved in SAVBLD array
 UTP9 I '$G(A1AEFAIL) D
+ . N UTOPIEN S UTOPIEN=$$UTPRIEN ; Save PRIMARY STREAM
  . K BUILD,SAVBLD
+ .;
  . S X=$$SETUP1 I 'X D  Q
+ .. D REPPRIM
  .. D FAIL^%ut("Unable to build array of BUILD names")
  . S X=$$SETUP2(.BUILD) I 'X D  Q
+ .. D REPPRIM
  .. D FAIL^%ut("Unable to complete entry of TEST builds")
  . S X=$$SETUP3(.BUILD) I 'X D  Q
+ .. D REPPRIM
  .. D FAIL^%ut("Unable to complete entry of TEST patches")
  . M SAVBLD=BUILD
  . D PTCSTRM^A1AEF1(.BUILD)
+ . D REPPRIM
  . N PD S PD=" ",X=1
  . F  S PD=$O(BUILD(PD)) Q:PD=""  S:$P(PD,"*",3)>999 X=0
  . D CHKEQ^%ut(1,X,"Testing filtering array for patch stream FAILED!")
  .; Return primary to original setting
- . I '$G(UTOPIEN) D
- .. S $P(^A1AE(11007.1,1,0),U,2)=0
- .. S $P(^A1AE(11007.1,10001,0),U,2)=0
- . E  S $P(^A1AE(11007.1,UTOPIEN,0),U,2)=1
- . N DIK,DA
- . S DIK(1)=".02",DIK="^A1AE(11007.1,"
- . D ENALL2^DIK
- . D ENALL^DIK
  Q
  ;
  ;
@@ -383,18 +382,19 @@ MKPATCH(PD) Q:PD="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
  N PTSTRM S PTSTRM=$S(PTCHNB>10001:10001,1:1)
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  N FDAIEN
  ; If already entry in 11005, move on to adding RTN
- I +$O(^A1AE(11005,"B",PD,0)) D
- . S FDAIEN(1)=+$O(^A1AE(11005,"B",PD,0))
+ I +$O(^A1AE(A1AEFILE,"B",PD,0)) D  ; JLI 150525
+ . S FDAIEN(1)=+$O(^A1AE(A1AEFILE,"B",PD,0)) ; JLI 150525
  E  D
  . N DIERR
- . S FDA(3,11005,"?+1,",.01)=PD
- . S FDA(3,11005,"?+1,",.2)=PTSTRM
- . S FDA(3,11005,"?+1,",2)=PKGIEN
- . S FDA(3,11005,"?+1,",3)=PKGAV
- . S FDA(3,11005,"?+1,",4)=PTCHNB
- . S FDA(3,11005,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
+ . S FDA(3,A1AEFILE,"?+1,",.01)=PD ; JLI 150525
+ . S FDA(3,A1AEFILE,"?+1,",.2)=PTSTRM
+ . S FDA(3,A1AEFILE,"?+1,",2)=PKGIEN
+ . S FDA(3,A1AEFILE,"?+1,",3)=PKGAV
+ . S FDA(3,A1AEFILE,"?+1,",4)=PTCHNB
+ . S FDA(3,A1AEFILE,"?+1,",5)="A1AE TEST ZZZFOR UNIT TESTS"
  . D UPDATE^DIE("","FDA(3)","FDAIEN")
  ;W "NEW ENTRY=",+$G(FDAIEN(1))
  Q:$D(DIERR) 0
@@ -449,26 +449,44 @@ DELTINST() N DA,DIK,X,Y S X=1
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N PD,PIEN,DIK,DA,DIERR,NOERR S PD="A1AE*999*",NOERR=1
- F  S PD=$O(^A1AE(11005,"B",PD)) Q:PD'["A1AE*999"  D  Q:'NOERR
- . S PIEN=$O(^A1AE(11005,"B",PD,0)) I 'PIEN S NOERR=0 Q
- . S DIK="^A1AE(11005," S DA=+PIEN D ^DIK
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ F  S PD=$O(^A1AE(A1AEFILE,"B",PD)) Q:PD'["A1AE*999"  D  Q:'NOERR
+ . S PIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) I 'PIEN S NOERR=0 Q
+ . S DIK="^A1AE(A1AEFILE," S DA=+PIEN D ^DIK
  . S:$D(DIERR) NOERR=0
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"C","A1AE",0))
  N ACTVER S ACTVER=$$GET1^DIQ(9.4,PKGIEN_",",13)
  N PD S PD="A1AE*"_ACTVER_"*911"
- S DA=$O(^A1AE(11005,"B",PD,0)) I DA D
- . S DIK="^A1AE(11005,"
+ S DA=$O(^A1AE(A1AEFILE,"B",PD,0)) I DA D
+ . S DIK="^A1AE(A1AEFILE,"
  . D ^DIK
  . S:$D(DIERR) X=0
  Q NOERR
  ;
  ; Function to return IEN of DHCP PATCH STREAM [#11007.1]
  ;   entry having PRIMARY? [#.02] field set
+ ;   while then setting FOIA VISTA to primary
 UTPRIEN() ;
  N A1AEI,UTPRIM S (A1AEI,UTPRIM)=0
  F  S A1AEI=$O(^A1AE(11007.1,A1AEI)) Q:'A1AEI  D
  . I $P(^A1AE(11007.1,A1AEI,0),U,2) S UTPRIM=A1AEI
+ S $P(^A1AE(11007.1,1,0),U,2)=1 ; Set PRIMARY TO FOIA VISTA
+ S $P(^A1AE(11007.1,10001,0),U,2)=0
+ N DIK,DA
+ S DIK(1)=".02",DIK="^A1AE(11007.1,"
+ D ENALL2^DIK
+ D ENALL^DIK
  Q UTPRIM
+ ;
+ ; Put PATCH STREAM PRIMARY back as it was
+REPPRIM S $P(^A1AE(11007.1,1,0),U,2)=0
+ S $P(^A1AE(11007.1,10001,0),U,2)=0
+ S:$G(UTOPIEN) $P(^A1AE(11007.1,UTOPIEN,0),U,2)=1
+ N DIK,DA
+ S DIK(1)=".02",DIK="^A1AE(11007.1,"
+ D ENALL2^DIK
+ D ENALL^DIK
+ Q
  ;
 UP(STR) Q $TR(STR,"abcdefghijklmnopqrstuvwxyz","ABCDEFGHIJKLMNOPQRSTUVWXYZ")
  ;
@@ -498,7 +516,8 @@ TEST K BUILD,SAVBLD
  D ENALL^DIK
 TEST1 W !,"LAST BUILD=",$O(^XPD(9.6,"A"),-1),!
  W !,"LAST INSTALL=",$O(^XPD(9.7,"A"),-1),!
- W !,"LAST PATCH=",$O(^A1AE(11005,"A"),-1),!
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ W !,"LAST PATCH=",$O(^A1AE(A1AEFILE,"A"),-1),!
  Q
  ;
 EOR ; end of routine A1AEUF1B

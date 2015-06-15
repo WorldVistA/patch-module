@@ -1,25 +1,31 @@
-A1AEOS	; VEN/SMH - Patch Module Operating System Interface;2014-03-31  1:27 PM
-	;;2.4;PATCH MODULE;;Mar 28, 2014
-	;
-	; This routine is not SAC compliant
-	;
-MKDIR(DIR)	; [PUBLIC] - $$; mkdir DIR name. Unix output for success and failure.
-	N CMD S CMD="mkdir -p '"_DIR_"'" ; mk sure that we take in account spaces
-	N OUT ; Exit value of command.
-	I +$SY=47 D  ; GT.M
-	. O "p":(shell="/bin/sh":command=CMD)::"pipe" U "p" C "p"
-	. I $ZV["V6.1" S OUT=$ZCLOSE ; GT.M 6.1 only returns the status!!
-	. E  S OUT=0
-	I +$SY=0 S OUT=$ZF(-1,CMD) ; Cache
-	QUIT OUT
-	;
-T2	; @TEST Make a directory
-	N % S %=$$MKDIR("/tmp/test/sam")
-	D CHKEQ^XTMUNIT(%,0,"Status of mkdir should be zero")
-	N % S %=$$MKDIR("/lksjdfkjsdf/")
-	D CHKEQ^XTMUNIT(%,1,"Status of failed mkdir should be one")
-	QUIT
-	;
+A1AEOS ;ven/smh-patch module operating system interface;2014-03-31T13:27
+ ;;2.5;PATCH MODULE;;Jun 13, 2015
+ ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
+ ;;Licensed under the terms of the Apache License, version 2.0
+ ;
+ ;
+ ;primary change history
+ ;2014-03-28: version 2.4 released
+ ;
+ ; This routine is not SAC compliant
+ ;
+MKDIR(DIR) ; [PUBLIC] - $$; mkdir DIR name. Unix output for success and failure.
+ N CMD S CMD="mkdir -p '"_DIR_"'" ; mk sure that we take in account spaces
+ N OUT ; Exit value of command.
+ I +$SY=47 D  ; GT.M
+ . O "p":(shell="/bin/sh":command=CMD)::"pipe" U "p" C "p"
+ . I $ZV["V6.1" S OUT=$ZCLOSE ; GT.M 6.1 only returns the status!!
+ . E  S OUT=0
+ I +$SY=0 S OUT=$ZF(-1,CMD) ; Cache
+ QUIT OUT
+ ;
+T2 ; @TEST Make a directory
+ N % S %=$$MKDIR("/tmp/test/sam")
+ D CHKEQ^%ut(%,0,"Status of mkdir should be zero")
+ N % S %=$$MKDIR("/lksjdfkjsdf/")
+ D CHKEQ^%ut(%,1,"Status of failed mkdir should be one")
+ QUIT
+ ;
 PWD() ; [PUBLIC] $$ - Current directory
  I +$SY=47 Q $ZD
  I +$SY=0 Q $ZU(168)
