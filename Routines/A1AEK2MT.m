@@ -1,4 +1,4 @@
-A1AEK2MT ;ven/smh-kids hfs files to Patch Module testing code;2015-06-14  2:02 AM
+A1AEK2MT ;ven/smh-kids hfs files to Patch Module testing code;2015-06-15  9:00 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -14,7 +14,8 @@ STARTUP ; M-Unit Start-up
  S FDA(3.703,"?+1,.5,",2)="y" ; Send Priv
  D UPDATE^DIE("E",$NA(FDA),$NA(A1AEK2MTIEN))
  ;
- ; --- CAREFUL ---
+ ; *********************
+ ; ------ CAREFUL ------
  ; Delete all the old data, ONLY IF WE ARE ON TEST
  I '$$PROD^XUPROD() D
  . D EN^DDIOL("Deleting all imported users.")
@@ -32,6 +33,8 @@ STARTUP ; M-Unit Start-up
  . . N DA,DIK S DIK="^A1AE(11007,"
  . . I $D(^A1AE(11007,"B",PKG)) S DA=PKG D ^DIK
  . S $P(^A1AE(11005,0),U,3,4)=0_U_0 ; Zero out the header node so we start counting at zero
+ ; /------ CAREFUL ------
+ ; **********************
  ;
  I +$SY'=47 QUIT  ; Test Works only on GT.M/Unix
  S OLDPWD=$$PWD^A1AEOS()
@@ -107,7 +110,7 @@ ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  . D ASSERT($L(RTN("SUBJECT")))
  QUIT
  ;
-ANALYZE2 ; @TEST Analyze on ALL patches on OSEHRA FOIA repo
+ANALYZE2 ; --TEST Analyze on first 20 patches on OSEHRA repo
  N FILES N % S %=$$RDPIPE^A1AEOS(.FILES,"find . -name '*.TXT'")
  N I F I=0:0 S I=$O(FILES(I)) Q:'I  D 
  . K ^TMP($J,"TXT")
@@ -151,38 +154,38 @@ MB ; @TEST Analyze Multibuild KIDS file
  D CHKTF^%ut($D(^TMP($J,"ANKID","TERATOGENIC MEDICATIONS ORDER CHECKS 1.0")))
  QUIT
  ;
-LOADALL ; @TEST Load all patches on the OSEHRA repo into the patch module
- N ROOT
- N P S P="cmdpipe"
- N A S A("VistA/Packages/*")=""
- N PACKAGES
- N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PACKAGES))
- I '% S $EC=",U-LISTER-FAILED,"
+LOADALL ; @TEST Load sample patches from the testing directory into the PM.
+ N ROOT S (ROOT("SB"),ROOT("MB"))="/home/forum/testkids/"
+ N A1AEDELPREVPATCH S A1AEDELPREVPATCH=1 ; tells code that during unit tests go ahead and delete previous builds
+ D SILENT^A1AEK2M(.ROOT)
+ ; N PACKAGES
+ ; N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PACKAGES))
+ ; I '% S $EC=",U-LISTER-FAILED,"
  ;
  ; Get MB directory
- N PACKAGE S PACKAGE=""
- F  S PACKAGE=$O(PACKAGES(PACKAGE)) Q:PACKAGE=""  D
- . I $E(PACKAGE)="." QUIT  ; .gitignore
- . I PACKAGE="MultiBuilds" S ROOT("MB")=$P($O(A("")),"*")_PACKAGE QUIT
- . I PACKAGE="Uncategorized" QUIT
+ ; N PACKAGE S PACKAGE=""
+ ; F  S PACKAGE=$O(PACKAGES(PACKAGE)) Q:PACKAGE=""  D
+ ; . I $E(PACKAGE)="." QUIT  ; .gitignore
+ ; . I PACKAGE="MultiBuilds" S ROOT("MB")=$P($O(A("")),"*")_PACKAGE QUIT
+ ; . I PACKAGE="Uncategorized" QUIT
  ;
  ; Load each patch
- F  S PACKAGE=$O(PACKAGES(PACKAGE)) Q:PACKAGE=""  D
- . I $E(PACKAGE)="." QUIT  ; .gitignore
- . I PACKAGE="MultiBuilds" QUIT
- . I PACKAGE="Uncategorized" QUIT
- . N A S A("VistA/Packages/"_PACKAGE_"/Patches/*")=""
- . N PATCHES
- . N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PATCHES))
- . I '% S $EC=",U-LISTER-FAILED,"
- . N PATCH S PATCH=""
- . F  S PATCH=$O(PATCHES(PATCH)) Q:PATCH=""  D
- . . I PATCH="README.rst" QUIT
- . . S ROOT("SB")="VistA/Packages/"_PACKAGE_"/Patches/"_PATCH_"/"
- . . D SILENT^A1AEK2M(.ROOT)
+ ; F  S PACKAGE=$O(PACKAGES(PACKAGE)) Q:PACKAGE=""  D
+ ; . I $E(PACKAGE)="." QUIT  ; .gitignore
+ ; . I PACKAGE="MultiBuilds" QUIT
+ ; . I PACKAGE="Uncategorized" QUIT
+ ; . N A S A("VistA/Packages/"_PACKAGE_"/Patches/*")=""
+ ; . N PATCHES
+ ; . N % S %=$$LIST^%ZISH($$PWD^A1AEOS(),$NA(A),$NA(PATCHES))
+ ; . I '% S $EC=",U-LISTER-FAILED,"
+ ; . N PATCH S PATCH=""
+ ; . F  S PATCH=$O(PATCHES(PATCH)) Q:PATCH=""  D
+ ; . . I PATCH="README.rst" QUIT
+ ; . . S ROOT("SB")="VistA/Packages/"_PACKAGE_"/Patches/"_PATCH_"/"
+ ; . . D SILENT^A1AEK2M(.ROOT)
  QUIT
  ;
-LOADDUP ; @TEST - Try to duplicate the loaded patches
+LOADDUP ; --TEST - Try to duplicate the loaded patches
  N ROOT
  S ROOT("SB")="/home/forum/testkids/"
  S ROOT("MB")="/home/sam/VistA/Packages/MultiBuilds/"

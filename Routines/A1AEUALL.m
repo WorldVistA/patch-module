@@ -1,4 +1,4 @@
-A1AEUALL ;ven/jli-unit tests for all A1AEU* tests ; 6/14/15 3:34am
+A1AEUALL ;ven/jli-unit tests for all A1AEU* tests ;2015-06-15  9:03 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -34,6 +34,7 @@ TESTONLY ;
  ;W !!,"RUNNING A1AEUT2:" D ^A1AEUT2 ; DATA ONLY
  W !!,"RUNNING A1AEUT1:" D ^A1AEUT1
  W !!,"RUNNING A1AEUT3:" D ^A1AEUT3
+ I $D(^A1AE(11005)) W !!,"RUNNING A1AEK2MT:" D ^A1AEK2MT
  I $D(^A1AE(11005)) W !!,"RUNNING A1AEUT4:" D ^A1AEUT4
  I $D(DOALL),$D(^A1AE(11005)) D
  . W !!,"RUNNING A1AEUT1:" D EN^%ut("A1AEUT1",1) ; D ^A1AEUT1 activates BREAK on problem

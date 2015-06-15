@@ -1,20 +1,12 @@
-A1AEK2M ;ven/smh,toad-options a1ae import * ; 6/9/15 6:14pm
+A1AEK2M ;ven/smh,toad-options a1ae import * ;2015-06-15  8:26 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
  ;
  ;
- ;primary change history
- ;2014-03-28: version 2.4 released
- ;
- ; contents
- ;
- ; IMPORT: option import patch
- ;   [A1AE IMPORT PATCH]
- ; SD: option import patches in a single directory
- ;   [A1AE IMPORT SINGLE DIR]
- ; RECURSE: option import patches recursive from a directory tree
- ;   [A1AE IMPORT RECURSIVE]
+ ; IMPORT: option import patch  [A1AE IMPORT PATCH]
+ ; SD: option import patches in a single directory [A1AE IMPORT SINGLE DIR]
+ ; RECURSE: option import patches recursive from a directory tree [A1AE IMPORT RECURSIVE]
  ; RECURSE1: import from directory & subdirectories
  ; $$RECURSE2: find the multibuild directory
  ; SILENT: silently import all patches from a directory
@@ -30,18 +22,6 @@ A1AEK2M ;ven/smh,toad-options a1ae import * ; 6/9/15 6:14pm
  ; PREREQAD: add dependencies in description
  ; ASSERT: assertion engine
  ;
- ;
- ; change history:
- ;
- ; Based on code written by Dr. Cameron Schlehuber.
- ;
- ; 2014-04-16 routine A1AEK2M created by Sam Habiel (ven/smh)
- ;
- ; 2015-05-25 Rick Marshall of the VISTA Expertise Network (ven/toad)
- ; added structure comments in SD and called subroutines in prep for
- ; creating option A1AE IMPORT HFS DISTRIBUTION. SD, SILENT, LOAD, MAIL,
- ; ADD0, $$INFOONLY, PREREQAD, PKGADD, PKGSETUP, VERSETUP, $$MKUSER,
- ; ASSERT.
  ;
  ; 2015-05-26 ven/toad: create option A1AE IMPORT HFS DISTRIBUTION
  ; (just a shell for now, fill in later), contents, more structural
@@ -74,7 +54,6 @@ A1AEK2M ;ven/smh,toad-options a1ae import * ; 6/9/15 6:14pm
  Q
  ;
 IMPORT ; option import a patch [A1AE IMPORT HFS DISTRIBUTION]
- ;private;procedure;clean?;silent?;sac-compliant?
  ; called by option A1AE IMPORT HFS DISTRIBUTION
  ;
  ; 1. prompt for a patch file
@@ -88,7 +67,6 @@ IMPORT ; option import a patch [A1AE IMPORT HFS DISTRIBUTION]
  ;
  ;
 SD ; option import patches in a single directory [A1AE IMPORT SINGLE DIR]
- ;private;procedure;clean?;silent?;sac-compliant?
  ; called by option A1AE IMPORT SINGLE DIR
  ;
  ; N DUZ S DUZ=.5,DUZ(0)="" ; Save DUZ from previous caller.
@@ -121,7 +99,6 @@ SD ; option import patches in a single directory [A1AE IMPORT SINGLE DIR]
  ;
 RECURSE ; option import patches recursive from a directory tree
  ;   [A1AE IMPORT RECURSIVE]
- ;private;procedure;clean?;silent?;sac-compliant?
  ; called by option A1AE IMPORT RECURSIVE
  ;
  ; TODO: Document and clean.
@@ -150,7 +127,6 @@ RECURSE ; option import patches recursive from a directory tree
  ;
  ;
 RECURSE1(ROOT,PATCHROOTS) ; import from directory & subdirectories
- ;private;procedure;clean?;silent?;sac-compliant?
  ; called by RECURSE
  ;
  ; TODO: Document and clean.
@@ -191,9 +167,7 @@ RECURSE1(ROOT,PATCHROOTS) ; import from directory & subdirectories
  ;
  ;
 RECURSE2(ROOT) ; find the multibuild directory
- ;private;function;clean?;silent?;sac-compliant?
  ; called by RECURSE
- ;
  ; TODO: Document and clean.
  ;
  ; 1. initialize
@@ -224,6 +198,12 @@ RECURSE2(ROOT) ; find the multibuild directory
  ;
 SILENT(ROOT) ; silently import all patches from a directory
  ; All output is sent via EN^DDIOL. Set DIQUIET to redirect to a global.
+ ;
+ ; How to invoke:
+ ; 
+ ; ROOT("SB") is the Single Builds dirctory
+ ; ROOT("MB") is the multiple build dirctory
+ ; Set ROOT and pass down by reference
  ;
  ; 1. load list of kids text files
  ;
@@ -306,7 +286,18 @@ LOAD(ROOT,PATCH,ERROR,RESULT) ; load a patch's hfs files
  ; S $ET=OET
  ; K OET
  ;
- ; 3. move description to msg array
+ ; ZEXCEPT: A1AEDELPREVPATCH
+ ; Inside UT delete previous patch if UT var says so.
+ ; I $$ISUTEST^%ut,$G(A1AEDELPREVPATCH) D
+ I $G(A1AEDELPREVPATCH) D
+ . N DES S DES=RTN("DESIGNATION")
+ . N mainIEN S mainIEN=$O(^A1AE(11005,"B",DES,""))
+ . N derivedIEN S derivedIEN=$O(^A1AE(11005,"ADERIVED",DES,""))
+ . N DA,DIK
+ . FOR DIK="^A1AE(11005,","^A1AE(11005.1," DO
+ .. FOR DA=mainIEN,derivedIEN D:DA ^DIK
+ ;
+ ; move description to msg array
  ; ensure we have room for $TXT
  ;
  K ^TMP($J,"MSG") ; Message array eventually to be mailed.
@@ -598,6 +589,3 @@ ASSERT(X,Y) ; assertion engine
  . S $EC=",U-ASSERTION-ERROR," ; throw error if assertion fails
  ;
  QUIT  ; end of ASSERT
- ;
- ;
-EOR ; end of routine A1AEK2M
