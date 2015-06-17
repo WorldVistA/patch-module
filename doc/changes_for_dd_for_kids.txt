@@ -1,0 +1,299 @@
+9.4901,.01    PATCH APPLICATION HISTORY 0;1 FREE TEXT (Multiply asked)
+
+              INPUT TRANSFORM:  K:$L(X)>15!($L(X)<8) X
+              LAST EDITED:      AUG 21,2014
+              HELP-PROMPT:      Answer must be 8-15 characters in length.
+              CROSS-REFERENCE:  9.4901^B
+                                1)= S ^DIC(9.4,DA(2),22,DA(1),"PAH","B",$E(X,1,
+                                30),DA)=""
+
+                                2)= K ^DIC(9.4,DA(2),22,DA(1),"PAH","B",$E(X,1,
+                                30),DA)
+
+              CROSS-REFERENCE:  9.4^A1AESEQ^MUMPS
+                                1)= D A1AESEQ^A1AEDD1
+                                2)= D KA1AESEQ^A1AEDD1
+                                This cross reference permits the user to
+                                rapidly find patches related to a package,
+                                version, and stream by release sequence number.
+
+
+
+              RECORD INDEXES:   APPLDT (#1118) (WHOLE FILE #9.4)
+
+9.4901,.02    DATE APPLIED           0;2 DATE
+
+              INPUT TRANSFORM:  S %DT="ESTX" D ^%DT S X=Y K:Y<1 X
+              LAST EDITED:      AUG 21,2014
+              HELP-PROMPT:      (No range limit on date)
+              RECORD INDEXES:   APPLDT (#1118) (WHOLE FILE #9.4)
+
+9.4901,.03    APPLIED BY             0;3 POINTER TO NEW PERSON FILE (#200)
+
+              LAST EDITED:      AUG 21,2014
+
+9.4901,1      DESCRIPTION            1;0   WORD-PROCESSING #9.49011
+
+              DESCRIPTION:      This is a description of the patch being
+                                distributed with this release.
+
+
+
+      FILES POINTED TO                      FIELDS
+
+NEW PERSON (#200)                 APPLIED BY (#.03)
+
+
+Subfile #9.4901
+
+  Record Indexes:
+
+  APPLDT (#1118)    RECORD    REGULAR    IR    SORTING ONLY
+                    WHOLE FILE (#9.4)
+      Short Descr:  Cross-reference for lookup of patch application date
+      Description:  This cross-reference was added for the Patch Module Client
+                    to enable interoperability between KIDS and the Patch
+                    Module.
+        Set Logic:  S ^DIC(9.4,"APPLDT",X(2),X(3),DA(2),DA(1),DA)=""
+       Kill Logic:  K ^DIC(9.4,"APPLDT",X(2),X(3),DA(2),DA(1),DA)
+       Whole Kill:  K ^DIC(9.4,"APPLDT")
+             X(1):  PATCH APPLICATION HISTORY  (9.4901,.01)  (Len 30)
+                    (forwards)
+             X(2):  Computed Code: S X=$P(^DIC(9.4,DA(2),0),"^",2)_"*"_$P(^DIC(
+                    9.4,DA(2),22,DA(1),0),"^")_"*"_$P($P(^DIC(9.4,DA(2),22,DA(1
+                    ),"PAH",DA,0),"^")," ")
+                      (Subscr 1)
+             X(3):  DATE APPLIED  (9.4901,.02)  (Subscr 2)  (forwards)
+
+9.6,.01       NAME                   0;1 FREE TEXT
+
+              INPUT TRANSFORM:  D INPUTB^XPDET(.X)
+              LAST EDITED:      JUN 17,2015
+              HELP-PROMPT:      Enter Package or Patch Name and version in the
+                                format 'PACKAGE nn.n[V|T]n' or 'PATCH*nn.n*nn'.
+              DESCRIPTION:      The name and version number of this Package or
+                                Patch.
+                                 i.e. KERNEL 8.0T1  or XU*8.0*1
+
+              TECHNICAL DESCR:  The pre-lookup transform D PLU96^A1AEDD1
+                                converts the Patch Module format (e.g. 1*1 or
+                                2) to the KIDS format (e.g. 1.0*1 or 2.0).
+
+                                This field was added to enable interoperability
+                                between the patch module and KIDS for the Patch
+                                Module Client.
+
+              PRE-LOOKUP:       D PLU96^A1AEDD1
+              NOTES:            XXXX--CAN'T BE ALTERED EXCEPT BY PROGRAMMER
+
+              CROSS-REFERENCE:  9.6^B
+                                1)= S ^XPD(9.6,"B",$E(X,1,50),DA)=""
+                                2)= K ^XPD(9.6,"B",$E(X,1,50),DA)
+
+
+9.63,.01      MULTIPLE BUILD         0;1 FREE TEXT (Multiply asked)
+
+              INPUT TRANSFORM:  K:$L(X)>50!($L(X)<3) X I $D(X) D INPUTMB^XPDET(
+                                .X)
+              LAST EDITED:      SEP 17,2014
+              HELP-PROMPT:      Enter a Build name
+              DESCRIPTION:      Name of Build that will be part of this
+                                multi-package distribution or a patch that is
+                                part of this Build definition.
+
+              EXECUTABLE HELP:  D HELPMB^XPDET
+              NOTES:            XXXX--CAN'T BE ALTERED EXCEPT BY PROGRAMMER
+
+              CROSS-REFERENCE:  9.63^B
+                                1)= S ^XPD(9.6,DA(1),10,"B",X,DA)=""
+                                2)= K ^XPD(9.6,DA(1),10,"B",X,DA)
+
+              FIELD INDEX:      MBLD (#1120)    MUMPS    IR    LOOKUP & SORTING
+                                WHOLE FILE (#9.6)
+                  Short Descr:  Quick lookup of all builds contained in other
+                                builds
+                    Set Logic:  S ^XPD(9.6,"MBLD",$E(X,1,60),DA(1),DA)=""
+                   Kill Logic:  K ^XPD(9.6,"MBLD",$E(X,1,60),DA(1),DA)
+                   Whole Kill:  K ^XPD(9.6,"MBLD")
+                         X(1):  MULTIPLE BUILD  (9.63,.01)  (Subscr 1)
+                                (forwards)
+
+9.7,.01       NAME                   0;1 FREE TEXT (Required)
+
+              INPUT TRANSFORM:  K:$L(X)>50!($L(X)<3) X
+              LAST EDITED:      AUG 14,2014
+              HELP-PROMPT:      Answer must be 3-50 characters in length.
+              DESCRIPTION:      The name and version number of this Package
+                                (i.e. Kernel 8.0T1)
+
+              TECHNICAL DESCR:  The pre-lookup transform D PLU96^A1AEDD1
+                                converts the Patch Module format (e.g. 1*1 or
+                                2) to the KIDS format (e.g. 1.0*1 or 2.0).
+
+                                This field was added to enable interoperability
+                                between the patch module and KIDS for the Patch
+                                Module Client.
+
+              PRE-LOOKUP:       D PLU97^A1AEDD1
+              DELETE TEST:      1,0)= I $P(^XPD(9.7,DA,0),U,9)<3 D EN^DDIOL($C(
+                                7)_$S($P(^(0),U,9)=2:"Cannot delete if Install
+                                has started.",1:"You must use the Unload a Dist
+                                ribution option."))
+
+              CROSS-REFERENCE:  9.7^B
+                                1)= S ^XPD(9.7,"B",X,DA)=""
+                                2)= K ^XPD(9.7,"B",X,DA)
+
+9.619,.01     PATCH                  0;1 POINTER TO DHCP PATCHES FILE (#11005)
+
+              LAST EDITED:      AUG 18,2014
+              DESCRIPTION:      Pointer to DHCP PATCHES [#11005] entry
+                                (entries) related to this Build.  As a Build
+                                may consist of multiple Builds, thus related to
+                                multiple entries in file 11005.
+
+              NOTES:            XXXX--CAN'T BE ALTERED EXCEPT BY PROGRAMMER
+
+              CROSS-REFERENCE:  9.619^B
+                                1)= S ^XPD(9.6,DA(1),"PAT","B",$E(X,1,30),DA)="
+                                "
+
+                                2)= K ^XPD(9.6,DA(1),"PAT","B",$E(X,1,30),DA)
+
+              CROSS-REFERENCE:  ^^TRIGGER^9.619^.02
+                                1)= K DIV S DIV=X,D0=DA(1),DIV(0)=D0,D1=DA,DIV(
+                                1)=D1 S Y(1)=$S($D(^XPD(9.6,D0,"PAT",D1,0)):^(0
+                                ),1:"") S X=$P(Y(1),U,2),X=X S DIU=X K Y S X=DI
+                                V S X=$P($G(^A1AE(11005,+DIV,0)),U) X ^DD(9.619
+                                ,.01,1,2,1.4)
+
+                                1.4)= S DIH=$G(^XPD(9.6,DIV(0),"PAT",DIV(1),0))
+                                ,DIV=X S $P(^(0),U,2)=DIV,DIH=9.619,DIG=.02 D ^
+                                DICR
+
+                                2)= K DIV S DIV=X,D0=DA(1),DIV(0)=D0,D1=DA,DIV(
+                                1)=D1 S Y(1)=$S($D(^XPD(9.6,D0,"PAT",D1,0)):^(0
+                                ),1:"") S X=$P(Y(1),U,2),X=X S DIU=X K Y S X=""
+                                 X ^DD(9.619,.01,1,2,2.4)
+
+                                2.4)= S DIH=$G(^XPD(9.6,DIV(0),"PAT",DIV(1),0))
+                                ,DIV=X S $P(^(0),U,2)=DIV,DIH=9.619,DIG=.02 D ^
+                                DICR
+
+                                CREATE VALUE)= PATCH
+                                DELETE VALUE)= @
+                                FIELD)= PATCH DESIGNATION
+
+              RECORD INDEXES:   PATCH (#1116) (WHOLE FILE #9.6)
+
+9.619,.02     PATCH DESIGNATION      0;2 FREE TEXT
+
+              INPUT TRANSFORM:  K:$L(X)>30!($L(X)<1) X
+              LAST EDITED:      AUG 16,2014
+              HELP-PROMPT:      Answer must be 1-30 characters in length.
+              NOTES:            TRIGGERED by the PATCH field of the PATCH
+                                sub-field of the BUILD File
+
+              RECORD INDEXES:   PATCH (#1116) (WHOLE FILE #9.6)
+
+
+      FILES POINTED TO                      FIELDS
+
+DHCP PATCHES (#11005)             PATCH (#.01)
+
+
+Subfile #9.619
+
+  Record Indexes:
+
+  PATCH (#1116)    RECORD    REGULAR    IR    LOOKUP & SORTING
+                    WHOLE FILE (#9.6)
+      Short Descr:  Quick lookup of DHCP PATCHES pointers relating to this
+                    BUILD
+        Set Logic:  S ^XPD(9.6,"PATCH",$E(X(1),1,30),X(2),DA(1),DA)=""
+       Kill Logic:  K ^XPD(9.6,"PATCH",$E(X(1),1,30),X(2),DA(1),DA)
+       Whole Kill:  K ^XPD(9.6,"PATCH")
+             X(1):  PATCH DESIGNATION  (9.619,.02)  (Subscr 1)  (Len 30)
+                    (forwards)
+             X(2):  PATCH  (9.619,.01)  (Subscr 2)  (forwards)
+
+
+INPUT TEMPLATE(S):
+
+PRINT TEMPLATE(S):
+
+SORT TEMPLATE(S):
+
+FORM(S)/BLOCK(S):
+
+9.719,.01     PATCH                  0;1 POINTER TO DHCP PATCHES FILE (#11005)
+
+              LAST EDITED:      AUG 18,2014
+              DESCRIPTION:      Pointer to DHCP PATCHES [#11005] entry
+                                (entries) related to this Install.  As an
+                                Install may document a multiple Build, which
+                                may, in turn, represent multiple entries in the
+                                DHCP PATCHES [#11005] file.
+
+              CROSS-REFERENCE:  9.719^B
+                                1)= S ^XPD(9.7,DA(1),"PAT","B",$E(X,1,30),DA)="
+                                "
+
+                                2)= K ^XPD(9.7,DA(1),"PAT","B",$E(X,1,30),DA)
+
+              CROSS-REFERENCE:  ^^TRIGGER^9.719^.02
+                                1)= K DIV S DIV=X,D0=DA(1),DIV(0)=D0,D1=DA,DIV(
+                                1)=D1 S Y(1)=$S($D(^XPD(9.7,D0,"PAT",D1,0)):^(0
+                                ),1:"") S X=$P(Y(1),U,2),X=X S DIU=X K Y S X=DI
+                                V S X=$P($G(^A1AE(11005,+DIV,0)),U) X ^DD(9.719
+                                ,.01,1,2,1.4)
+
+                                1.4)= S DIH=$G(^XPD(9.7,DIV(0),"PAT",DIV(1),0))
+                                ,DIV=X S $P(^(0),U,2)=DIV,DIH=9.719,DIG=.02 D ^
+                                DICR
+
+                                2)= K DIV S DIV=X,D0=DA(1),DIV(0)=D0,D1=DA,DIV(
+                                1)=D1 S Y(1)=$S($D(^XPD(9.7,D0,"PAT",D1,0)):^(0
+                                ),1:"") S X=$P(Y(1),U,2),X=X S DIU=X K Y S X=""
+                                 X ^DD(9.719,.01,1,2,2.4)
+
+                                2.4)= S DIH=$G(^XPD(9.7,DIV(0),"PAT",DIV(1),0))
+                                ,DIV=X S $P(^(0),U,2)=DIV,DIH=9.719,DIG=.02 D ^
+                                DICR
+
+                                CREATE VALUE)= PATCH
+                                DELETE VALUE)= @
+                                FIELD)= PATCH DESIGNATION
+
+              RECORD INDEXES:   PATCH (#1115) (WHOLE FILE #9.7)
+
+9.719,.02     PATCH DESIGNATION      0;2 FREE TEXT
+
+              INPUT TRANSFORM:  K:$L(X)>30!($L(X)<1) X
+              LAST EDITED:      AUG 16,2014
+              HELP-PROMPT:      Answer must be 1-30 characters in length.
+              NOTES:            TRIGGERED by the PATCH field of the PATCH
+                                sub-field of the INSTALL File
+
+              RECORD INDEXES:   PATCH (#1115) (WHOLE FILE #9.7)
+
+
+      FILES POINTED TO                      FIELDS
+
+DHCP PATCHES (#11005)             PATCH (#.01)
+
+
+Subfile #9.719
+
+  Record Indexes:
+
+  PATCH (#1115)    RECORD    REGULAR    IR    LOOKUP & SORTING
+                    WHOLE FILE (#9.7)
+      Short Descr:  Quick lookup of DHCP PATCHES pointer for this INSTALL
+        Set Logic:  S ^XPD(9.7,"PATCH",$E(X(1),1,30),X(2),DA(1),DA)=""
+       Kill Logic:  K ^XPD(9.7,"PATCH",$E(X(1),1,30),X(2),DA(1),DA)
+       Whole Kill:  K ^XPD(9.7,"PATCH")
+             X(1):  PATCH DESIGNATION  (9.719,.02)  (Subscr 1)  (Len 30)
+                    (forwards)
+             X(2):  PATCH  (9.719,.01)  (Subscr 2)  (forwards)
+								
