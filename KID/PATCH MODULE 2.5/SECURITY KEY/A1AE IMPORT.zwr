@@ -1,0 +1,8 @@
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,-1)="0^9"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,0)="A1AE IMPORT^Patch import capability key"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,0)="^^5^5^3140306^"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,1,0)="The patch module checks this key to see if a user is allowed to load"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,2,0)="an entire patch directly into the patch module automatically."
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,3,0)=" "
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,4,0)="Patches can be loaded from the file system or sent as a mail message"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,5,0)="from the VA Forum."

@@ -1,0 +1,13 @@
+^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^11"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE FULL SUMMARY BY DATE^Full Summary by Date for Every Package^^P^^^A1AE HELP OPTION FULL SUMM^^^^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^3^3^3020513^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This print option generates a report of 'verified' patches for all "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="packages, not just for users selected packages, for a specified date"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,3,0)="range. "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,60)="A1AE(11005,"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,62)=0
+^XTMP("K2VC","EXPORT","KRN",19,IEN,63)="[A1AE FULL SUMMARY BY DATE]"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,64)="[A1AE FULL SUMARY SORT]"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,65)=""
+^XTMP("K2VC","EXPORT","KRN",19,IEN,66)=""
+^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="FULL SUMMARY BY DATE FOR EVERY"

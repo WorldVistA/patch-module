@@ -1,0 +1,7 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^33"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION FWD NOT REL^FORWARD A COMPLETED/NOT RELEASED PATCH MESSAGE^3150602.013641^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^4^4^3150602^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="With this option, you can use Mailman to forward a patch that has been "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="completed but not released. Most verifiers use this option to forward a "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="copy of the patch to themselves in order to install it in their baseline "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,4,0)="environment."

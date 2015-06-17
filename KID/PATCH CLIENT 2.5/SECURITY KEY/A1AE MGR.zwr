@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,-1)="0^1"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,0)="A1AE MGR"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,0)="^19.11^1^1^3081014^^^^"
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,1,1,0)="This key gives the user access to the 'Patch Module Management' option."
+^XTMP("K2VC","EXPORT","KRN",19.1,IEN,3,0)="^19.13P"

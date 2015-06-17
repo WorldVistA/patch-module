@@ -1,0 +1,6 @@
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,-1)="0^5"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,0)="A1AE COMP DATE^3070327.1036^@^11005^^@^3100804"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DIAB",4,0,11005,0)="19;REQ;""REASON FOR CHANGE"""
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DR",1,11005)="S A1AEPRE=$P(^A1AE(11005,D0,0),""^"",18);18;@1;19REASON FOR CHANGE~R~;S CDC=$$GET1^DIQ(11005,D0,19,""Z"",""CDC"");S (I,CNT,CNT1)=0 I CDC'="""" F I=1:1 S I=$O(CDC(I)) Q:'I  S CNT=CNT+$L(CDC(I,0)),CNT1=I;"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DR",1,11005,1)="I CNT>256 W !!,""Text is too long. You have "",CNT,"" characters.  Maximum characters is 256"",! K CDC,CNT,I S Y=""@1"";"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DR",1,11005,2)="I CNT1>5 W !!,""Please enter text on less than 5 lines so text will fit in the bulletin message"",! K CDC,CNT,CNT1,I S Y=""@1"";D:$P(^A1AE(11005,D0,0),""^"",18)'=A1AEPRE ^A1AECDE;"

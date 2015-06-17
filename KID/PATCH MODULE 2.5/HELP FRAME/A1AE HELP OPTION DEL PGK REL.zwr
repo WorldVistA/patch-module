@@ -1,0 +1,6 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^24"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION DEL PGK REL^DELETE A PACKAGE RELEASE^3150602.013045^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^3^3^3150602^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to delete a package release before it has been verified "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="and released. Once a package has been verified and released, it cannot be "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="deleted with this option"
