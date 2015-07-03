@@ -6373,7 +6373,7 @@ ERR W !!,"Error in Packman Message, ABORTING load!!"
 "SEC","^DIC",11007.1,11007.1,0,"WR")
 
 "VER")
-8.0^22.2
+8.0^22.0
 "^DD",11004,11004,0)
 FIELD^^5.6^17
 "^DD",11004,11004,0,"DT")
