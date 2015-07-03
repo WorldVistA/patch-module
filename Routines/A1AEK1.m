@@ -1,4 +1,4 @@
-A1AEK1 ;ven/lgc-check patch against site's stream ;2015-04-01T00:44
+A1AEK1 ;ven/lgc-check patch against site's stream ;2015-07-03  9:58 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -94,6 +94,10 @@ EN(A1AEHDR) ; Check KIDS for correct patch stream
  .;  still do some evaluation before allowing install
  .; Pull patch variables - PKG PREFIX^VERSION^PTCHNMB
  . D KIDVAR(.KV,.XPDT,XPDTCNT)
+ .;
+ .; If we have no patch number, this is not a patch, but a new package.
+ .; So quit. We don't do that check.
+ . I '$DATA(KV("PTCHNBR")) QUIT
  .;
  .; Get toggle SSEKS variable.  Site Stream=KIDS Stream
  . S SSEKS=$$SSEKS(.SV,.KV)
