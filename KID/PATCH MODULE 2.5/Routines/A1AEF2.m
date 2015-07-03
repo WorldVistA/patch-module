@@ -25,11 +25,11 @@ A1AEF2 ;ven/lgc-functions minimum set ;2015-05-24T00:25
  ;          New or modified files
  ;          Unique Components
  ;          Most recently installed of duplicates
- ;NOTE: Removing 
+ ;NOTE: Removing
  ;          BUILDS not belonging to the user's site's stream
  ;            determined by checking corresponding PATCHES[#11005]
  ;          BUILDS not representing current package versions
- ;   
+ ;
  ;^XPD(9.6,BIEN,4,FILE#)=FILE#           FILES
  ;^XPD(9.6,BIEN,"KRN","B",.4,CI) =       PRINT TEMPLATES
  ;^XPD(9.6,BIEN,"KRN","B",.401,CI) =     SORT TEMPLATES
@@ -71,7 +71,7 @@ MINSET(BARR) ; Reduce array of builds to minimum set
  ;K ^XTMP($J)
  Q
  ;
- ; Load ^XTMP($J nodes with all components found 
+ ; Load ^XTMP($J nodes with all components found
  ;   in this build
  ; ENTER
  ;    BUILD   =  BUILD name (used to identify ^XTMP node)
@@ -122,12 +122,12 @@ DTINS(BUILD) ; Return inverse date/time of build's most recent install
  ;       4            INVERSE install date/time
  ;       5            BUILD
  ;       6            BUILD IEN in file 9.6
- ; Could right out file 
+ ; Could right out file
  ; Type of Component ,Component ID, ISTALL DATE, BUILD
  ; ENTER
  ;   ^XTMP($J nodes set
  ; RETURNS
- ;   MINSET array 
+ ;   MINSET array
 BLDMS ; Reduce component array in ^XTMP to minimal set
  K MINSET
  N NODE S NODE=$NA(^XTMP($J))
@@ -135,7 +135,7 @@ BLDMS ; Reduce component array in ^XTMP to minimal set
  F  S NODE=$Q(@NODE) Q:NODE=""  Q:($QS(NODE,1)'[$J)  D
  .; Keep every build with file components
  . I $QS(NODE,2)=4 S MINSET($QS(NODE,5))="" Q
- .; Quit if this is the same component and 
+ .; Quit if this is the same component and
  .;   component description we have seen before
  .;   INVERSE DT (like lab) puts recent on top
  . I $QS(NODE,2)=CMP,$QS(NODE,3)=CID Q
@@ -143,7 +143,7 @@ BLDMS ; Reduce component array in ^XTMP to minimal set
  . S MINSET($QS(NODE,5))=""
  ;W !,"$J = ",$J,!
  Q
- ;  
+ ;
  ;
  ; Example entry
  ;^XPD(9.6,42,"KRN",0) = ^9.67PA^8994^14

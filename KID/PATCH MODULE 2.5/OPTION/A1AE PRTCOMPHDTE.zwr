@@ -1,5 +1,5 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^42"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMPHDTE^Completed Patch Summary Report by Date^^P^^^^^^^^PATCH MODULE^y"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMPHDTE^Completed Patch Summary Report by Date^^P^^^A1AE HELP OPTION COMPL SUM RPT^^^^^PATCH MODULE^y"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^4^4^2860619^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This print option generates a report of completed patches for a"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="select package, or all selected packages for a specified date"

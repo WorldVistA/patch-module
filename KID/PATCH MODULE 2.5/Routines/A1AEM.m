@@ -102,7 +102,7 @@ TRASHALL(AXMZ) ;Remove other entries in QUE with same start
  . S XMZ=+X,X=$G(^XMB(3.9,XMZ,0)),X1=$P($P(X,U)," ")
  . I XMSUB=X1 D
  . . N XMKD,XMK S (XMKD,XMK)=QUE,XMDUZ=.5 D KLQ
- Q 
+ Q
  ;
 XM I '$D(XMDUZ) S XMDUZ=DUZ
  S XMDUN=$P(^VA(200,XMDUZ,0),U),(XMKN,XMLOCK)="",(XMK,XMZ)=0

@@ -200,7 +200,7 @@ SILENT(ROOT) ; silently import all patches from a directory
  ; All output is sent via EN^DDIOL. Set DIQUIET to redirect to a global.
  ;
  ; How to invoke:
- ; 
+ ;
  ; ROOT("SB") is the Single Builds dirctory
  ; ROOT("MB") is the multiple build dirctory
  ; Set ROOT and pass down by reference

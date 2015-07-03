@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^59"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION ROUTINE INQ^ROUTINE INQUIRY^3150630.211534^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^2^2^3150630^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to query the routine file to find out the current and"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="past checksums"

@@ -1,5 +1,5 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^62"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE TEST SCANNER^Scan Patch for Discrepancies and Contents^^R^^A1AE SCAN MESSAGE^^^^^^PATCH MODULE"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE TEST SCANNER^Scan Patch for Discrepancies and Contents^^R^^A1AE SCAN MESSAGE^A1AE HELP OPTION TEST SCAN^^^^^PATCH MODULE"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^2^2^2981021^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="Enables manual running of patch scanner (inventorier and checksum"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="verifier), e.g. for testing prior to general release."

@@ -54,7 +54,7 @@ STRM(STRM,Y0,SLNT) ; INPUT TRANSFORM ON SUBSCRIPTION [.06] in 11007.1
  ... W:'SLNT !,!,"*** Forum is being notified of your request"
  ... W:'SLNT !,"to change your site's SUBSCRIPTION to "
  ... W:'SLNT !,"   ",$P(^A1AE(11007.1,STRM,0),"^"),"***",!
- ; Since updating SEQUENCE requires FORUM action, the 
+ ; Since updating SEQUENCE requires FORUM action, the
  ;  input transform ALWAYS kills X
  K X
  Q
@@ -76,7 +76,7 @@ CONFIRM() ; Return answer to confirm No/Yes
  ; Send formatted email out to G.A1AESTRMCHG to be sent
  ;  to local users on the mail group and through the server
  ;  on the MEMBERS REMOTE named S.A1AENEWSTRM
- ; Action fired off by an INPUT TRANSFORM on the 
+ ; Action fired off by an INPUT TRANSFORM on the
  ;  SUBSCRIPTION [#.06] field in the DHCP PATCH STREAM
  ;  [#11007.1] file
  ; ENTER
@@ -279,7 +279,7 @@ FCNF1() ; Process incoming FORUM APPROVAL to switch streams
  Q:$Q 0 Q
  ;
  ;
- ; SUBSCRIPTION CHNG NOT APPR 
+ ; SUBSCRIPTION CHNG NOT APPR
  ;  send PERMISSION REFUSED to mailgroup only
  ; expected message example
  ;    SERVER:::FORUM.OSEHRA.ORG
@@ -325,7 +325,7 @@ FCNF3 ; Send to FORUM subscription change completed message
  N FRMDMN S FRMDMN=$$GET1^DIQ(11007.1,ACTSTRM_",",.07)
  I 'UT N XMY S XMY("G.A1AEFMSC@"_FRMDMN)="" D ENT1^XMD Q
  ; Unit Test
- ; Copy text of incoming message 
+ ; Copy text of incoming message
  N DATA,I S I=0
  F  S I=$O(^XMB(3.9,XMZ,2,I)) Q:'I  D
  . S DATA(I)=^XMB(3.9,XMZ,2,I,0),DATA(0)=I
@@ -336,7 +336,7 @@ FCNF3 ; Send to FORUM subscription change completed message
  Q
  ;
  ;
- ; SUBSCRIPTION CHNG FAILED 
+ ; SUBSCRIPTION CHNG FAILED
  ;  forward to FORUM
  ; Copy of authorization with FAIL entry in text
  ;   DATA(0)=7

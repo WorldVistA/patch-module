@@ -18,7 +18,7 @@ A1AEK1 ;ven/lgc-check patch against site's stream ;2015-04-01T00:44
  ; NOTE: How find SEQ# on patches in multiple-patch
  ;       such as DG*5.3*860 where the SEQ# isn't anywhere
  ;       in the KIDS file or Subject Header?
- ; 
+ ;
  ; VARIABLES
  ;   A1AEHDR   = Patch header (1st line) gleaned in
  ;               XPDIL or XPDIPM
@@ -53,7 +53,7 @@ A1AEK1 ;ven/lgc-check patch against site's stream ;2015-04-01T00:44
  ;    XPDT("DA",8994)         =1   [DA]
  ;    XPDT("NM","DG*5.3*770") =1   [PATCH NAME]
  ;    ERRMSG         = 0 no error, 1^error message = error
- ;                   
+ ;
  ;ENTER
  ;  XPDQUIT   = variable passed by reference *
  ;  XPD ARRAY = Builds in this Distribution *
@@ -160,7 +160,7 @@ SSEKSY(MSSEQ,ABORT) ; Process when Site/Server Stream = KIDS'
  N MSA S MSA=$$SHOWMSQN(.MSSEQ,KV("PKGPRFX"),KV("PTCHSTRM"),Y,.MSA)
  Q ABORT
  ;
- ; 
+ ;
  ; Process when Site/Server Stream NOT SAME as KIDS'
  ; ENTER
  ;   MSSEQ   =  Array of missing installs by Patch Stream
@@ -300,7 +300,7 @@ ANSWQ() ; Return answer of YES/NO question
  D ^DIR
  Q +$G(Y)
  ;
- ; 
+ ;
  ;
  ; ENTER
  ;   SV   =  Array by reference of Site variables built by SITEVAR
@@ -380,17 +380,17 @@ WARNTXT ;;                    ***
  ;;  your Active Patch Stream."
  ;;             --- OR ---"
  ;;  Edit the following fields in the Package [#9.4]
- ;;  file to indicate your unwillingness to install 
+ ;;  file to indicate your unwillingness to install
  ;;  one or more back patches"
  ;;  PATCH APPLICATION HISTORY [#.01] enter as
  ;;     Patch Number [space] "SEQ#" [space] Patch SEQ#
- ;;  DATE APPLIED [#.02] 
+ ;;  DATE APPLIED [#.02]
  ;;  APPLIED BY [#.03]
  ;;  DESCRIPTION [#1] Reason for not installing
  ;;                     ***
  ;;*END*
  ;
- ; Error messages 
+ ; Error messages
 PKGVERR ;;Couln't ascertain active package version on system
 VRSNERR ;;Does not represent current package version
 MSNGSQN ;;Earler SEQUENCE #'d patches for package not installed

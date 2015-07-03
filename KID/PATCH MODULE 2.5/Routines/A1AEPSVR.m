@@ -133,7 +133,7 @@ UT1 ; @TEST Send a Mailman KIDS message to S.A1AE LOAD RELEASED PATCH
  ; Get entry from package file if it exists.
  N PKIEN S PKIEN=$O(^DIC(9.4,"C",PKGAB,0))
  ; If package is there, delete everything that belongs to it
- I PKIEN D 
+ I PKIEN D
  . S DA="" F  S DA=$O(^A1AE(11005,"D",PKIEN,DA)) Q:'DA  D
  . . F DIK="^A1AE(11005,","^A1AE(11005.1," D ^DIK  ; PM Patch and Message files
  . S DIK="^A1AE(11007,",DA=PKIEN D ^DIK  ; PM Package File
@@ -161,7 +161,7 @@ MESSAGE ;;
  ;;
  ;;Subject: TEST IMPORT INTO PATCH MODULE VIA S.A1AE LOAD RELEASED PATCH
  ;;
- ;;Category: 
+ ;;Category:
  ;;  - Data Dictionary
  ;;  - Input Template
  ;;  - Print Template
@@ -170,12 +170,12 @@ MESSAGE ;;
  ;;Description:
  ;;============
  ;;
- ;; 
+ ;;
  ;;  This patch is the result of the Unit Test routine.
  ;;  Please ignore it.
- ;;  
+ ;;
  ;;  Patch ID: ZZZ*2.0*1
- ;;  
+ ;;
  ;;
  ;;Routine Information:
  ;;====================
@@ -187,7 +187,7 @@ MESSAGE ;;
  ;;
  ;;Routine Name: ZOSV2GTM
  ;;    Before:  B7008460   After:  B7008460  **275,425**
- ;; 
+ ;;
  ;;Routine list of preceding patches: 425
  ;;
  ;;=============================================================================

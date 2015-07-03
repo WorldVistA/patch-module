@@ -102,7 +102,7 @@ OPTION ; option copy a patch into a new patch [A1AE COPY PATCH]
  . DO Q
  . QUIT
  ;
- ; 2.c. modify copy of original patch 
+ ; 2.c. modify copy of original patch
  ;
  WRITE !!?3,"...modifying utility global for new patch "
  IF $PIECE(A1AEPD,"*",2)=999 DO
@@ -267,7 +267,7 @@ PCOPY(DA,A1AEIFN,A1AEPD,A1AEOLPD) ; copy patch message/payload (11005.1)
  ; input:
  ;   DA = ien of new patch
  ;   A1AEIFN = ien of original patch
- ;   A1AEPD = new patch id 
+ ;   A1AEPD = new patch id
  ;   A1AEOLPD = original patch id
  ;
  ; a. compare versions of original and copied patch

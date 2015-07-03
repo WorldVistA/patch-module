@@ -92,8 +92,8 @@ PREREQ ; Pre-requisite patches
  ;
  ;11005.09,2      REQUIRED FOR VERIFICATION 0;2 SET
  ;
- ;                              'y' FOR YES; 
- ;                              'n' FOR NO; 
+ ;                              'y' FOR YES;
+ ;                              'n' FOR NO;
  ;
  I LINE="" D SEEK()  ; Get next line if it's empty
  I LINE'["Associated patches:" S STATE="SUBJECT" QUIT
@@ -164,7 +164,7 @@ USERS ; Users
  S RTN("DEV")=$P(RTN("DEV"),"Date ")
  S RTN("DEV")=$$TRIM^XLFSTR(RTN("DEV"))
  S:RTN("DEV")="" RTN("DEV")="PATCHMODULE,DEVELOPER"
- ; CHANGE 2015 06 07 VEN/LGC 
+ ; CHANGE 2015 06 07 VEN/LGC
  ;  Should be only one space after "Date Entered" and ":"
  ; new code
  S RTN("DEV","DATE")=$P(LINE,"Date Entered : ",2)
@@ -193,11 +193,11 @@ USERS ; Users
  QUIT
 FOOTER ; Footer
  ; ZEXCEPT: LINE,EOD,START
- ; 
- ; 
+ ;
+ ;
  ; Packman Mail Message:
  ; =====================
- ; 
+ ;
  ; $END TXT
  ;
  F  D SEEK() Q:LINE="$END TXT"

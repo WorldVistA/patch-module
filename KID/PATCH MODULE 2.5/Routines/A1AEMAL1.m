@@ -73,7 +73,7 @@ RO ;Add KIDS message
  F  S Z=$O(^A1AE(11005.1,DA,2,Z)) Q:'Z  I $E(^(Z,0),1,8)="$END TXT",^(0)'["KIDS" Q
  ;
  I Z D
- . S Z=$O(^A1AE(11005.1,DA,2,Z),-1) ;backup 1 to get $end txt  
+ . S Z=$O(^A1AE(11005.1,DA,2,Z),-1) ;backup 1 to get $end txt
  . ;Find the build number for later
  . S ZA=Z F  S ZA=$O(^A1AE(11005.1,DA,2,ZA)) Q:'ZA  I $E(^(ZA,0),1,5)="""BLD""" Q
  . ;Move Message Text into Message Stop at $END KID

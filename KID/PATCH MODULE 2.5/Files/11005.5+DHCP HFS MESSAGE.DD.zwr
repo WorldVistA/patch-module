@@ -1,7 +1,7 @@
 ^XTMP("K2VC","EXPORT","FIA",11005.5)="DHCP HFS MESSAGE"
 ^XTMP("K2VC","EXPORT","FIA",11005.5,0)="^A1AE(11005.5,"
 ^XTMP("K2VC","EXPORT","FIA",11005.5,0,0)="11005.5P"
-^XTMP("K2VC","EXPORT","FIA",11005.5,0,1)="y^y^f^^y^^y^m^n"
+^XTMP("K2VC","EXPORT","FIA",11005.5,0,1)="y^y^f^^^^n^^"
 ^XTMP("K2VC","EXPORT","FIA",11005.5,0,10)=""
 ^XTMP("K2VC","EXPORT","FIA",11005.5,0,11)=""
 ^XTMP("K2VC","EXPORT","FIA",11005.5,0,"RLRO")=""
@@ -35,7 +35,7 @@
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,0)="From Domain^F^^0;5^K:$L(X)>200!($L(X)<2) X"
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,3)="Answer must be 2-200 characters in length."
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,21,0)="^^2^2^3050816^"
-^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,21,1,0)="This field hold the name of the master patch when more that one patch is "
+^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,21,1,0)="This field hold the name of the master patch when more that one patch is"
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,21,2,0)="sent out in a HFS file."
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,5,"DT")=3050822
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.5,11,0)="ROUTINE^11005.511A^^1;0"
@@ -87,7 +87,7 @@
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,1,1,2)="K ^A1AE(11005.5,DA(1),2,""B"",$E(X,1,30),DA)"
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,3)="Answer must be 2-30 characters in length."
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,21,0)="^^2^2^3050816^"
-^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,21,1,0)="This field holds the linked patches when this patch is the master patch "
+^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,21,1,0)="This field holds the linked patches when this patch is the master patch"
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,21,2,0)="of a set of patches in a HFS release."
 ^XTMP("K2VC","EXPORT","^DD",11005.5,11005.521,.01,"DT")=3050816
 ^XTMP("K2VC","EXPORT","SEC","^DIC",11005.5,11005.5,0,"AUDIT")="@"

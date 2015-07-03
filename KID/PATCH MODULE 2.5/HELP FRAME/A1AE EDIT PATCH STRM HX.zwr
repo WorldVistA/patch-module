@@ -1,0 +1,6 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^66"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE EDIT PATCH STRM HX^A1AE EDIT PATCH STREAM HISTORY^3150701.015516^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^3^3^3150701^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="This option allows editing of the PATCH STREAM HISTORY [#11007.2] file by"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="Forum personnel in order to approve/disapprove a request by a client to"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="change their Patch Stream."

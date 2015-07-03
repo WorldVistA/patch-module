@@ -6,7 +6,7 @@ XPDIL ;SFISC/RSD - load Distribution Global ;2015-06-13  8:28 PM
  ;    before allowing installation.  The filter checks
  ;    that the site attempting to install the KIDS has
  ;    the correct PATCH STREAM and has previously installed
- ;    all earlier SEQ# patches for this package, if 
+ ;    all earlier SEQ# patches for this package, if
  ;    they have switch PATCH STREAMS in the past.
  ;
 EN1 N POP,XPDA,XPDST,XPDIT,XPDT,XPDGP,XPDQUIT,XPDREQAB,XPDSKPE

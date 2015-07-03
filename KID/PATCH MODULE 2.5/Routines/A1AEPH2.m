@@ -128,7 +128,7 @@ PKG K AN S PKG=0
  F  S PKG=$O(^A1AE(11007,"AV",DUZ,PKG)) Q:'PKG  DO
  .I $D(^DIC(9.4,PKG,0)) S (AN(PKG),A1AEPK)=$P(^(0),"^",2) DO
  ..S A1AEVR=0
- ..F  S A1AEVR=$O(^A1AE(11007,PKG,"V",A1AEVR)) Q:'A1AEVR  DO 
+ ..F  S A1AEVR=$O(^A1AE(11007,PKG,"V",A1AEVR)) Q:'A1AEVR  DO
  ...S AN(PKG,A1AEVR)=""
  S PKG=0
  F  S PKG=$O(AN(PKG)) Q:'PKG  S A1AEPK=AN(PKG) DO
@@ -240,7 +240,7 @@ LASTDATE(DA) ; [PROTECTED] - $$ What is the last action status date (Internal)?
  I $D(A(ST)) Q $$GET1^DIQ(11005,DA,A(ST),"I")
  Q ""
  ;
-DTARR(A) ; [Private to this routine] - Date fields array 
+DTARR(A) ; [Private to this routine] - Date fields array
  S A("v")=11
  S A("c")=10
  S A("u")=12

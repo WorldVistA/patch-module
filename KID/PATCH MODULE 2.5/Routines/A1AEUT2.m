@@ -12,9 +12,9 @@ KIDS ;;
  ;;
  ;; This patch is the result of the Unit Test routine.
  ;; Please ignore it.
- ;; 
+ ;;
  ;; Patch ID: ZZZ*1.0*1
- ;; 
+ ;;
  ;;$END TXT
  ;;$KID ZZZ*1.0*1
  ;;**INSTALL NAME**

@@ -2,7 +2,7 @@
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,0)="A1AE COMPLIANCE DATE EDIT^PATCH |2| COMPLIANCE DATE CHANGE"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,0)="^^14^14^3070516^"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,1,0)="The Compliance Date has been edited for a ""|1|"" patch."
-^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,2,0)=" "
+^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,2,0)=""
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,3,0)="Patch:   |2|"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,4,0)="Patch Subject:  |3|"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,5,0)="Patch Priority: |4|"

@@ -70,7 +70,7 @@ SHUTDOWN I '$G(A1AEFAIL) D
  ;  before, however since the subject is prefixed with
  ;  A1AE::: the mail is not forwarded to FORM, but rather
  ;  an indicating email with the subject A1AE FCFN0 is
- ;  generated and again sent to the A1AESTRMCHG mail 
+ ;  generated and again sent to the A1AESTRMCHG mail
  ;  group.  This second email does not contain a trapping
  ;  string and spawns no further activity.
  ; Thus, we are able to check the entire input transform

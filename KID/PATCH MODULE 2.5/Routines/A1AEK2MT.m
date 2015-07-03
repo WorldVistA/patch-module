@@ -112,7 +112,7 @@ ANALYZE1 ; @TEST Test Analyze on just the TIU patches
  ;
 ANALYZE2 ; --TEST Analyze on first 20 patches on OSEHRA repo
  N FILES N % S %=$$RDPIPE^A1AEOS(.FILES,"find . -name '*.TXT'")
- N I F I=0:0 S I=$O(FILES(I)) Q:'I  D 
+ N I F I=0:0 S I=$O(FILES(I)) Q:'I  D
  . K ^TMP($J,"TXT")
  . N Y S Y=$$FTG^%ZISH($$PWD^A1AEOS(),FILES(I),$NA(^TMP($J,"TXT",2,0)),3) I 'Y S $ECODE=",U-CANNOT-READ-FILE,"
  . D CLEANHF^A1AEK2M0($NA(^TMP($J,"TXT"))) ; Clean header and footer.

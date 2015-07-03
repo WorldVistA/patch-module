@@ -2,7 +2,7 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE COMPLIANCE DISPLAY^Compliance Date Display^^P^^^A1AE HELP OPTION COMP DATE DSP^^^^^PATCH MODULE"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^3^3^3070327^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This report will display Compliance Date data sorted by date verified.  If"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="the Compliance Date contains any text in the ""Reason for Change: field "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="the Compliance Date contains any text in the ""Reason for Change: field"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,3,0)="this data is also displayed."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,60)="A1AE(11005,"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,62)=0

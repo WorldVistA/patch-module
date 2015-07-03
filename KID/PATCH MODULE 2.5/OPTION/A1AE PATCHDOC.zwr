@@ -1,5 +1,5 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^15"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PATCHDOC^Patch Options Documentation^^R^^^^^^^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PATCHDOC^Patch Options Documentation^^R^^^A1AE HELP OPTION DOCUMENTATION^^^^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^2^2^2871112^^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This print option generates a report of all the options available"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="for recording, printing and maintaining patch information."

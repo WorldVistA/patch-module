@@ -31,7 +31,7 @@ SHUTDOWN L -^A1AE(11007.1) Q
 UTP0 N A1AEI,UTOIEN,UTPOST
  ; Save IEN of entry now set as PRIMARY?
  S UTOIEN=$$UTPRIEN
- ; If no Stream was set to PRIMARY, we must set one 
+ ; If no Stream was set to PRIMARY, we must set one
  ;  or we are unable to check that clearing all PRIMARY works
  S:'UTOIEN $P(^A1AE(11007.1,1,0),U,2)=1
  ; Call should set all PRIMARY to 0
@@ -80,7 +80,7 @@ UTPR N A1AEI,UTDOM,UTOIEN,UTPOST,X
  S UTPOST=$$UTPRIEN
  S X=1
  ; If all PRIMARY are 0, and
- ;    a) and MAIL DOMAIN not contain "FORUM" --- correct 
+ ;    a) and MAIL DOMAIN not contain "FORUM" --- correct
  ;    b) and no FORUM DOMAIN fields set in 11007.1 --- correct
  ; If there is a PRIMARY set then correct if,
  ;    a) the mail domain (UTDOM) contains "FORUM"
@@ -107,7 +107,7 @@ UTPR N A1AEI,UTDOM,UTOIEN,UTPOST,X
  ;   Stream.
  ; Rather than correct a site's entries if they are set wrong
  ;   we will first save off their present SUBSCRIPTION entry
- ;   in the DHCP PATCH STREAM [#11007.1] file so we might 
+ ;   in the DHCP PATCH STREAM [#11007.1] file so we might
  ;   set it back after our test.
  ; Logic for test
  ;   1. Save off IEN for entry in DHCP PATCH STREAM [#11007.1]
@@ -116,7 +116,7 @@ UTPR N A1AEI,UTDOM,UTOIEN,UTPOST,X
  ;      which should set SUBSCRIPTION to 0, then set
  ;      the FOIA VISTA site to SUBSCRIPTION
  ;   3. Set the IEN for Stream SUBSCRIPTION back to original
- ;   4. Run Unit Test code 
+ ;   4. Run Unit Test code
  ;
 UTS0 N A1AEI,UTOIEN,UTPOST
  ; Save off stream now set to SUBSCRIPTION

@@ -12,8 +12,8 @@ START I $T(^%ut)="" W !,"*** UNIT TEST NOT INSTALLED ***" Q
  D EN^%ut($T(+0),1)
  Q
  ;
-STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN 
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  L +^XPD(9.6):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
@@ -26,7 +26,7 @@ STARTUP S A1AEFAIL=0 ; KILLED IN SHUTDOWN
  Q
  ;
 SHUTDOWN L -^XPD(9.6):1
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  L -^A1AE(A1AEFILE):1 ; JLI 150525
  I '$$DELPAT D
  . W !,"Unable to delete test entries in "_A1AEFILE,!
@@ -35,7 +35,7 @@ SHUTDOWN L -^XPD(9.6):1
  K A1AEFAIL
  Q
  ;
- ; Testing 
+ ; Testing
  ;   1. PTC4RTN^A1AEF1(A1AERTNM,.PTCHARR)
  ;   2. PTCRTNS^A1AEF1(A1AEPIEN,.PTCHARR)
  ;
@@ -43,7 +43,7 @@ UTP6 I '$G(A1AEFAIL) S X=$$PTC4RTN D
  . D CHKEQ^%ut(1,X,"Testing REQB dependencies FAILED!")
  Q
  ;
- ; Testing PTC4RTN logic 
+ ; Testing PTC4RTN logic
  ;   1. Enter with RTN and POO array of patches
  ;   2. Run PTC4RTN^A1AEF1 for this routine
  ;   3. Pull up 2nd line of the routine and run through
@@ -66,7 +66,7 @@ PTC4RTN() S X=1
  ;
  ; Pick up 2nd line and run through each patch listed
  ;   is there a POO(name) array entry
- ;   if POO(name)>0 (=IEN in file 11005) 
+ ;   if POO(name)>0 (=IEN in file 11005)
  ;      check the patch is in 11005
  ;      check the routine is in the patch
 P1 N A1AE2LN S A1AE2LN=$T(+2^@RTN)
@@ -81,7 +81,7 @@ P1 N A1AE2LN S A1AE2LN=$T(+2^@RTN)
  F CNT=1:1:$L(A1AE2LN,",") S PNMB=$P(A1AE2LN,",",CNT) D  Q:'X
  . S PNM=A1AESABB_"*"_A1AEVR_"*"_PNMB
  . I '$D(POO(PNM)) S X=0 Q
- . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  . I +POO(PNM),'$D(^A1AE(A1AEFILE,+POO(PNM))) S X=0 Q
  . I +POO(PNM),'$O(^A1AE(A1AEFILE,+POO(PNM),"P","B",RTN,0)) S X=0
  . K POO(PNM)
@@ -111,7 +111,7 @@ PTCRTNS() N X S X=0
  N PD,A5IEN S PD=$O(POO("")),A5IEN=$G(POO(PD))
  N PPP D PTCRTNS^A1AEF1(A5IEN,.PPP)
  N LN2,RTN,PCH,A1AEIEN
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  N NODE S NODE=$NA(PPP(" "))
  F  S NODE=$Q(@NODE) Q:NODE'["PPP("  D  Q:X
  .; Pull out RTN name, PATCH name, and 11005
@@ -156,13 +156,13 @@ PTCRTNS() N X S X=0
 BLDPARR(POO,RTN) K POO,RTN S RTN=""
  N IEN,LNG,NODE,X S NODE=$NA(^DIC(9.8,"B")),(LNG,X)=0
  F  S NODE=$Q(@NODE) Q:NODE'["^DIC(9.8,""B"""  D  Q:LNG>90
- . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D 
+ . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D
  .. S RTN=$QS(NODE,3)
  ..; W !,RTN
  ..; Watch for routines like MPIFAPI in FOIA release
  ..;  where the package name begins with a space
  .. I $E($P($T(+2^@RTN),";",4))=" " Q
- ..; Watch for package name on 2nd line that doesn't 
+ ..; Watch for package name on 2nd line that doesn't
  ..;  match that in package file
  .. N LN2 S LN2=$T(+2^@RTN)
  .. N A1AEVR S A1AEVR=$P(LN2,";",3)
@@ -200,7 +200,7 @@ CONFRM(POO) N PNM,X,Y S PNM="",Y=0,X=1
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N DA,DIK,PAT,NOERR S PAT=0,NOERR=1
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D  Q:'NOERR
  . I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
  .. S DIK="^A1AE(A1AEFILE," S DA=+PAT D ^DIK S:$D(DIERR) NOERR=0
@@ -222,7 +222,7 @@ MKPATCH(PD,RTN) Q:PD="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
  N PTSTRM S PTSTRM=$S(PTCHNB>10001:10001,1:1)
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  N FDAIEN
  ; If already entry in 11005, move on to adding RTN
  I +$O(^A1AE(A1AEFILE,"B",PD,0)) D

@@ -7,7 +7,7 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,4,0)="since only the developer(s) and verifier(s) are aware of the patch."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,5,0)="The system assigned patch number will then be re-assigned to the next"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,6,0)="patch."
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,7,0)=" "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,7,0)=""
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,8,0)="When a patch has a status of 'verified' or 'entered in error'"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,9,0)="the patch can not be deleted, since users have been notified of the"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,10,0)="patch. If there is an error to a verified patch then the developer"

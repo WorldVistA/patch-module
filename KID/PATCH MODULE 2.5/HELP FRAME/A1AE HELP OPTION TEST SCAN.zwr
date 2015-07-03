@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^62"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION TEST SCAN^SCAN PATCH FOR DISCREPANCIES AND CONTENTS^3150630.211101^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^2^2^3150630^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="This option allows you to manually run the patch scanner (inventorier and"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="checksum verifier). Use this option for testing prior to general release."

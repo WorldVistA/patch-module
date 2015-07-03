@@ -1,7 +1,7 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^35"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PKMENU^Package Menu^^M^^^A1AE HELP MENU PACKAGE^^^^^^y"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^2^2^3150603^^"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This option holds the option for ADD, EDIT, DELETE and VERIFY a new "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This option holds the option for ADD, EDIT, DELETE and VERIFY a new"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="package."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,10,0)="^19.01IP^4^4"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,10,1,0)="11528^^1"

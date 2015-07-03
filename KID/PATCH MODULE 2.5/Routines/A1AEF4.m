@@ -52,7 +52,7 @@ OTHSTRM(BUILD) ; Add patches derived from other stream,update PAT
  ;    NAME of patch derived from PD
 DERPTC(PD) ; Get name of patch derived from parent build
  Q:PD="" PD
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  N PATIEN S PATIEN=+$O(^A1AE(A1AEFILE,"ADERIVED",PD,0)) ; JLI 150525
  Q:PATIEN $$GET1^DIQ(A1AEFILE,PATIEN_",",.01) ; JLI 150525
  ;

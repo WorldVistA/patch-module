@@ -6,4 +6,4 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,3,0)="range. The report contains the Patch Designation, Subject, Date"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,4,0)="Completed, and Priority."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,25)="9^A1AEPH2"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="RELEASED PATCH SUMMARY REPORT "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="RELEASED PATCH SUMMARY REPORT"

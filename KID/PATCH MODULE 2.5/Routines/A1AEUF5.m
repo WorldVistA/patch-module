@@ -13,7 +13,7 @@ STARTUP ;
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
  . W !," Unable to perform testing."
  ;
- N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525
  L +^A1AE(A1AEFILE):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on "_A1AENAME_" [#"_A1AEFILE_"] file"
@@ -58,7 +58,7 @@ SHUTDOWN I '$G(A1AEFAIL) S X=$$DELTBLDS I 'X D
  . W !,"  BUILDS with names beginning with  A1AEXTST*1*"
  . W !,"  may need to be deleted manually."
  ;
- N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525
  I '$G(A1AEFAIL) S X=$$DELPAT I 'X D
  . W !,"Unable to delete test entries in "_A1AEFILE,!
  L -^XPD(9.6):1
@@ -67,7 +67,7 @@ SHUTDOWN I '$G(A1AEFAIL) S X=$$DELTBLDS I 'X D
  K A1AEFAIL,BUILD
  Q
  ;
- ; Testing 
+ ; Testing
  ;   32. REQB^A1AEF1(BUILD,.BMARR)
  ;   33. MULB^A1AEF1(BUILD,.BMARR)
  ;   34. $$BACTV^A1AEF1(BUILD)
@@ -187,13 +187,13 @@ LDSCD1 N ARR,BLD,CNT,X,XXX S (CNT,X)=1
 BLDPARR(POO,RTN) K POO,RTN S RTN=""
  N IEN,LNG,NODE,X S NODE=$NA(^DIC(9.8,"B")),(LNG,X)=0
  F  S NODE=$Q(@NODE) Q:NODE'["^DIC(9.8,""B"""  D  Q:LNG>90
- . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D 
+ . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D
  .. S RTN=$QS(NODE,3)
  ..; W !,RTN
  ..; Watch for routines like MPIFAPI in FOIA release
  ..;  where the package name begins with a space
  .. I $E($P($T(+2^@RTN),";",4))=" " Q
- ..; Watch for package name on 2nd line that doesn't 
+ ..; Watch for package name on 2nd line that doesn't
  ..;  match that in package file
  .. N LN2 S LN2=$T(+2^@RTN)
  .. N A1AEVR S A1AEVR=$P(LN2,";",3)
@@ -550,7 +550,7 @@ CONFRM(POO) N PNM,X,Y S PNM="",Y=0,X=1
  ;    0 = error,  IEN of patch if successful
 MKPATCH(PD,RTN) Q:PD="" 0
  N X,Y,DA,DIC,DIEN
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"C",$P(PD,"*"),0)) Q:PKGIEN="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
@@ -583,7 +583,7 @@ MKPATCH(PD,RTN) Q:PD="" 0
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N DA,DIK,PAT,NOERR,X,Y S PAT=0,NOERR=1
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
  F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D  Q:'NOERR
  . I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
  .. S DIK="^A1AE(A1AEFILE," S DA=+PAT D ^DIK S:$D(DIERR) NOERR=0

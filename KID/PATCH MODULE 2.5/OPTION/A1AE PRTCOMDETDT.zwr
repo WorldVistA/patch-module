@@ -1,5 +1,5 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^40"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMDETDT^Released Patches by Date Detailed Report^^R^^^^^^^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMDETDT^Released Patches by Date Detailed Report^^R^^^A1AE HELP OPTION REL DETAIL^^^^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^8^8^2981203^^^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This print option generates a detailed report of 'verified' patches"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="for a select package, or all selected packages for a specified date"

@@ -56,12 +56,12 @@ EN(P11005IEN) ; Public Entry Point. Rest are private.
  . S @("^XTMP(""K2VC"","""_PD_""","_L1TXT)=L2TXT      ; Set our data into our global
  . S SVLN=L2                                 ; move data pointer to last accessed one
  ;
- ; 
+ ;
  ; Make directory for exporting KIDS compoents
  S ROOT=ROOT_"KIDComponents/"
  N % S %=$$MKDIR^A1AEOS(ROOT)
  I % D EN^DDIOL($$RED("Couldn't create KIDCommponents directory")) QUIT
- ; 
+ ;
  ; Say that we are exporting
  N MSG S MSG(1)="Exporting Patch "_PD
  S MSG(1,"F")="!!!!!"
@@ -197,7 +197,7 @@ KRN(FAIL,KIDGLO,ROOT) ; Print OPT and KRN sections
  . U IO                                                                    ;
  . D ZWRITE($NA(@KIDGLO@("ORD",ORD,FNUM)))                                 ; Zwrite the ORD node
  . D CLOSE^%ZISH("ORD")                                                    ; Done with ORD
- . D EN^DDIOL("Wrote ORD.zwr for "_FNAM)                                   ; Say so                            
+ . D EN^DDIOL("Wrote ORD.zwr for "_FNAM)                                   ; Say so
  . K @KIDGLO@("ORD",ORD,FNUM)                                              ; KILL this entry
  . ;
  . N IENQL S IENQL=$QL($NA(@KIDGLO@("KRN",FNUM,0)))                        ; Where is the IEN sub?
