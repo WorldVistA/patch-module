@@ -3,7 +3,7 @@ The following will be a brief overview of how to configure the patch module
 so that it is operational.
 
 ## Install the Patch Module
-KIDS: <https://downloads.va.gov/files/FOIA/Software/Patches_By_Application/A1AE-Patch%20Module/A1AE.KID>
+KIDS: Latest package in this repository for the PATCH MODULE (not the PATCH CLIENT).
 
 ## Hang the main menu
 Menu is A1AE USER. Hang it off XUCORE and EVE.
@@ -12,8 +12,8 @@ Menu is A1AE USER. Hang it off XUCORE and EVE.
 For a complete workflow, you need at least 3 users: 2 developers and 1 verifier.
 
 ## Allocate keys
-I am not clear as of today on which keys are exactly needed, so I gave myself 
-all of them. I know that A1AE MGR is certainly required for set-up.
+Allocate all for the set-up user.
+I know that A1AE MGR is certainly required for set-up.
 
  * A1AE COMPDATE   
  * A1AE DEVELOPER  
