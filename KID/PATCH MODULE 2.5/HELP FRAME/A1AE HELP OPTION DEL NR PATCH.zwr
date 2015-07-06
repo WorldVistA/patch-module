@@ -1,6 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^23"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION DEL NR PATCH^DELETE A NOT RELEASED PATCH^3150602.012954^"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^3^3^3150602^"
-^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to delete a patch before it has been verified and"
-^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="released. Once a patch has been verified and released, it cannot be"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to delete a patch before it has been verified and "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="released. Once a patch has been verified and released, it cannot be "
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="deleted with this option."

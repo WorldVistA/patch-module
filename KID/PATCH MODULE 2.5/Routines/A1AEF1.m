@@ -30,7 +30,7 @@ A1AEF1 ;ven/lgc-functions builds and installs ;2015-02-15T17:37
  ; Code by Rick Marshall and Joel Ivey during dev conference call
  ;    discussing recursion practices
  ; ENTER
- ;   BUILD   =  bill name
+ ;   BUILD   =  bill name 
  ;   BMARR   =  array passed by reference
  ;              *** Array must be empty
  ; EXIT
@@ -51,7 +51,7 @@ REQB(BUILD,BMARR) ; Return array of all REQ builds
  ; Return in BMARR array all MULTIPLE BUILDS for
  ;  a the BUILD entry in BUILDS [#9.6]
  ; ENTER
- ;   BUILD   =  bill name
+ ;   BUILD   =  bill name 
  ;   BMARR   =  array passed by reference
  ;              *** array must be empty
  ; EXIT
@@ -116,7 +116,7 @@ A1AEFMUB(BUILD) ; File MULTIPLE BUILDS
  ;
  ; Add a build name to either the MULB or REQB multiple
  ; ENTER
- ;    BIEN     =  Parent BUILD
+ ;    BIEN     =  Parent BUILD 
  ;    BLDNM    =  member or prerequisite build being added
  ;    RM       =  "R" prerequisite REQB
  ;             =  "M" for member MULB
@@ -186,7 +186,7 @@ PTC4RTN(A1AERTNM,PTCHARR) ; Find all patches touching Routine
  ; Save necessary patches in array with IEN of patch
  ;   in file 11005 if found
  N A1AE005 ; *** ADDED 10/3/2014
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  F CNT=1:1:$L(A1AEPLST,",") D
  . S A1AEPNM=A1AESABB_"*"_A1AEVR_"*"_$P(A1AEPLST,",",CNT)
  . S PTCHARR(A1AEPNM)=""
@@ -199,7 +199,7 @@ PTC4RTN(A1AERTNM,PTCHARR) ; Find all patches touching Routine
  ; Given a patch
  ;   Find every routine in this patch
  ;   Find all patches for 2nd line of each routine as
- ;     occurs on the system.
+ ;     occurs on the system.  
  ;   Return all patches needed to build every routine
  ;     in the original patch
  ;   As the necessary patches may not be in 11005
@@ -210,7 +210,7 @@ PTC4RTN(A1AERTNM,PTCHARR) ; Find all patches touching Routine
  ;   routine as now active in the system, so use 2nd line
  ;   of the active routine
  ; Logic
- ;  Identify every routine in a patch
+ ;  Identify every routine in a patch 
  ;     ^A1AE(11005,PATCH IEN,"P",SS,0)=ROUTINE^CHKSM^**123,231**
  ;   With each routine idenfity every patch with that routine
  ;       ^A1AE(11005,"R",RTN,11005IEN,SS WITHIN PATCH)
@@ -239,7 +239,7 @@ PTCRTNS(A1AEPIEN,PTCHARR) ; Return array of all patches to build Routine
  ;    Double array   ARR(RTN,"ACTIVE")=LINE2 RTN IN SYSTEM
  ;                   ARR(RTN,P,IEN,SS)=PATCH ENTRY DISP LINE2
  N A1AER,A1AERR,A1AERRS,A1AERSS S A1AERSS=0
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  F  S A1AERSS=$O(^A1AE(A1AEFILE,A1AEPIEN,"P",A1AERSS)) Q:'A1AERSS  D  ; JLI 150525 changed 11005 to A1AEFILE
  .  S A1AER=^A1AE(A1AEFILE,A1AEPIEN,"P",A1AERSS,0) ; JLI 150525 changed 11005 to A1AEFILE
  .  S A1AERTNM=$P(A1AER,"^"),A1AEPLST=$P(A1AER,"^",3)
@@ -294,7 +294,7 @@ P2 F  S RTN=$O(PTCHARR(RTN)) Q:RTN=""  D
  ;                 "" unknown
  ; EXIT
  ;    BARR    =  Array of builds belonging to user's site's
- ;               patch stream.
+ ;               patch stream.  
  ;               MR = "" all builds filtered for stream
  ;               MR = "R" filtered list minus REQB entries
  ;               MR = "M" filtered list minus MULB entries
@@ -319,7 +319,7 @@ PTC4KIDS(BUILD,BARR,MR) ; Filter build's REQB and MULB for patch stream
  .. S PD=$P(PD,"*")_"*"_$P($P(PD,"*",2),".")_"*"_$P(PD,"*",3)
  .; If BUILD does not have corresponding entryDHCP PATCHES file,
  .;   then delete this node from incoming array
- . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  . S PDIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) ; JLI 150525
  .; Local change to increase returned list size
  . I 'PDIEN K @NODE Q
@@ -334,7 +334,7 @@ PTC4KIDS(BUILD,BARR,MR) ; Filter build's REQB and MULB for patch stream
  ; ENTER
  ;   BARR  =  array by reference. BUILDS, INSTALLS, or PATCHES
  ; RETURN
- ;   BARR  =  array filtered for names found in
+ ;   BARR  =  array filtered for names found in 
  ;            DHCP PATCHES [#11005] and correct patch stream
 PTCSTRM(BARR) ; Filter build array to match site's patch stream
  ; PTSTRM will be 0,1,or 10001
@@ -344,7 +344,7 @@ PTCSTRM(BARR) ; Filter build array to match site's patch stream
  .; correct for builds with ".0" in version
  . I $P(PD,"*",2)?.NP1"0" D
  .. S PD=$P(PD,"*")_"*"_$P($P(PD,"*",2),".")_"*"_$P(PD,"*",3)
- . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ . N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  . S PDIEN=$O(^A1AE(A1AEFILE,"B",PD,0)) ; JLI 150525 changed 11005 to A1AEFILE
  . I 'PDIEN K @NODE Q
  .; Must match patch stream
@@ -370,7 +370,7 @@ UPDPAT(BUILD,BARR) ; Update PAT multiple of a build
  ; Looks in DHCP PATCHES [#11005] for Patch Designation
  ;   matching the BUILD name (PD)
  ;   If found, the patch is entered in the primary BUILD
- ;             primary BUILD's PAT [#19] multiple
+ ;             primary BUILD's PAT [#19] multiple 
  ;               and into
  ;             all corresponding INSTALLS' PAT [#19] multiple
  ; ENTER
@@ -383,7 +383,7 @@ UPDPAT(BUILD,BARR) ; Update PAT multiple of a build
  ;   A1AEPI  =  IEN of Patch matching name of PD
  ;   IIEN    =  IEN of INSTALLS(s) matching KIEN entry
 UPDPAT1(PD,KIEN) ; Add a patch entry to the PAT multiple of a build
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  S A1AEPI=$O(^A1AE(A1AEFILE,"B",PD,0))
  ; If no match, try dropping the ".0"
  I 'A1AEPI,$P(PD,"*",2)?.NP1"0" D

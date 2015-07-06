@@ -24,10 +24,10 @@
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,21,1,0)="The name and version number of this Package or Patch."
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,21,2,0)=" i.e. KERNEL 8.0T1  or XU*8.0*1"
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,0)="^^5^5^3150617^"
-^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,1,0)="The pre-lookup transform D PLU96^A1AEDD1 converts the Patch Module format"
+^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,1,0)="The pre-lookup transform D PLU96^A1AEDD1 converts the Patch Module format "
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,2,0)="(e.g. 1*1 or 2) to the KIDS format (e.g. 1.0*1 or 2.0)."
-^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,3,0)=""
-^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,4,0)="This field was added to enable interoperability between the patch module"
+^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,3,0)=" "
+^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,4,0)="This field was added to enable interoperability between the patch module "
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,23,5,0)="and KIDS for the Patch Module Client."
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,.01,"DT")=3150617
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.6,10,0)="MULTIPLE BUILD^9.63^^10;0"
@@ -58,7 +58,7 @@
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,1,2,"DT")=3140818
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,1,2,"FIELD")="PATCH DESIGNATION"
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,21,0)="^^3^3^3140814^"
-^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,21,1,0)="Pointer to DHCP PATCHES [#11005] entry (entries) related to this Build."
+^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,21,1,0)="Pointer to DHCP PATCHES [#11005] entry (entries) related to this Build.  "
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,21,2,0)="As a Build may consist of multiple Builds, thus related to multiple"
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,21,3,0)="entries in file 11005."
 ^XTMP("K2VC","EXPORT","^DD",9.6,9.619,.01,"DT")=3140818

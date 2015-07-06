@@ -122,13 +122,13 @@ ZWRITE0 ; Goto Entry point for A1AEK2VC (only permitted user)
  I $L(QSREP) S INCEXPN="S $G("_QSREP_")="_QSREP_"+1"
  N L S L=$L(NAME) ; Name length
  I $E(NAME,L-2,L)=",*)" S NAME=$E(NAME,1,L-3)_")" ; If last sub is *, remove it and close the ref
- N ORIGNAME S ORIGNAME=NAME          ;
+ N ORIGNAME S ORIGNAME=NAME          ; 
  N ORIGQL S ORIGQL=$QL(NAME)         ; Number of subscripts in the original name
  I $D(@NAME)#2 W $S(QS:$$SUBNAME(NAME,QS,QSREP),1:NAME),"=",$$FORMAT(@NAME),!        ; Write base if it exists
- ; $QUERY through the name.
+ ; $QUERY through the name. 
  ; Stop when we are out.
- ; Stop when the last subscript of the original name isn't the same as
- ; the last subscript of the Name.
+ ; Stop when the last subscript of the original name isn't the same as 
+ ; the last subscript of the Name. 
  F  S NAME=$Q(@NAME) Q:NAME=""  Q:$NA(@ORIGNAME,ORIGQL)'=$NA(@NAME,ORIGQL)  D
  . W $S(QS:$$SUBNAME(NAME,QS,QSREP),1:NAME),"=",$$FORMAT(@NAME),!
  QUIT
@@ -184,7 +184,7 @@ T1 ; @TEST subscript substitutions
  D CHKEQ^%ut($$SUBNAME($NA(^DIPT(2332,0)),1,"IEN"),"^DIPT(IEN,0)")
  D CHKEQ^%ut($$SUBNAME($NA(^DIPT("A",123,0)),2,"IEN"),"^DIPT(""A"",IEN,0)")
  QUIT
- ;
+ ; 
 RED(X) ; Convenience method for Sam to see things on the screen.
  Q $C(27)_"[41;1m"_X_$C(27)_"[0m"
  ;

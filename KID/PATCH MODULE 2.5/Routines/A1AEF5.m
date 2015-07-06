@@ -19,14 +19,14 @@ A1AEF5 ;ven/lgc-find every related build ;2015-02-16T17:31
  ;   6. Go through every build (PARENT and ASSOCIATE)
  ;      a. Find all routines
  ;         Save patches requred for this routine
- ;            use  PTCRTNS^A1AEF1(A1AEPIEN,.PTCHARR)
+ ;            use  PTCRTNS^A1AEF1(A1AEPIEN,.PTCHARR) 
  ;         ^XTMP($J,PARENT BUILD,ASSOCIATED BUILD,ROUTINE)=
  ;            PATCH NAME
  ;      b. Find every component in build
  ;         Use LOADXTMP^A1AEF2(PARENT BUILD,ASSBIEN,DTINS)
  ;            Note: this doesn't clear so can do repeatedly
  ;                  for each build
- ;      c. Run through every component and find every
+ ;      c. Run through every component and find every 
  ;         build that contained this component or file
  ;         add to ^XTMP($J,PARENT BUILD,ASSOC BUILD,COMPONENT)
  ;
@@ -145,7 +145,7 @@ FND2(BUILD,MSG,MSGTXT) ; Add all patches to build routines
  ... S ^XTMP($J,BUILD,PTCH,RTNNM,"R")=""
  ;
  I '$G(MSG) D
- . N A1AEFILE S A1AEFILE=11004,A1AENAME="PATCH" I '$D(^DIC(11004)) S A1AEFILE=11005,A1AENAME="DHCP PATCHES" ; JLI 150525
+ . N A1AEFILE S A1AEFILE=11004,A1AENAME="PATCH" I '$D(^DIC(11004)) S A1AEFILE=11005,A1AENAME="DHCP PATCHES" ; JLI 150525 
  . W !,"Adding all patches (BUILDS) found in the"
  . W !," second line of all routines associated with"
  . W !," the full array of BUILDS identified to date"

@@ -315,7 +315,7 @@ UTP72 ; Test building appropriate error message
  . S MSG=$P($T(PKGVERR^A1AEK1),";;",2)
  . S STRNG=$$ERRMSG^A1AEK1(MSG,93)
  . S X=(STRNG=MSG(1))
- .; Test site not have KIDS package version
+ .; Test site not have KIDS package version 
  . S:X MSG=$P($T(VRSNERR^A1AEK1),";;",2)
  . S:X STRNG=$$ERRMSG^A1AEK1(MSG,93)
  . S:X X=(STRNG=MSG(2))

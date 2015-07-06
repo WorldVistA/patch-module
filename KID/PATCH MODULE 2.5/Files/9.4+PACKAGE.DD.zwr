@@ -26,7 +26,7 @@
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,1)="D A1AESEQ^A1AEDD1"
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,2)="D KA1AESEQ^A1AEDD1"
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,"%D",0)="^^2^2^3150105^"
-^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,"%D",1,0)="This cross reference permits the user to rapidly find patches related to"
+^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,"%D",1,0)="This cross reference permits the user to rapidly find patches related to "
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,"%D",2,0)="a package, version, and stream by release sequence number."
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,1,2,"DT")=3150105
 ^XTMP("K2VC","EXPORT","^DD",9.4,9.4901,.01,3)="Answer must be 8-15 characters in length."
@@ -54,7 +54,7 @@
 ^XTMP("K2VC","EXPORT","UP",9.4,9.49011,0)=9.49011
 ^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",0)="9.4^APPLDT^Cross-reference for lookup of patch application date^R^^R^IR^W^9.4901^^^^^S"
 ^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",.1,0)="^^2^2^3150617^"
-^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",.1,1,0)="This cross-reference was added for the Patch Module Client to enable"
+^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",.1,1,0)="This cross-reference was added for the Patch Module Client to enable "
 ^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",.1,2,0)="interoperability between KIDS and the Patch Module."
 ^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",1)="S ^DIC(9.4,""APPLDT"",X(2),X(3),DA(2),DA(1),DA)="""""
 ^XTMP("K2VC","EXPORT","IX",9.4,9.4,"APPLDT",2)="K ^DIC(9.4,""APPLDT"",X(2),X(3),DA(2),DA(1),DA)"

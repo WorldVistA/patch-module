@@ -138,7 +138,7 @@ EN(PATCHES,ROOT,A1AEOV) ;
  D OPEN^%ZISH("KIDFIL",ROOT,FN_".KID","W")
  I POP D EN^DDIOL("Can't open file "_FN_" in path "_ROOT) QUIT
  U IO
- ;
+ ; 
  ; Header (2 lines)
  W "KIDS Distributions saved on "_$$FMTE^XLFDT($$NOW^XLFDT())_" by the Patch Module on "_^XMB("NETNAME"),!
  W "Patches/Packages: "

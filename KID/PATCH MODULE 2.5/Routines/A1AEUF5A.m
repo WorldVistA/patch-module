@@ -19,7 +19,7 @@ STARTUP ;
  . W !,"Unable to obtain lock on BUILD [#9.6] file"
  . W !," Unable to perform testing."
  ;
- N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  L +^A1AE(A1AEFILE):1 I '$T D  Q
  . S A1AEFAIL=1
  . W !,"Unable to obtain lock on "_A1AENAME_" [#"_A1AEFILE_"] file"
@@ -27,7 +27,7 @@ STARTUP ;
  Q
  ;
 SHUTDOWN L -^XPD(9.6):1
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  L -^A1AE(A1AEFILE):1
  I '$$DELPAT D
  . W !,"Unable to delete test entries in "_A1AEFILE,!
@@ -35,7 +35,7 @@ SHUTDOWN L -^XPD(9.6):1
  K A1AEFAIL
  Q
  ;
- ; Testing
+ ; Testing 
  ;   35. Testing $$PTC4RTN^A1AEF1 - patches to build RTN 2nd line
  ;   36. Testing LOADXTMP^A1AEF2 - Load Build Components
  ;   37. Testing $$DTINS^A1AEF2 - get INVERSE Install DT
@@ -45,7 +45,7 @@ UTP35 I '$G(A1AEFAIL) S X=$$PTC4RTN D
  . D CHKEQ^%ut(1,X,"$$PTC4RTN^A1AEF1 - patches to build RTN 2nd line FAILED!")
  Q
  ;
- ; Testing PTC4RTN logic
+ ; Testing PTC4RTN logic 
  ;   1. Enter with RTN and POO array of patches
  ;   2. Run PTC4RTN^A1AEF1 for this routine
  ;   3. Pull up 2nd line of the routine and run through
@@ -68,7 +68,7 @@ PTC4RTN() N X S X=1
  ;
  ; Pick up 2nd line and run through each patch listed
  ;   is there a POO(name) array entry
- ;   if POO(name)>0 (=IEN in file 11005)
+ ;   if POO(name)>0 (=IEN in file 11005) 
  ;      check the patch is in 11005
  ;      check the routine is in the patch
 P1 N A1AE2LN S A1AE2LN=$T(+2^@RTN)
@@ -80,7 +80,7 @@ P1 N A1AE2LN S A1AE2LN=$T(+2^@RTN)
  N A1AESABB S A1AESABB=$$GET1^DIQ(9.4,A1AESIEN_",",1) Q:A1AESABB="" 0
  S A1AE2LN=$P(A1AE2LN,"**",2)
  N CNT,PNM,PNMB
- N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005 I '$D(^DIC(11005)) S A1AEFILE=11004 ; JLI 150525 
  F CNT=1:1:$L(A1AE2LN,",") S PNMB=$P(A1AE2LN,",",CNT) D  Q:'X
  . S PNM=A1AESABB_"*"_A1AEVR_"*"_PNMB
  . I '$D(POO(PNM)) S X=0 Q
@@ -173,13 +173,13 @@ UTP37 N PD,PDIEN,DTIC,DTICIV S PD="DG"
 BLDPARR(POO,RTN) K POO,RTN S RTN=""
  N IEN,LNG,NODE,X S NODE=$NA(^DIC(9.8,"B")),(LNG,X)=0
  F  S NODE=$Q(@NODE) Q:NODE'["^DIC(9.8,""B"""  D  Q:LNG>90
- . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D
+ . S IEN=$QS(NODE,4) I $O(^DIC(9.8,IEN,8,"A"),-1) D 
  .. S RTN=$QS(NODE,3)
  ..; W !,RTN
  ..; Watch for routines like MPIFAPI in FOIA release
  ..;  where the package name begins with a space
  .. I $E($P($T(+2^@RTN),";",4))=" " Q
- ..; Watch for package name on 2nd line that doesn't
+ ..; Watch for package name on 2nd line that doesn't 
  ..;  match that in package file
  .. N LN2 S LN2=$T(+2^@RTN)
  .. N A1AEVR S A1AEVR=$P(LN2,";",3)
@@ -221,7 +221,7 @@ CONFRM(POO) N PNM,X,Y S PNM="",Y=0,X=1
  ;    0 = error,  IEN of patch if successful
 MKPATCH(PD,RTN) Q:PD="" 0
  N X,Y,DA,DIC,DIEN
- N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  N PKGIEN S PKGIEN=$O(^DIC(9.4,"C",$P(PD,"*"),0)) Q:PKGIEN="" 0
  N PKGAV S PKGAV=$$GET1^DIQ(9.4,PKGIEN_",",13) Q:'PKGAV 0
  N PTCHNB S PTCHNB=+$P(PD,"*",3) Q:'PTCHNB 0
@@ -254,7 +254,7 @@ MKPATCH(PD,RTN) Q:PD="" 0
  ; RETURN
  ;   0 = error, 1 = deletions complete
 DELPAT() N DA,DIK,PAT,NOERR,X,Y S PAT=0,NOERR=1
- N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525
+ N A1AEFILE S A1AEFILE=11005,A1AENAME="DHCP PATCHES" I '$D(^DIC(11005)) S A1AEFILE=11004,A1AENAME="PATCH" ; JLI 150525 
  F  S PAT=$O(^A1AE(A1AEFILE,PAT)) Q:'PAT  D  Q:'NOERR
  . I $P(^A1AE(A1AEFILE,PAT,0),"^",5)["A1AE TEST ZZZFOR UNIT TESTS" D
  .. S DIK="^A1AE(A1AEFILE," S DA=+PAT D ^DIK S:$D(DIERR) NOERR=0

@@ -10,9 +10,9 @@ A1AEUT4 ;ven/lgc,jli-unit tests for the patch module ;2014-09-19T18:15
  ;
  ;
  ; Unit Test for Post Install which loads all BUILD [#9.6]
- ;   and INSTALL [#9.7] entries with pointers to
+ ;   and INSTALL [#9.7] entries with pointers to 
  ;   DHCP PATCHES [#11005] file in the PAT multiple
- ;
+ ;   
  ;   1. Lock DHCP PATCHES,BUILD,INSTALL files
  ;
  ;   2. Select 10 patches from DHCP PATCHES [#11005]

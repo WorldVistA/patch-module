@@ -1,4 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",.402,IEN,-1)="0^4"
 ^XTMP("K2VC","EXPORT","KRN",.402,IEN,0)="A1AE CHANGE PROBLEM STATUS^2860211^^11006^^^^"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"%D",0)="^^1^1^3150705.234635"
+^XTMP("K2VC","EXPORT","KRN",.402,IEN,"%D",1,0)="Not used."
 ^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DR",1,11006)="Q;S A1AESTA=$P(^A1AE(11006,DA,0),U,10),DIE(""NO^"")="""";Q;Q;@10;10;S Y=$S(X=""T"":""@20"",X=""R"":""@30"",X=""C""!(X=""U""):""@99"",1:""@40"");@20;11.5;S Y=""@99"";@30;12.5;13;S Y=""@99"";@40;Q;Q;Q;Q;"
 ^XTMP("K2VC","EXPORT","KRN",.402,IEN,"DR",1,11006,1)="W !?3,*7,""Please enter 'T'abled, or 'R'esolved, or 'U'nder Review."",!?3,""You can also leave status as 'C'omplete/Release for Review."";Q;10///^S X=A1AESTA;S Y=""@10"";@99;K A1AESTA,DIE(""NO^"");"

@@ -1,4 +1,4 @@
-A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ; 6/11/15 9:27pm
+A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ;2015-07-03  9:26 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -45,7 +45,10 @@ A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ; 6/11/15 9:27pm
  ;                PAT multiples in BUILD [#9.6] and
  ;                INSTALL [#9.7] files
  ;
- ;
+ ; XXX TODO (VEN/SMH) XXX: A1AEP2 is not invoked anywhere. This is supposed to
+ ;               be part of the PATCH CLIENT, but the patch client
+ ;               has NO CODE to perform the same update upon the 
+ ;               installation of a KIDS build!
  ;
  ; POST INSTALL - Following DHCP PATCH STREAM [#11007.1] KIDS
  ;                install, Set all PRIMARY? to NO, then
@@ -106,15 +109,15 @@ A1AEP1R ;
  . D MES^XPDUTL(" OSEHRA VISTA entry .001 not 10001")
  . D MES^XPDUTL(" Post Install cannot continue.")
  ;
- If $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
- . D BMES^XPDUTL(2)
- . D MES^XPDUTL("PATCH multiple [#19] not found in BUILD file")
- . D MES^XPDUTL(" Post Install cannot continue.")
+ ; If $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
+ ; . D BMES^XPDUTL(2)
+ ; . D MES^XPDUTL("PATCH multiple [#19] not found in BUILD file")
+ ; . D MES^XPDUTL(" Post Install cannot continue.")
  ;
- I $G(^DD(9.7,19,0))'["PATCH^9.719PA^^PAT;0" D  Q
- . D BMES^XPDUTL(2)
- . D MES^XPDUTL("PATCH multiple [#19] not found in INSTALL file")
- . D MES^XPDUTL(" Post Install cannot continue.")
+ ; I $G(^DD(9.7,19,0))'["PATCH^9.719PA^^PAT;0" D  Q
+ ; . D BMES^XPDUTL(2)
+ ; . D MES^XPDUTL("PATCH multiple [#19] not found in INSTALL file")
+ ; . D MES^XPDUTL(" Post Install cannot continue.")
  ;
  I '$D(^DD(A1AEFILE,0)) D  Q
  . D BMES^XPDUTL(2)
@@ -137,7 +140,7 @@ A1AEP1R ;
  ; Finally display SUBSCRIPTION to installer and ask if they
  ;    wish to switch to another PATCH SEQUENCE.
  D A1AEP1D
-A1AEP1E Q
+ QUIT
  ;
  ; Set all PRIMARY? [#.02] in 11007.1 to 0 [NO]
  ; WAS A1AEP0

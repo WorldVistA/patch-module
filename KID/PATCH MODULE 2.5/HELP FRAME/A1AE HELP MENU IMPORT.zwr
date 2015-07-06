@@ -1,7 +1,7 @@
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^2"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP MENU IMPORT^PATCH IMPORT FROM FILESYSTEM MENU^3141212.0413^^"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^9.21^7^7^3150602^^"
-^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="The options on this menu allow you to bring patches from the filesystem"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="The options on this menu allow you to bring patches from the filesystem "
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="into the Patch Module. USE CAUTION. The options on this menu have the"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="potential to seriously corrupt your VISTA system. Before proceeding, make"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,4,0)="sure you know which patches have already been imported, which patches you"

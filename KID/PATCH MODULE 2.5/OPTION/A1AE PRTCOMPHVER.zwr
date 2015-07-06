@@ -1,6 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^43"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMPHVER^Completed Patch Summary for Assigned Packages^^R^^^A1AE HELP OPTION COMP SUMM PKG^^^^^"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^2^2^2900607^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^2^2^3150705^^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This prints a summary report for all complete/unverified patches in"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="all assigned Packages."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,25)="13^A1AEPH2"

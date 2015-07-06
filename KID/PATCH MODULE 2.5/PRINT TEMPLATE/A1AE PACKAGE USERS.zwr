@@ -1,6 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^3"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE PACKAGE USERS^2860311^^11007^^^3100818^"
-^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",0)="^^1^1^3150701^"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",0)="^.4001^1^1^3150705^^"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",1,0)="Print development users and support personnel for a package"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="""Package:"";C3~.01;""""~""User Selection Allowed:"";C40~2;""""~""Developers: "";C3;S2~200,.01;"""";C37~"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="""-------------------------------------------------------------------------------"";C1~""Support Personnel: "";C3~100,.01;C37;L25;""""~100,2;"""";C65~"

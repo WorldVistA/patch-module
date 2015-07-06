@@ -1,6 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^59"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE ROUTINES THAT OVERLAP^Routines that overlap in patches^^R^^^A1AE HELP OPTION RT OVERLAP^^^^^"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^2^2^3050325^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^2^2^3150705^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="Given a selected patch that is entered or completed but not yet"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="verified/released, routines that overlap with other patches are listed."
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,25)="A1AERCON"

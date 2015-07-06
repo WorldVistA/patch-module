@@ -1,5 +1,7 @@
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^9"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE ROUTINE INQUIRE^3070612.0933^^9.8^^@^3070612"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",0)="^^1^1^3150705.22552"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",1,0)="Not used."
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="""Routine Name: "";C2~.01;X~""Checksum Report: "";C40~6;X~""Checksum Date: "";C3~7.1;X~""Checksum Value: "";C2~7.2;X~""Patch List: "";C6~7.3;X~8,""Patch: "";C5~"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="8,.01;X~8,""Checksum: "";C40~8,2;X~"
 ^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="ROUTINE LIST"

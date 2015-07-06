@@ -423,7 +423,7 @@ ADDPATCH(A1AEPKIF,A1AEVR,TXTINFO,PATCHMSG,KIDMISSING,INFOONLY,ROOTPATH,TXTFIL,KI
  D:$D(FDA) UPDATE^DIE("E",$NA(FDA))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  ;
- ; Here we add ourselves if you find
+ ; Here we add ourselves if you find 
  ; If previously in ^XTMP, then we have a previously loaded patch
  ; that does not have dependencies resolved.
  N US S US=DESIGNATION

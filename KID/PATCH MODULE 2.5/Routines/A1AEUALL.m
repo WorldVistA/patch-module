@@ -57,7 +57,7 @@ COVERMIN ; MINIMAL summary coverage analysis output ONLY
 COVERAGE  ; complete coverage analysis output LISTS LINES NOT COVERED
  I '$D(TYPE) N TYPE S TYPE=2
  D COV^%ut1("A1AE*","D TESTONLY^A1AEUALL",-1)
- ; the following indicates that routines beginning with the following
+ ; the following indicates that routines beginning with the following 
  ; characters, comma separated are to be included in the analysiS
  ;
  ;S ROULIST=",A1AE2POS,A1AEBLD,A1AEDD1,A1AEF1,A1AEF2,A1AEF3,A1AEF4,A1AEF5,A1AEK1,A1AEK2,A1AEK2M0,A1AEM,A1AEM1,A1AEPH1,A1AECOPD,A1AEPH2,A1AEPH3,A1AERD,A1AEUTL,A1AEUTL1,"

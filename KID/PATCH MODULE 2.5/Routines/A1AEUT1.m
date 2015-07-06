@@ -31,7 +31,7 @@ STARTUP ; Delete all test data
  ; Get entry from package file if it exists.
  N PKIEN S PKIEN=$O(^DIC(9.4,"C",PKGAB,0))
  ; If package is there, delete everything that belongs to it
- I PKIEN D
+ I PKIEN D 
  . S DA="" F  S DA=$O(^A1AE(11005,"D",PKIEN,DA)) Q:'DA  D
  . . F DIK="^A1AE(11005,","^A1AE(11005.1," D ^DIK  ; PM Patch and Message files
  . S DIK="^A1AE(11007,",DA=PKIEN D ^DIK  ; PM Package File
@@ -303,7 +303,7 @@ PATCHCR ; @TEST Create a Patch
  N X,AXMZ ; X - User Input; AXMZ = Patch Message IEN
  S AXMZ=MESSAGEIEN,X="ALL" D LINESIL^A1AECOPD ; Returns A1AELINE: # of lines.
  ;
- N A1AEFRLN,A1AETOLN S A1AEFRLN=1,A1AETOLN=A1AELINE ; from to
+ N A1AEFRLN,A1AETOLN S A1AEFRLN=1,A1AETOLN=A1AELINE ; from to 
  D SETUTI^A1AECOPD ; Set util global
  D ASSERT($O(^UTILITY($J,"A1AECP",0))>0)
  N A1AELNIN,A1AEBOT S A1AELNIN=0,A1AEBOT=0 ; necessary for below
@@ -320,7 +320,7 @@ PATCHCR ; @TEST Create a Patch
  ; Because ^A1AECOPY and ^A1AECOPR both reference Packman
  ; formats in SETUTI, it's most likely that Wally intended for us to skip this.
  ; ^A1AECOPY uses Cache's ZLOAD.
- ;
+ ; 
  ; ROUTINE NAME
  ;    ROUTINE NAME
  ;    W !?20,"editing DESCRIPTION OF ROUTINE CHANGES"

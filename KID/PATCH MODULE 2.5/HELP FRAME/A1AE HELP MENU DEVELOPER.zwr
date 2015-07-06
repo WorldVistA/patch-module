@@ -1,7 +1,7 @@
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^1"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP MENU DEVELOPER^DEVELOPER MENU^3141212.0346^^"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^9.21^3^3^3150602^^"
-^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="This is the main menu for primary and secondary development. The main"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="This is the main menu for primary and secondary development. The main "
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="options most developers will use from this menu are: [ADD] a Patch, [EDIT]"
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)="a Patch, [DISPLAY] a Patch, and [EXTENDED] (DIQ) Display of a Patch."
 ^XTMP("K2VC","EXPORT","KRN",9.2,IEN,2,0)="^9.22A^4^4"

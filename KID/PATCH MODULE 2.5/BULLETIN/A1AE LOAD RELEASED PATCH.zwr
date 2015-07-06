@@ -2,7 +2,7 @@
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,0)="A1AE LOAD RELEASED PATCH^Patches imported into the Patch Module^^0"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,0)="^^1^1^3140304^"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,1,1,0)="The following patches were loaded by |1| and are ready for review."
-^XTMP("K2VC","EXPORT","KRN",3.6,IEN,3,0)="^3.63^3^3^3150701^^"
+^XTMP("K2VC","EXPORT","KRN",3.6,IEN,3,0)="^3.63^3^3^3150705^^^"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,3,1,0)="This bulletin will be sent to members of A1AE LOAD RELEASED PATCH"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,3,2,0)="whenever a new released patch has been imported from Mailman or"
 ^XTMP("K2VC","EXPORT","KRN",3.6,IEN,3,3,0)="the host file system."

@@ -6,13 +6,13 @@ XPDIPM ;SFISC/RSD - Load a Packman Message ;2015-06-13  9:20 PM
  ;    before allowing installation.  The filter checks
  ;    that the site attempting to install the KIDS has
  ;    the correct PATCH STREAM and has previously installed
- ;    all earlier SEQ# patches for this package, if
+ ;    all earlier SEQ# patches for this package, if 
  ;    they have switch PATCH STREAMS in the past.
  ;
  ; CHANGE: (VEN/LGC) 6/2/2105
  ;   Modified code at GI +5 to set XPDQUIT and QUIT rather than
  ;    handle the abort myself
- ;
+ ;    
  ;
  Q:'$D(^XMB(3.9,+$G(XMZ),0))
  ;

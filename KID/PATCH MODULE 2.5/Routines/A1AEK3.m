@@ -1,4 +1,4 @@
-A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-06-13  8:54 PM
+A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-07-05  3:43 AM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -11,7 +11,7 @@ A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-06-13  8:54 PM
  ;    Set G.A1AEFMSC as the FORUM mail group name that
  ;    will receive Patch Stream Change messaging
  ;
- ; CHANGE VEN/LGC 5/20/2015
+ ; CHANGE VEN/LGC 5/20/2015 
  ;    Saved copy from 11:30 to KBAPAEK3 in case
  ;    KIDS install overwrites during debugging
  ;
@@ -55,7 +55,7 @@ PRCSMAIL(A1AESTR) ; Process mail concerning changing site's Patch Stream
  ;
  ; Now deal with contents of structured email line one
  ;
- ;SUBJ["SUBSCRIPTION CHNG REQUEST"
+ ;SUBJ["SUBSCRIPTION CHNG REQUEST" 
  ;ENTER
  ;  XMZ  =  IEN of message in 3.9
  ;RETURNS
@@ -105,7 +105,7 @@ FCNF2 ; FORUM receives subscription change completed message
  ; Note: This does allow updating of a client even
  ;       when the SCS is still at WAITING FORUM APPROVAL
  ;       However, there is a check run on the incoming
- ;       message to be certain the structured text
+ ;       message to be certain the structured text 
  ;       indicates Forum approval.
  K ^XTMP("POO","FCNF2") S ^XTMP("POO","FCNF2","A")=$G(XMZ)_" "_$$HTFM^XLFDT($H)
  N UT S UT=(^XMB(3.9,XMZ,0)["A1AE:::")
@@ -139,7 +139,7 @@ FCNF2 ; FORUM receives subscription change completed message
  M ^XTMP("POO","FCNF2","E")=DATA
  N XMZ S XMZ=$$SNDMAIL(XMSUBJ,.DATA,.MGRP,.VAP)
  H 10
- ; Now update entry in 11007.2 once more to show Forum
+ ; Now update entry in 11007.2 once more to show Forum 
  ;   response email
  D EMDATA^A1AEK3(XMZ,.DATA)
  ; Note that Forum correctly responds with text being
@@ -175,7 +175,7 @@ FCNF2 ; FORUM receives subscription change completed message
  ;
  ;
  ;
- ; SUBSCRIPTION CHNG FAILED
+ ; SUBSCRIPTION CHNG FAILED 
  ;  forward to FORUM
  ; Copy of authorization with FAIL entry in text
  ;   DATA(0)=7
@@ -231,13 +231,13 @@ FCNF4 ; Notify other Forums of SUBSCRIPTION CHANG CONFIRMED msg
  ;  e.g. If the client has switch to OSEHRA, the confirmation
  ;       msg is sent from FORUM.OSEHRA.ORG to the new client
  ;       AND to other Forums such as FORUM.VA.GOV.
- ; When received at the(se) other Forum sites, their
- ;   PATCH STREAM HISTORY [#11007.2] file needs updated
- ;   to show they no longer support this client.  This
- ;   could be left up to Forum personnel or performed
+ ; When received at the(se) other Forum sites, their 
+ ;   PATCH STREAM HISTORY [#11007.2] file needs updated 
+ ;   to show they no longer support this client.  This 
+ ;   could be left up to Forum personnel or performed 
  ;   automatically
  ; Note if we have gotten here, message
- ;   has been received at FORUM site and is being
+ ;   has been received at FORUM site and is being 
  ;   processed via G.A1AEFMSC as notification from
  ;   another FORUM of client's change subscription.
  ; NB: (Important): messsage is not sent to
@@ -406,13 +406,13 @@ FND(DATA,HDR) ;Find HDR in DATA array, return data
  ;       domain and updates entry in 11007.2
  ;
 FRMAPPR(X1,X2,D) ;
- K ^XTMP("POO","FRMAPPR") S ^XTMP("POO","FRMAPPR")=$$HTFM^XLFDT($H)
  Q:'$L($G(X1))
  Q:'$L($G(X2))
- Q:'$G(D)
- N UT S UT=(D["A1AE:::")
+ N UT S UT=($G(D)["A1AE:::")
  W:'UT " One moment. Sending email to Client. "
- N A1AE72I S A1AE72I=$O(^A1AE(11007.2,"B",+D,0))
+ N A1AE72I
+ I UT S A1AE72I=$O(^A1AE(11007.2,"B",+D,0))
+ E  S A1AE72I=DA
  N NODE S NODE=$NA(^A1AE(11007.2,A1AE72I,1,"B","A"))
  N A1AEDT S A1AEDT=$O(@NODE,-1)
  N A1AEDTI S A1AEDTI=$O(^A1AE(11007.2,A1AE72I,1,"B",A1AEDT,0))
@@ -429,7 +429,8 @@ FRMAPPR(X1,X2,D) ;
  F  S I=$O(FDATA(I)) Q:'I  S DATA(I)=FDATA(I),DATA(0)=I
  K FDATA
  N SUBJ,MGRP
- I X2=1 D
+ ; I X2=1 D  ; VEN/SMH After value is "IN REVIEW" does not sound right.
+ I X2=3 D
  . S DATA(0)=DATA(0)+1,DATA(DATA(0))="APPROVED:::YES"
  . S SUBJ="SUBSCRIPTION CHNG APPROVED"
  E  D
@@ -451,7 +452,7 @@ FRMAPPR(X1,X2,D) ;
  ;
  ;ENTER
  ;    XMZ    = IEN into 3.9 of incoming email
- ;    DATA   = Array of all variables pulled from
+ ;    DATA   = Array of all variables pulled from 
  ;             the incoming email
  ;EXIT
  ;    0  = email DOES NOT match entry in 11007.2 in progress
@@ -465,8 +466,8 @@ FRMAPPR(X1,X2,D) ;
  ;         $$GET1^DIQ(11007.21,IENS,12,"I")
  ;  By pulling all DATA array variables from previously
  ;  received message from this DOMAIN to Forum and comparing
- ;  this array to DATA array of just received message
- ;  we can assure ourselves client and forum are working
+ ;  array to DATA array of just received message
+ ;  we assure ourselves client and forum are working
  ;  on same change patch stream request.
 CHKMTCH(XMZ,DATA) ; Check incoming mail matches active Forum entry
  K ^XTMP("POO","CHKMTCH")

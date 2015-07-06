@@ -1,6 +1,6 @@
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^6"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE DEV CREATE^Create a packman message^^R^^^A1AE HELP OPTION PACKMAN MSG^^^^^"
-^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^^2^2^2900429^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^2^2^3150705^^"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This option allows a developer to create a input packman message"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="from the local routine directory if the routines, version are present"
 ^XTMP("K2VC","EXPORT","KRN",19,IEN,20)=""

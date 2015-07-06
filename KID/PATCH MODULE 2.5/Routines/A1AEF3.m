@@ -8,7 +8,7 @@ A1AEF3 ;ven/lgc-find all prerequisite/member builds ; 2015-05-15T00:26
  ;2014-09-11: version 2.4 released
  ;
  ;
- ; Option for developer to
+ ; Option for developer to 
  ;  1. Use recursive search to identify any additional
  ;     member [MULB] or prerequisite [REQB] builds dependent
  ;     in the array of each already existing in parent
@@ -85,7 +85,7 @@ SELBLDS(BUILD) ; Evaluate build for all related REQB & MULB builds
  .. D BLDTXTA("TXT6",.POO,1)
  .. S ERR=$$UPDBLD(BUILD,.OARR,.MB,"M",UPD)
  ;
- ;Fall into PREREQUISITE [REQB]
+ ;Fall into PREREQUISITE [REQB] 
  ; ---- REQUIRED BUILDS
  D BLDTXTA("TXT7",.POO,1)
  ; Check is this is parent with prerequisites [REQB]
@@ -166,7 +166,7 @@ KEEP(RM) ; Ask how to proceed
  Q +$G(Y)
  ;
  ;
- ; Ask whether to update the BUILDS
+ ; Ask whether to update the BUILDS 
  ; ENTER
  ;   BUILD = name of BUILD to potentially update
  ; RETURN
@@ -225,7 +225,7 @@ UPDBLD(BUILD,OARR,REQB,RM,UPD) ; Ask if parent should be updated
  N ERR S ERR=0
  N BIEN S BIEN=$O(^XPD(9.6,"B",BUILD,0))
  Q:'BIEN ERR
- ;
+ ; 
  ; Asked to update either REQB or MULB multiple
  N NODE S NODE=$S(UPD=2:$NA(OARR(" ")),UPD=3:$NA(REQB(" ")),1:"")
  Q:NODE=""
@@ -240,7 +240,7 @@ UPDBLD(BUILD,OARR,REQB,RM,UPD) ; Ask if parent should be updated
  ; ENTER
  ;    DPLARR  =  Array of BUILDS with parental history
  ;               identification
- ;               e.g.
+ ;               e.g. 
  ; RETURN
  ;    No variables returned or modified
 DSPNODES(DPLARR) ; Display array of builds parental history
@@ -252,7 +252,7 @@ DSPNODES(DPLARR) ; Display array of builds parental history
  .  I $D(MINSET($QS(NODE,2))) W " <<<"
  Q
  ;
- ; Load inheritance nodes generated at the REQB or MULB
+ ; Load inheritance nodes generated at the REQB or MULB 
  ;   call in A1AEF1 before minimal set and patch stream
  ;   subroutines pulled out unnecessary nodes
  ; NOTE: the OARR array needed to be saved immediately
@@ -357,7 +357,7 @@ TXT3 ;;
 TXT4 ;;
  ;;
  ;;BUILD
- ;; has
+ ;; has 
  ;;^MB0
  ;; members listed in MULB multiple.
  ;;
@@ -387,14 +387,14 @@ TXT8 ;;
  ;;*END*
 TXT9 ;;
  ;;
- ;;Parent BUILD has
+ ;;Parent BUILD has 
  ;;^REQB0
  ;; prerequisites.
  ;;
  ;;*END*
 TXT10 ;;
  ;;
- ;;Parent BILD has
+ ;;Parent BILD has 
  ;;^CNT
  ;; prerequisites after removing
  ;;
@@ -424,7 +424,7 @@ TXT13 ;;
  ;
  ; UNIT TEST testing.  Do not modify TXTZ /lgc
 TXTZ ;;
- ;;Testing BLDTXTA in A1AEF3
+ ;;Testing BLDTXTA in A1AEF3 
  ;;^BUILD
  ;;Testing Testing Testing
  ;;
