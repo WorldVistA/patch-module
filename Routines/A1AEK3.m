@@ -1,4 +1,4 @@
-A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-06-13  8:54 PM
+A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-07-05  3:43 AM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -406,13 +406,13 @@ FND(DATA,HDR) ;Find HDR in DATA array, return data
  ;       domain and updates entry in 11007.2
  ;
 FRMAPPR(X1,X2,D) ;
- K ^XTMP("POO","FRMAPPR") S ^XTMP("POO","FRMAPPR")=$$HTFM^XLFDT($H)
  Q:'$L($G(X1))
  Q:'$L($G(X2))
- Q:'$G(D)
- N UT S UT=(D["A1AE:::")
+ N UT S UT=($G(D)["A1AE:::")
  W:'UT " One moment. Sending email to Client. "
- N A1AE72I S A1AE72I=$O(^A1AE(11007.2,"B",+D,0))
+ N A1AE72I
+ I UT S A1AE72I=$O(^A1AE(11007.2,"B",+D,0))
+ E  S A1AE72I=DA
  N NODE S NODE=$NA(^A1AE(11007.2,A1AE72I,1,"B","A"))
  N A1AEDT S A1AEDT=$O(@NODE,-1)
  N A1AEDTI S A1AEDTI=$O(^A1AE(11007.2,A1AE72I,1,"B",A1AEDT,0))
@@ -429,7 +429,8 @@ FRMAPPR(X1,X2,D) ;
  F  S I=$O(FDATA(I)) Q:'I  S DATA(I)=FDATA(I),DATA(0)=I
  K FDATA
  N SUBJ,MGRP
- I X2=1 D
+ ; I X2=1 D  ; VEN/SMH After value is "IN REVIEW" does not sound right.
+ I X2=3 D
  . S DATA(0)=DATA(0)+1,DATA(DATA(0))="APPROVED:::YES"
  . S SUBJ="SUBSCRIPTION CHNG APPROVED"
  E  D
@@ -465,8 +466,8 @@ FRMAPPR(X1,X2,D) ;
  ;         $$GET1^DIQ(11007.21,IENS,12,"I")
  ;  By pulling all DATA array variables from previously
  ;  received message from this DOMAIN to Forum and comparing
- ;  this array to DATA array of just received message
- ;  we can assure ourselves client and forum are working
+ ;  array to DATA array of just received message
+ ;  we assure ourselves client and forum are working
  ;  on same change patch stream request.
 CHKMTCH(XMZ,DATA) ; Check incoming mail matches active Forum entry
  K ^XTMP("POO","CHKMTCH")
