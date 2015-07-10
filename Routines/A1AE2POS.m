@@ -1,4 +1,4 @@
-A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ;2015-07-03  9:26 PM
+A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ;2015-07-10  3:04 AM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -109,6 +109,7 @@ A1AEP1R ;
  . D MES^XPDUTL(" OSEHRA VISTA entry .001 not 10001")
  . D MES^XPDUTL(" Post Install cannot continue.")
  ;
+ ; VEN/SMH - I commented all of these calls out.
  ; If $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
  ; . D BMES^XPDUTL(2)
  ; . D MES^XPDUTL("PATCH multiple [#19] not found in BUILD file")
@@ -119,27 +120,27 @@ A1AEP1R ;
  ; . D MES^XPDUTL("PATCH multiple [#19] not found in INSTALL file")
  ; . D MES^XPDUTL(" Post Install cannot continue.")
  ;
- I '$D(^DD(A1AEFILE,0)) D  Q
- . D BMES^XPDUTL(2)
- . D MES^XPDUTL("Do not find DD for DHCP PATCHES [#"_A1AEFILE_"] file")
- . D MES^XPDUTL(" Post Install cannot continue.")
+ ; I '$D(^DD(A1AEFILE,0)) D  Q
+ ; . D BMES^XPDUTL(2)
+ ; . D MES^XPDUTL("Do not find DD for DHCP PATCHES [#"_A1AEFILE_"] file")
+ ; . D MES^XPDUTL(" Post Install cannot continue.")
  ;
  ; Set all PRIMARY? [#.02] in 11007.1 to 0 [NO]
- D A1AEP1A
+ ; D A1AEP1A
  ;
  ; Set PRIMARY? to YES if the FORUM DOMAIN [#.07] entry
  ;    for this DHCP PATCH STREAM entry matches the
  ;    NAME of the first entry in the MAILMAN PARAMTERS
  ;    [#4.3] file.
- D A1AEP1B
+ ; D A1AEP1B
  ;
  ; Set SUBSCRIPTION [#.06] in 11007.1 to 0 for
  ;    every site. Then set FOIA VISTA SUBSCRIPTION to 1
- D A1AEP1C
+ ; D A1AEP1C
  ;
  ; Finally display SUBSCRIPTION to installer and ask if they
  ;    wish to switch to another PATCH SEQUENCE.
- D A1AEP1D
+ ; D A1AEP1D
  QUIT
  ;
  ; Set all PRIMARY? [#.02] in 11007.1 to 0 [NO]
