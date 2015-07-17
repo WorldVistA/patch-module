@@ -1,4 +1,4 @@
-A1AEUT1 ;ven/smh-unit tests for the patch module ;2015-06-14  4:06 AM
+A1AEUT1 ;ven/smh-unit tests for the patch module ;2015-07-17  5:23 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -102,7 +102,7 @@ MKPKG() ; Create a new package
  S FDA(9.4,"+1,",.01)="TEST PACKAGE"
  S FDA(9.4,"+1,",1)="ZZZ"
  S FDA(9.4,"+1,",2)="Used for testing the Patch Module"
- S FDA(9.49,"+2,+1,",.01)=1 ; version number
+ S FDA(9.49,"+2,+1,",.01)="1.0" ; version number
  D UPDATE^DIE("E","FDA","IEN")
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"
  QUIT IEN(1)
@@ -244,7 +244,9 @@ PATCHNO ; @TEST Obtain next patch number
  S DIC("DR")="5///TEST"
  S DIC(0)="L"
  D NUM^A1AEUTL
- D CHKEQ(A1AENB,$G(A1AEUT1PN,A1AESTREAM)) ; cuz first patch now is switch patch; next patch is the new one.
+ N PATNUMTOCHECK S PATNUMTOCHECK=$S(A1AESTREAM>1:A1AESTREAM+1,1:A1AESTREAM) ; cuz first patch now is switch patch; next patch is the new one.
+ I $D(A1AEUT1PN) S A1AEUT1PN=$S(A1AESTREAM>1:A1AEUT1PN+1,1:A1AEUT1PN)
+ D CHKEQ(A1AENB,$G(A1AEUT1PN,PATNUMTOCHECK)) 
  D ASSERT(A1AEPD["ZZZ*1")
  D ASSERT($D(^A1AE(11005,"D",A1AEPKIF)))
  QUIT
