@@ -1,4 +1,4 @@
-A1AEUT1 ;ven/smh-unit tests for the patch module ;2015-07-17  7:49 PM
+A1AEUT1 ;ven/smh-unit tests for the patch module ;2015-07-27  7:59 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -71,6 +71,8 @@ MKSTREAM ; @TEST Make OSEHRA Stream
  S FDA(11007.1,IENS,.01)="OSEHRA VISTA" ; Name
  S FDA(11007.1,IENS,.02)="YES" ; Primary?
  S FDA(11007.1,IENS,.05)="OV" ; Abbreviation
+ S FDA(11007.1,IENS,.06)="NO" ; Subscription
+ S FDA(11007.1,IENS,.07)="FORUM.OSEHRA.ORG"
  N DIERR,ERR
  D UPDATE^DIE("E",$NA(FDA),$NA(IEN),$NA(ERR))
  I $D(DIERR) S $EC=",U-FILEMAN-ERROR,"

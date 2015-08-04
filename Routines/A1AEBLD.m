@@ -1,4 +1,4 @@
-A1AEBLD ;ven/jli-handle transport of build entries for dhcp patches file(#11005) ;2015-06-03  10:28 PM
+A1AEBLD ;ven/jli-handle transport of build entries for dhcp patches file(#11005) ;2015-07-06  11:53 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -188,7 +188,9 @@ CHKPACKG(A1AEBASE) ; Check that entry PKGNAME exists in PACKAGE file (#9.4), if 
  ;
 CHKSTREM(A1AEBASE) ; Check that entry PKGNAME exists in DHCP PATCH STREAM file (#11007.1), if not create it
  N STREMIEN,STREMNAM,A1AEMSG,A1AESTRM
- S STREMNAM=$G(@A1AEBASE@("FLDS",.2)) S STREMIEN=$$GETIEN(11007.1,STREMNAM) I STREMIEN'>0 D
+ S STREMNAM=$G(@A1AEBASE@("FLDS",.2))
+ I STREMNAM="" QUIT  ; Package. No stream.
+ S STREMIEN=$$GETIEN(11007.1,STREMNAM) I STREMIEN'>0 D
  . ; create an entry with its required fields
  . N STRMIENS,STREMFDA,I
  . S STRMIENS="+1," I $D(@A1AEBASE@(11007.1,"FLDS",.001)) S STRMIENS="+"_^(.001)_","
