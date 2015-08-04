@@ -1,4 +1,4 @@
-A1AEUT2 ;ven/smh-kids test file;2015-06-14  3:09 AM
+A1AEUT2 ;ven/smh-kids test file;2015-07-06  6:04 AM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -230,8 +230,7 @@ KIDS ;;
  ;;"RTN","ZOSV2GTM",10,0)
  ;; O %F:(newversion:noreadonly:blocksize=2048:recordsize=2044) U %F
  ;;"RTN","ZOSV2GTM",11,0)
- ;; F  S XCN=$O(@(DIE_XCN_")")) Q:XCN'>0  S %=@(DIE_XCN_",0)") Q:$E(%,1)="$"  I $E(
- ;;%)'=";" W $P(%,SP)_$C(9)_$P(%,SP,2,99999),!
+ ;; F  S XCN=$O(@(DIE_XCN_")")) Q:XCN'>0  S %=@(DIE_XCN_",0)") Q:$E(%,1)="$"  I $E(%)'=";" W $P(%,SP)_$C(9)_$P(%,SP,2,99999),!
  ;;"RTN","ZOSV2GTM",12,0)
  ;; C %F ;S %N=$$NULL
  ;;"RTN","ZOSV2GTM",13,0)
