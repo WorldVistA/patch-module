@@ -1,4 +1,4 @@
-A1AEUTL ;ven/toad-patch tools ;2015-06-13  9:16 PM
+A1AEUTL ;ven/toad-patch tools ;2015-08-04  5:32 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ; (c) VISTA Expertise Network
  ;
@@ -414,7 +414,7 @@ NEWVER(PKIEN,PCHIEN) ; set up a new version for application
 PRIMSTRM() ; See comments
  ; if no records, add FOIA VISTA
  I '$D(^A1AE(11007.1,1,0)) D
- . S ^(0)="FOIA VISTA^0^^^FV" ; set Name, Primary?, & Abbreviation
+ . S ^(0)="FOIA VISTA^0^^^FV^1^FORUM.VA.GOV" ; set Name, Primary?, & Abbreviation
  . N DA S DA=1
  . N DIK S DIK="^A1AE(11007.1,"
  . D IX1^DIK ; cross-reference
@@ -429,6 +429,7 @@ PRIMSTRM() ; See comments
  ;
  ;
 ID11005 ; See comments
+ N IEN S IEN=Y ; Internal entry number is in Y
  N ID S ID="" ; initialize identifier
  I '$G(DIQUIET),$X<33 W ?32 ; align subject column
  N X S X=$X ; current X position
@@ -436,8 +437,8 @@ ID11005 ; See comments
  N DELIM S DELIM=" " ; write ID component delimiter, default to space
  I $G(DIQUIET) S DELIM="|" ; | delim in silent mode
  ;
- N PATCH S PATCH=^(0) ; DHCP Patches record's header
- N NODE5 S NODE5=$G(^(5)) ; DHCP Patches record's node 5
+ N PATCH S PATCH=^A1AE(11005,IEN,0) ; DHCP Patches record's header
+ N NODE5 S NODE5=$G(^A1AE(11005,IEN,5)) ; DHCP Patches record's node 5
  ;
  ; [Stream]Subject
  S ID=$$STRMSUBJ(.IDLEN,PATCH,DELIM)
