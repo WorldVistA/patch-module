@@ -1,4 +1,4 @@
-A1AEUSPL ;VEN/JLI - Unit tests for A1AESPLT routine ;2015-06-13  8:39 PM
+A1AEUSPL ;VEN/JLI - Unit tests for A1AESPLT routine ;2015-07-27  7:39 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -16,6 +16,10 @@ SPLIT ; @TEST - setting up a initial patch in a new stream and releasing it
  S ^DIC(9.4,PKGIEN,8,22,1,"PAH",0)="^9.4901^^"
  S ^A1AE(11007.1,4001,0)="TEST STREAM^0^^^TS^O^TEST.STREAM.ORG"
  S ^A1AE(11007,PKGIEN,0)=PKGIEN_"^Y^n^n^y"
+ N DA,DIK
+ S DIK="^DIC(9.4,",DA=PKGIEN    D IX1^DIK
+ S DIK="^A1AE(11007.1",DA=4001  D IX1^DIK
+ S DIK="^A1AE(11007,",DA=PKGIEN D IX1^DIK
  S STREAM=4001
  ;
  ;SETPACKG ; set up for releasing a patch in a new stream
