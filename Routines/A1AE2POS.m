@@ -1,4 +1,4 @@
-A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ;2015-07-10  3:04 AM
+A1AE2POS ;ven/lgc,jli-post installs for A1AE pkg ;2015-07-27  8:46 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -108,6 +108,8 @@ A1AEP1R ;
  . D MES^XPDUTL("DHCP PATCH STREAM [#11007.1] is CORRUPTED")
  . D MES^XPDUTL(" OSEHRA VISTA entry .001 not 10001")
  . D MES^XPDUTL(" Post Install cannot continue.")
+ ;
+ D MAILGRP
  ;
  ; VEN/SMH - I commented all of these calls out.
  ; If $G(^DD(9.6,19,0))'["PATCH^9.619PA^^PAT;0" D  Q
@@ -384,4 +386,17 @@ LOADFILE() N DIERR,FDA,FDAIEN
  Q:$D(DIERR) 0
  Q 1
  ;
-EOR ; end of routine A1AE2POS
+MAILGRP ; [For KIDS] Add Server options to mail groups
+ N SRVGROUP S SRVGROUP=$$FIND1^DIC(3.8,,"QX","A1AEFMSC")
+ N CLGROUP   S CLGROUP=$$FIND1^DIC(3.8,,"QX","A1AESTRMCHG")
+ ;
+ N FDA
+ I SRVGROUP D
+ . N IENS S IENS="?+1,"_SRVGROUP_","
+ . S FDA(3.812,IENS,.01)="S.A1AEFMSC" ; Server
+ N IENSC S IENSC="?+2,"_CLGROUP_","
+ S FDA(3.812,IENSC,.01)="S.A1AENEWSTRM"
+ ;
+ D UPDATE^DIE("E",$NA(FDA),,$NA(ERR))
+ I $D(ERR) D MES^XPDUTL("Error: "_ERR("DIERR",1,"TEXT",1))
+ QUIT
