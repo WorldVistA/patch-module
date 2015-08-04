@@ -1,4 +1,4 @@
-A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-07-05  3:43 AM
+A1AEK3 ;ven/lgc-site-forum subscription messaging ;2015-07-06  6:55 PM
  ;;2.5;PATCH MODULE;;Jun 13, 2015
  ;;Submitted to OSEHRA 3 June 2015 by the VISTA Expertise Network
  ;;Licensed under the terms of the Apache License, version 2.0
@@ -429,8 +429,7 @@ FRMAPPR(X1,X2,D) ;
  F  S I=$O(FDATA(I)) Q:'I  S DATA(I)=FDATA(I),DATA(0)=I
  K FDATA
  N SUBJ,MGRP
- ; I X2=1 D  ; VEN/SMH After value is "IN REVIEW" does not sound right.
- I X2=3 D
+ I X2=1 D
  . S DATA(0)=DATA(0)+1,DATA(DATA(0))="APPROVED:::YES"
  . S SUBJ="SUBSCRIPTION CHNG APPROVED"
  E  D
@@ -443,7 +442,7 @@ FRMAPPR(X1,X2,D) ;
  I UT S MGRP=DUZ N VAP S VAP="T+1"
  S XMZ=$$SNDMAIL(SUBJ,.DATA,.MGRP,.VAP)
  ;
- H 15 ; Wait for slow system
+ I $G(UT) H 15 ; Wait for slow system
  ;
  D EMDATA^A1AEK3(XMZ,.DATA)
  S X=$$UPDDOMA^A1AEK3(.DATA)
