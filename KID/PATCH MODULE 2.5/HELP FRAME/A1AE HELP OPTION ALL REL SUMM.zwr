@@ -1,0 +1,8 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^50"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION ALL REL SUMM^ALL RELEASED P'S FOR A PACKAGE, SUMMARY W/ROUTINES^3150630.202528^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^4^4^3150630^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to display a summary report of all patches for a selected "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="package and version "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,3,0)=" "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,4,0)="The report contains the Patch Designation, Subject, Status, and Routines."
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,2,0)="^9.22A^1^1"

@@ -1,0 +1,14 @@
+^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^42"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRTCOMPHDTE^Completed Patch Summary Report by Date^^P^^^A1AE HELP OPTION COMPL SUM RPT^^^^^PATCH MODULE^y"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^4^4^3150705^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="This print option generates a report of completed patches for a"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="select package, or all selected packages for a specified date"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,3,0)="range. The report contains the Patch Designation, Subject, Date"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,4,0)="Completed, and Priority."
+^XTMP("K2VC","EXPORT","KRN",19,IEN,60)="A1AE(11005,"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,61)=1
+^XTMP("K2VC","EXPORT","KRN",19,IEN,62)=0
+^XTMP("K2VC","EXPORT","KRN",19,IEN,63)="[A1AE VERIFIED PATCH SUMMARY]"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,64)="[A1AE COM PATCH BY STRM BY DT]"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,68)=1
+^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="COMPLETED PATCH SUMMARY REPORT"

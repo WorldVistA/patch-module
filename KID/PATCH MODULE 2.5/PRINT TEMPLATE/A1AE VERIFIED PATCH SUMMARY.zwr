@@ -1,0 +1,13 @@
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,-1)="0^15"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,0)="A1AE VERIFIED PATCH SUMMARY^3140327.1425^^11005^^^3150705^"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",0)="^^1^1^3150705.225831"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"%D",1,0)="Used by menu option A1AE PRTCOMPHDTE."
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS")=2
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"DXS",1,9)="I $D(^A1AE(11005,D0,""Q"",""B"")) S A1AEPD=$P(^A1AE(11005,D0,0),""^""),PRINT="""" D PCHK^A1AEUTL1 K AZ,PRINT,A1AEPD"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",1)="S YY=^(0);X;Z;""S YY=^(0)""~.01;""Patch ID"";L13;C1~6;""SEQ"";C15;R3~5;""Subject"";L37;C20~8;L1;C60;X~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",2)="S Y=$$LASTDATE^A1AEPH2(D0) I Y]"""" S Y=$$FMTE^XLFDT(Y,4) W ?61,Y;""Status"";Z;""S Y=$$LASTDATE^A1AEPH2(D0) I Y]"""" S Y=$$FMTE^XLFDT(Y,4) W ?61,Y""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",3)="100,.01;""Routine"";C72;L8~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",4)="S Y=$P(YY,""^"",17) I Y]"""" S Y=$$FMTE^XLFDT(Y,4) W !,?39,""Hold date  ""_Y;X;Z;""S Y=$P(YY,""^"",17) I Y]"""" S Y=$$FMTE^XLFDT(Y,4) W !,?39,""Hold date  ""_Y""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",5)="X DXS(1,9);"""";X;Z;""I $D(^A1AE(11005,D0,""Q"",""B"")) S A1AEPD=$P(^A1AE(11005,D0,0),""^""),PRINT="""" D PCHK^A1AEUTL1 K AZ,PRINT,A1AEPD""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"F",6)="""-------------------------------------------------------------------------------"";C1~K YY;X;Z;""K YY""~"
+^XTMP("K2VC","EXPORT","KRN",.4,IEN,"H")="DHCP Patch Summary Report"

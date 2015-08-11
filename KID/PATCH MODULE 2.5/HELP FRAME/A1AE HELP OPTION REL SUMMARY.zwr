@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^58"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION REL SUMMARY^RELEASE SUMMARY^3150630.211806^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^9.21^2^2^3150630^^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to display the patch ID, sequence nubbier, date of "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="release, compliance date, and status of patches in a selected date range."

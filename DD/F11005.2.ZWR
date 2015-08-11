@@ -1,5 +1,5 @@
 KBANXDD - FILE 11005.2
-3140331.185358 ZWR
+3150615.015143 ZWR
 ^DIC(11005.2,0)="DHCP PATCH STATUS^11005.2"
 ^DIC(11005.2,0,"AUDIT")="@"
 ^DIC(11005.2,0,"DD")="@"
@@ -9,6 +9,13 @@ KBANXDD - FILE 11005.2
 ^DIC(11005.2,0,"RD")=""
 ^DIC(11005.2,0,"WR")="@"
 ^DIC(11005.2,"%",0)="^1.005^^"
+^DIC(11005.2,"%D",0)="^^6^6^3141009^"
+^DIC(11005.2,"%D",1,0)="This file describes the statuses that a patch can have. It supports the "
+^DIC(11005.2,"%D",2,0)="input transform of the Status of Patch field (8) in the DHCP Patches file "
+^DIC(11005.2,"%D",3,0)="(11005), and is used by routine A1AEPHS to help properly process patches "
+^DIC(11005.2,"%D",4,0)="when they change status. Some day, the Status of Patch field should be "
+^DIC(11005.2,"%D",5,0)="changed to point to this file, and the corresponding routines changes "
+^DIC(11005.2,"%D",6,0)="along with it."
 ^DD(11005.2,0)="FIELD^^.08^8"
 ^DD(11005.2,0,"DT")=3140326
 ^DD(11005.2,0,"NM","DHCP PATCH STATUS")=""

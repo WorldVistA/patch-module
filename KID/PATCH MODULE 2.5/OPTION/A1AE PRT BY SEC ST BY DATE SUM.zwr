@@ -1,0 +1,8 @@
+^XTMP("K2VC","EXPORT","KRN",19,IEN,-1)="0^72"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,0)="A1AE PRT BY SEC ST BY DATE SUM^Patches in a single Secondary Status by Date^^R^^^A1AE HELP OPTION SEC BY DATE^^^^^PATCH MODULE^y"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,0)="^19.06^3^3^3150705^^"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,1,0)="Print a summary of patches in a selected secondary status by the date of "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,2,0)="that status. Please note that if there is no date associated with the "
+^XTMP("K2VC","EXPORT","KRN",19,IEN,1,3,0)="status, nothing will print."
+^XTMP("K2VC","EXPORT","KRN",19,IEN,25)="SECDT^A1AEPH2"
+^XTMP("K2VC","EXPORT","KRN",19,IEN,"U")="PATCHES IN A SINGLE SECONDARY "

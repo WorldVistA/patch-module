@@ -1,18 +1,18 @@
 KBANXDD - FILE 11007
-3140102.151645 ZWR
+3150615.015246 ZWR
 ^DIC(11007,0)="DHCP PATCH/PROBLEM PACKAGE^11007PI"
 ^DIC(11007,0,"DD")="#"
 ^DIC(11007,0,"DEL")="#"
 ^DIC(11007,0,"GL")="^A1AE(11007,"
 ^DIC(11007,"%",0)="^1.005^0^0"
-^DIC(11007,"%D",0)="^^5^5^2910612^^^^"
+^DIC(11007,"%D",0)="^1.001^5^5^3140211^^^^"
 ^DIC(11007,"%D",1,0)="This file contains DHCP packages for the DHCP PATCHES file (#11005)."
 ^DIC(11007,"%D",2,0)="For a package to be added to this file it must reside in the PACKAGE"
 ^DIC(11007,"%D",3,0)="file (#9.4). This file also contains authorized development, support"
 ^DIC(11007,"%D",4,0)="and verify personnel for the patch file, the next patch/problem number,"
 ^DIC(11007,"%D",5,0)="and the package versions."
-^DD(11007,0)="FIELD^^6^11"
-^DD(11007,0,"DT")=3030108
+^DD(11007,0)="FIELD^^7^12"
+^DD(11007,0,"DT")=3150529
 ^DD(11007,0,"ID",2)="W """""
 ^DD(11007,0,"IX","AC",11007,6)=""
 ^DD(11007,0,"IX","AD",11007.03,.01)=""
@@ -101,6 +101,21 @@ KBANXDD - FILE 11007
 ^DD(11007,6,21,1,0)="The field is used to include the package on the Performance "
 ^DD(11007,6,21,2,0)="Measures/Compliance Date reports."
 ^DD(11007,6,"DT")=3030108
+^DD(11007,7,0)="FOR UNIT TEST ONLY?^S^1:YES, ONLY FOR UNIT TESTING;^0;7^Q"
+^DD(11007,7,3)="Select YES if this application only exists as a subject for unit tests."
+^DD(11007,7,21,0)="^^6^6^3150529^"
+^DD(11007,7,21,1,0)="Normally, this field must be left blank. The Patch Module developers may "
+^DD(11007,7,21,2,0)="permanently or temporarily create one or more throw-away applications "
+^DD(11007,7,21,3,0)="never intended to distribute real software, only to be subjects for Patch "
+^DD(11007,7,21,4,0)="Module and KIDS to manipulate, to perform unit tests that demonstrate the "
+^DD(11007,7,21,5,0)="soundness of Patch Module and KIDS. For such throw-away unit-testing "
+^DD(11007,7,21,6,0)="applications, set this field to YES."
+^DD(11007,7,23,0)="^^4^4^3150529^"
+^DD(11007,7,23,1,0)="Field For Unit Test Only? (7) was created by Rick Marshall of the VISTA "
+^DD(11007,7,23,2,0)="Expertise Network (ven/toad) on Friday, 29 May 2015 in support of unit "
+^DD(11007,7,23,3,0)="testing of Patch Module and KIDS during development of Patch Module "
+^DD(11007,7,23,4,0)="version 2.5."
+^DD(11007,7,"DT")=3150529
 ^DD(11007,50,0)="SELECTED USERS FOR PACKAGE^11007.05PA^^1;0"
 ^DD(11007,50,21,0)="^^2^2^2900428^^^^"
 ^DD(11007,50,21,1,0)="This field holds the names of users who have requested to"
@@ -119,7 +134,7 @@ KBANXDD - FILE 11007
 ^DD(11007,200,21,4,0)="Resolve any Problem for which they are an assigned developer. "
 ^DD(11007,200,21,5,0)="They may also Print any Patch or Problem for any Package."
 ^DD(11007,300,0)="VERSION^11007.01I^^V;0"
-^DD(11007,300,21,0)="^^3^3^2921027^^^^"
+^DD(11007,300,21,0)="^.001^3^3^3150529^^^^"
 ^DD(11007,300,21,1,0)="In Options which require a Version the System will"
 ^DD(11007,300,21,2,0)="default to the most recent Version. The Version is"
 ^DD(11007,300,21,3,0)="used to keep track of assigning Patch Numbers."
@@ -129,6 +144,7 @@ KBANXDD - FILE 11007
 ^DD(11007,"B","ASK PATCH DESCRIPTION COPY",5)=""
 ^DD(11007,"B","DEVELOPMENT PERSONNEL",200)=""
 ^DD(11007,"B","FOR TEST SITE ONLY?",4)=""
+^DD(11007,"B","FOR UNIT TEST ONLY?",7)=""
 ^DD(11007,"B","NETWORK MAIL GROUP",400)=""
 ^DD(11007,"B","PACKAGE",.01)=""
 ^DD(11007,"B","PERFORMANCE MEASURE FLAG",6)=""
@@ -142,6 +158,7 @@ KBANXDD - FILE 11007
 ^DD(11007,"GL",0,4,4)=""
 ^DD(11007,"GL",0,5,5)=""
 ^DD(11007,"GL",0,6,6)=""
+^DD(11007,"GL",0,7,7)=""
 ^DD(11007,"GL",1,0,50)=""
 ^DD(11007,"GL","NT",0,400)=""
 ^DD(11007,"GL","PB",0,100)=""
@@ -157,8 +174,8 @@ KBANXDD - FILE 11007
 ^DD(11007,"SB",11007.03,200)=""
 ^DD(11007,"SB",11007.04,400)=""
 ^DD(11007,"SB",11007.05,50)=""
-^DD(11007.01,0)="VERSION SUB-FIELD^NL^27^5"
-^DD(11007.01,0,"DT")=2920917
+^DD(11007.01,0)="VERSION SUB-FIELD^NL^28^6"
+^DD(11007.01,0,"DT")=3150526
 ^DD(11007.01,0,"ID",2)="W:+^(0)=999 ?18,""for 'DBA'"" W:+$P(^(0),U,2) ?30,""   Date Verified: "",$E($P(^(0),U,2),4,5)_""-""_$E($P(^(0),U,2),6,7)_""-""_$E($P(^(0),U,2),2,3)"
 ^DD(11007.01,0,"NM","VERSION")=""
 ^DD(11007.01,0,"UP")=11007
@@ -167,7 +184,7 @@ KBANXDD - FILE 11007
 ^DD(11007.01,.01,2.1)="S Y=$S(Y=999:""DBA"",1:Y)"
 ^DD(11007.01,.01,3)="TYPE A NUMBER BETWEEN 1 AND 999"
 ^DD(11007.01,.01,7.5)="S X=$S(X=""DBA""!(X=""dba""):999,1:X)"
-^DD(11007.01,.01,"DT")=2891101
+^DD(11007.01,.01,"DT")=3150526
 ^DD(11007.01,2,0)="DATE VERIFIED^RD^^0;2^S %DT=""EX"" D ^%DT S X=Y K:Y<1 X"
 ^DD(11007.01,2,21,0)="^^2^2^2871112^"
 ^DD(11007.01,2,21,1,0)="This field should hold the date the specified version of the"
@@ -192,17 +209,21 @@ KBANXDD - FILE 11007
 ^DD(11007.01,27,0)="NEXT SEQUENCE NUMBER^NJ5,0^^PR;1^K:+X'=X!(X>99999)!(X<1)!(X?.E1"".""1N.N) X"
 ^DD(11007.01,27,3)="Type a Number between 1 and 99999, 0 Decimal Digits"
 ^DD(11007.01,27,"DT")=2921027
+^DD(11007.01,28,0)="PATCH STREAM^11007.128P^^1;0"
 ^DD(11007.01,"B","DATE VERIFIED",2)=""
 ^DD(11007.01,"B","NEXT PATCH NUMBER",26)=""
 ^DD(11007.01,"B","NEXT PROBLEM NUMBER",25)=""
 ^DD(11007.01,"B","NEXT SEQUENCE NUMBER",27)=""
+^DD(11007.01,"B","PATCH STREAM",28)=""
 ^DD(11007.01,"B","VERSION",.01)=""
 ^DD(11007.01,"GL",0,1,.01)=""
 ^DD(11007.01,"GL",0,2,2)=""
+^DD(11007.01,"GL",1,0,28)=""
 ^DD(11007.01,"GL","PB",1,25)=""
 ^DD(11007.01,"GL","PH",1,26)=""
 ^DD(11007.01,"GL","PR",1,27)=""
 ^DD(11007.01,"RQ",2)=""
+^DD(11007.01,"SB",11007.128,28)=""
 ^DD(11007.02,0)="SUPPORT PERSONNEL SUB-FIELD^NL^3^3"
 ^DD(11007.02,0,"DT")=2980730
 ^DD(11007.02,0,"NM","SUPPORT PERSONNEL")=""
@@ -264,7 +285,8 @@ KBANXDD - FILE 11007
 ^DD(11007.03,"B","DEVELOPMENT PERSONNEL",.01)=""
 ^DD(11007.03,"GL",0,1,.01)=""
 ^DD(11007.03,"IX",.01)=""
-^DD(11007.04,0)="NETWORK MAIL GROUP SUB-FIELD^^3^3"
+^DD(11007.04,0)="NETWORK MAIL GROUP SUB-FIELD^^4^4"
+^DD(11007.04,0,"DT")=3141208
 ^DD(11007.04,0,"ID",2)="W ""   "",$P(^(0),U,2)"
 ^DD(11007.04,0,"IX","B",11007.04,.01)=""
 ^DD(11007.04,0,"NM","NETWORK MAIL GROUP")=""
@@ -292,12 +314,19 @@ KBANXDD - FILE 11007
 ^DD(11007.04,2,"DT")=2910613
 ^DD(11007.04,3,0)="TEST SITE^S^1:YES;0:NO;^0;3^Q"
 ^DD(11007.04,3,"DT")=2900428
+^DD(11007.04,4,0)="DHCP PATCH STREAM^P11007.1'^A1AE(11007.1,^0;4^Q"
+^DD(11007.04,4,3)="Enter the DHCP PATCH STREAM associated with this NETWORK MAIL GROUP"
+^DD(11007.04,4,21,0)="^^1^1^3141208^"
+^DD(11007.04,4,21,1,0)="This field is used to determine the patch stream that should be going to the current NETWORK MAIL GROUP.  If no value is present, it would be FOIA VA."
+^DD(11007.04,4,"DT")=3141208
+^DD(11007.04,"B","DHCP PATCH STREAM",4)=""
 ^DD(11007.04,"B","DOMAIN",2)=""
 ^DD(11007.04,"B","NETWORK ROUTING",.01)=""
 ^DD(11007.04,"B","TEST SITE",3)=""
 ^DD(11007.04,"GL",0,1,.01)=""
 ^DD(11007.04,"GL",0,2,2)=""
 ^DD(11007.04,"GL",0,3,3)=""
+^DD(11007.04,"GL",0,4,4)=""
 ^DD(11007.04,"IX",.01)=""
 ^DD(11007.05,0)="SELECTED USERS FOR PACKAGE SUB-FIELD^NL^3^3"
 ^DD(11007.05,0,"DT")=2921202

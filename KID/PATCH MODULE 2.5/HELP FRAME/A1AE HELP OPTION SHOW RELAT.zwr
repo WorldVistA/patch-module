@@ -1,0 +1,5 @@
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,-1)="0^61"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,0)="A1AE HELP OPTION SHOW RELAT^SHOW A PATCH'S RELATIONSHIPS^3150630.211151^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,0)="^^2^2^3150630^"
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,1,0)="Use this option to show the derivation source and dependencies of a "
+^XTMP("K2VC","EXPORT","KRN",9.2,IEN,1,2,0)="specific patch"
